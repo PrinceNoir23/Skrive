@@ -119,17 +119,17 @@ DescriptionGUI() {
 
    
     DescripGui.Add("Text", "x10 y10", "The desccription is:")
-    FinalDesc:= outedit.value, "on" , editSoftware.value 
+    ; FinalDesc:= outedit.value, "on" , editSoftware.value 
 
           
     
 
-    btnCopy := DescripGui.Add("Button", "x10 y120 w320", "Copy")
+    ; btnCopy := DescripGui.Add("Button", "x10 y120 w320", "Copy")
     
-    btnCopy.OnEvent("Click", (*) => (
-        editDescripare.Value := comboBox1.Text " version " comboBox2.Text, 
-        DescripGui.Destroy()
-    ))
+    ; btnCopy.OnEvent("Click", (*) => (
+    ;     editDescripare.Value := comboBox1.Text " version " comboBox2.Text, 
+    ;     DescripGui.Destroy()
+    ; ))
     
     DescripGui.Show()
 }
