@@ -109,7 +109,7 @@ ExplorerOpen(Folder_To_Open){
     if ForwardToTeamViewer("{LWin Down}e{LWin Up}") {
         Sleep(2000)
         Search_Focus(Folder_To_Open)
-        Sleep(200)
+        Sleep(300)
     }    
     return
 
