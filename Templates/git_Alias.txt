@@ -1,0 +1,6 @@
+git config --global alias.st status
+git config --global alias.ci "commit -m"
+git config --global alias.co checkout
+git config --global alias.purebase "pull --rebase"
+git config --global alias.lg "log --oneline --graph --all --decorate"
+git config --global --list | grep alias
