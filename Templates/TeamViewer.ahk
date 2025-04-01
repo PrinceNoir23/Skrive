@@ -198,7 +198,7 @@ Ctrl_b() {
         ; {
         ;     ; Aquí puedes poner el código para detener el proceso o realizar otra acción
         ;     MsgBox("El proceso se detendrá.")
-        ;     ExitApp()  ; Detiene el script si el usuario elige "No"
+        ;     return  ; Detiene el script si el usuario elige "No"
         ; }
 
 
@@ -277,7 +277,7 @@ Ctrl_d() {
         {
             ; Aquí puedes poner el código para detener el proceso o realizar otra acción
             MsgBox("El proceso se detendrá.")
-            ExitApp()  ; Detiene el script si el usuario elige "No"
+            return ; Detiene el script si el usuario elige "No"
         }
 
 
