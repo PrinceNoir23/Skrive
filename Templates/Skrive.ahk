@@ -192,15 +192,11 @@ SaveBttm(SvBool) {
     global datos
     ; Recorrer el mapa y mostrar los valores
     if SvBool==false{
-        textData2 := Jxon_dump(datos,2) ; ===> convert array to JSON
+        textData2 := Jxon_dump(datos,4) ; ===> convert array to JSON
         ; MsgBox textData2
         newObj := Jxon_load(&textData2) ; ===> convert json back to array
         
-        Msgbox "textData2 = textData3:  " ((datos=newObj) ? "true" : "false")
-          
-
-        
-
+        msgbox "textData2 = textData3:  " ((datos=newObj) ? "true" : "false")
         
     }
 
