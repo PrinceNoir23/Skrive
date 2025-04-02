@@ -1000,8 +1000,28 @@ Ctrl_5() {
 }
 
 Ctrl_6() {
-    
+    global datos
+    if !WinExist("ahk_exe TeamViewer.exe") {
+        WndOpen("TeamViewer")
+        MsgBox "TeamViewer no está abierto."
+        return
+    }
+
+    WinActivate  ; Activa la ventana de TeamViewer
+    WinWaitActive  ; Espera hasta que esté activa
+
+    tvID:= datos["TV ID"] 
+    tvPS:=datos["TV PSS"]
+    Send(tvID)
+    Sleep(500)
+    Send '{Enter}'
+    Sleep(5000)
+    Send(tvPS)
+    Sleep(500)
+    Send '{Enter}'
+
 }
+
 
 Ctrl_7() {
     if ForwardToTeamViewer("") {

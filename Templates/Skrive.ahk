@@ -42,20 +42,31 @@ AutoResize(*) {
     tab.Move(10, 10, w - 20, h - 40)  ; Ajusta tamaño y posición
 }
 
-InputLine(Name, yOffset, btnSze, BtnHeigh) {
+InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?) {
     Name2Text := Name
-    btn := SkrvGui.Add("Button", Format("x50 y{} w{} h{}", yOffset, btnSze, BtnHeigh), Name2Text)
-    edit := SkrvGui.Add("Edit", Format("x260 y{} w750 h{}", yOffset, BtnHeigh), "")
     
-    btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)    ; Clic izquierdo: pega desde el portapapeles
-    btn.OnEvent("ContextMenu", (*) => edit.Value := "")       ; Clic derecho: limpia el Edit
+    ; Asignar valores predeterminados si los parámetros no están definidos
+    x := IsSet(x) ? x : 50
+    xedit := IsSet(xedit) ? xedit : 260
+    widthedit := IsSet(widthedit) ? widthedit : 750
+    yOffset := IsSet(yOffset) ? yOffset : 100
+    btnSze := IsSet(btnSze) ? btnSze : 80
+    BtnHeigh := IsSet(BtnHeigh) ? BtnHeigh : 30
+
+    btn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}", x, yOffset, btnSze, BtnHeigh), Name2Text)
+    edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, yOffset, widthedit, BtnHeigh), "")
+
+    btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
+    btn.OnEvent("ContextMenu", (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
 
     global datos
-    datos[Name2Text] := edit.Value  ; Guarda el valor inicial (vacío al principio)
+    datos[Name2Text] := ""  ; Asegura que el valor inicial sea vacío
 
     ; Capturar cambios en el input
     edit.OnEvent("Change", (*) => datos[Name2Text] := edit.Value)
 }
+
+
 
 SoftwareVersionSelect(Name, yOffset, btnSze, BtnHeigh) {
     Name2Text := Name
@@ -132,21 +143,28 @@ spacing := 35 ; Espaciado entre elementos
 Insize:=390
 
 SkrvGui.Add("Text",)
-InputLine("Name", y,btnSze,BtnHeigh), y += spacing
-InputLine("Phone", y,btnSze,BtnHeigh), y += spacing
-InputLine("Email", y,btnSze,BtnHeigh), y += spacing
-InputLine("Company Name", y,btnSze,BtnHeigh), y += spacing
+tvsize := (750/2)-(spacing*2)
+
+InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh), y
+InputLine("TV PSS",465,50+tvsize+spacing,, y,btnSze,BtnHeigh), y += spacing
+
+InputLine("Name",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("Phone",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("Email",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("Company Name",,,, y,btnSze,BtnHeigh), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y += spacing
-InputLine("Dongle", y,btnSze,BtnHeigh), y += spacing
-InputLine("SID", y,btnSze,BtnHeigh), y += spacing
-InputLine("GUI", y,btnSze,BtnHeigh), y += spacing
-InputLine("Scanner S/N", y,btnSze,BtnHeigh), y += spacing
-InputLine("PC ID", y,btnSze,BtnHeigh), y += spacing
-InputLine("Case Number", y,btnSze,BtnHeigh), y += spacing
+
+InputLine("Dongle",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("SID",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("GUI",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("PC ID",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("Case Number",,,, y,btnSze,BtnHeigh), y += spacing
 ; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Description"),
 descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(true))
 descripton.OnEvent("Click", (*) => DescriptionGUI(false))
+#Include CompareMaps.ahk
 DescriptionGUI(bool) {
     global datos  ; Hacer accesible el mapa de datos
 
@@ -190,15 +208,18 @@ BtnSaveInfo.OnEvent("Click", (*) => SaveBttm(false))
 SaveBttm(SvBool) {
 
     global datos
+    
     ; Recorrer el mapa y mostrar los valores
     if SvBool==false{
         textData2 := Jxon_dump(datos,4) ; ===> convert array to JSON
         ; MsgBox textData2
         newObj := Jxon_load(&textData2) ; ===> convert json back to array
-        
-        msgbox "textData2 = textData3:  " ((datos=newObj) ? "true" : "false")
-        
+
+        CompareMaps(newObj, datos)
+        CompareMaps(datos, newObj)
+                
     }
+
 
     if SvBool==true{
         lista := "Datos guardados:`n"
