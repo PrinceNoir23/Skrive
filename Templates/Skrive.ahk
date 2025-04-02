@@ -1,5 +1,6 @@
 #Requires AutoHotkey v2.0
-#Include  TeamViewer.ahk
+#Include  TeamViewer.ahk  
+#Include Json.ahk
 Persistent 1  ; Establece el script como persistente
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -40,7 +41,6 @@ AutoResize(*) {
     SkrvGui.GetPos(&x, &y, &w, &h)  ; Obtiene el tamaño actual de la ventana
     tab.Move(10, 10, w - 20, h - 40)  ; Ajusta tamaño y posición
 }
-
 
 InputLine(Name, yOffset, btnSze, BtnHeigh) {
     Name2Text := Name
@@ -100,9 +100,6 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     SoftwGui.Show()
 }
 
-
-
-
 OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
     ; Name2Text := Format("{}",Name)
     Name2Text := Name
@@ -115,7 +112,6 @@ OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
 
 }
 
-
 Hotkeys(Name, yOffset){
     ; Name2Text := Format("{}",Name)
     Name2Text := Name
@@ -125,6 +121,9 @@ Hotkeys(Name, yOffset){
     btn.OnEvent("Click", (*) => Ctrl_y())
 
 }
+
+; ---------------------------------------------------------------------------------------------------------------------------------
+
 ; PESTAÑA 1 (General)
 tab.UseTab(1)
 y := 50 ; Posición inicial en Y
@@ -144,13 +143,10 @@ InputLine("GUI", y,btnSze,BtnHeigh), y += spacing
 InputLine("Scanner S/N", y,btnSze,BtnHeigh), y += spacing
 InputLine("PC ID", y,btnSze,BtnHeigh), y += spacing
 InputLine("Case Number", y,btnSze,BtnHeigh), y += spacing
-
+; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Description"),
-
-descripton.OnEvent("Click", (*) => DescriptionGUI(true))
-descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(false))
-
-
+descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(true))
+descripton.OnEvent("Click", (*) => DescriptionGUI(false))
 DescriptionGUI(bool) {
     global datos  ; Hacer accesible el mapa de datos
 
@@ -182,28 +178,33 @@ DescriptionGUI(bool) {
 
     DescripGui.Show()
 }
-
-
+; ---------------------------------------------------------------------------------------------------------------------------------
 OutputLine("Issue",x,y, Insize ,btnSze,BtnHeigh), 
 OutputLine("Solution",(x+Insize +10),y, Insize ,btnSze,BtnHeigh), y += spacing
 Hotkeys("Hotkeys", y) 
 
-
-
-
 BtnSaveInfo := SkrvGui.Add("Button", "w150 h30", "&Save Info")
-BtnSaveInfo.OnEvent("Click", SaveBttm(true))
-BtnSaveInfo.OnEvent("ContextMenu", SaveBttm(false))
+BtnSaveInfo.OnEvent("ContextMenu", (*) => SaveBttm(true))
+BtnSaveInfo.OnEvent("Click", (*) => SaveBttm(false))
 ; Función para abrir una nueva ventana
-SaveBttm(bool) {
+SaveBttm(SvBool) {
 
     global datos
     ; Recorrer el mapa y mostrar los valores
-    if bool==false{
+    if SvBool==false{
+        textData2 := Jxon_dump(datos,2) ; ===> convert array to JSON
+        ; MsgBox textData2
+        newObj := Jxon_load(&textData2) ; ===> convert json back to array
+        
+        Msgbox "textData2 = textData3:  " ((datos=newObj) ? "true" : "false")
+          
+
+        
+
         
     }
 
-    if bool==true{
+    if SvBool==true{
         lista := "Datos guardados:`n"
         for key, value in datos {
             lista .= key ": " value "`n"
@@ -213,6 +214,7 @@ SaveBttm(bool) {
     }
     
 }
+; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 2 (View)
 tab.UseTab(2)
