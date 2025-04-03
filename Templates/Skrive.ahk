@@ -1,10 +1,12 @@
 #Requires AutoHotkey v2.0
+
+global datos := Map()  ; Crear un diccionario global
+
 #Include  TeamViewer.ahk  
 #Include Json.ahk
 Persistent 1  ; Establece el script como persistente
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
-global datos := Map()  ; Crear un diccionario global
 
 saveData(key, value) {
     global datos
@@ -28,7 +30,7 @@ SkrvGui.SetFont("s12")
 tab := SkrvGui.Add("Tab3", "x10 y10 w1000 h600", ["Information", "Add Info", "Email", "Settings"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
-SkrWidth := 1050
+SkrWidth := 1070
 SkrHeigh := 650 
 BtnHeigh:=30
 btnSze:= 200
@@ -42,7 +44,7 @@ AutoResize(*) {
     tab.Move(10, 10, w - 20, h - 40)  ; Ajusta tamaño y posición
 }
 
-InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?) {
+InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefltPaste?) {
     Name2Text := Name
     
     ; Asignar valores predeterminados si los parámetros no están definidos
@@ -56,8 +58,16 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?) {
     btn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}", x, yOffset, btnSze, BtnHeigh), Name2Text)
     edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, yOffset, widthedit, BtnHeigh), "")
 
-    btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
-    btn.OnEvent("ContextMenu", (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
+    if buttomDefltPaste == true {
+        btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
+        btn.OnEvent("ContextMenu", (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
+    } 
+    if buttomDefltPaste == false {
+        btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
+        btn.OnEvent("ContextMenu", (*) => Ctrl_6())  ; Clic izquierdo: limpia el Edit
+    }
+
+    
 
     global datos
     datos[Name2Text] := ""  ; Asegura que el valor inicial sea vacío
@@ -127,9 +137,24 @@ Hotkeys(Name, yOffset){
     ; Name2Text := Format("{}",Name)
     Name2Text := Name
     btnSze:= 200
-    btn := SkrvGui.Add("Button", Format("x50 y{} w{} h{}", yOffset,btnSze,BtnHeigh), Name2Text)
+    btnHot := SkrvGui.Add("Button", Format("x50 y{} w{} h{}", yOffset,btnSze,BtnHeigh), Name2Text)
     ; edit := SkrvGui.Add("Edit", Format("x260 y{} w700 h{}", yOffset), "")
-    btn.OnEvent("Click", (*) => Ctrl_y())
+    ; btnHot.OnEvent("Click", (*) => Ctrl_y())
+    btnHot.OnEvent("ContextMenu", (*) => Ctrl_a() )
+    btnHot.OnEvent("Click", (*) => altcheck())
+    altcheck() {
+        if GetKeyState("Alt"){  ; Verifica si Alt está presionado
+                Ctrl_2()
+                return
+        }
+        else { 
+            Ctrl_y()
+            return
+        }
+    }
+
+
+    
 
 }
 
@@ -145,21 +170,33 @@ Insize:=390
 SkrvGui.Add("Text",)
 tvsize := (750/2)-(spacing*2)
 
-InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh), y
-InputLine("TV PSS",465,50+tvsize+spacing,, y,btnSze,BtnHeigh), y += spacing
+InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh, false), y
+InputLine("TV PSS",465,570,tvsize, y,btnSze/2,BtnHeigh, false), y 
+Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y += spacing
+Int_PhBtt.OnEvent("Click", (*) => IntPhBttm())
+Int_PhBtt.OnEvent("ContextMenu", (*) => IntPhBttm())
 
-InputLine("Name",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("Phone",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("Email",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("Company Name",,,, y,btnSze,BtnHeigh), y += spacing
+
+IntPhBttm(){
+
+}
+
+
+
+
+ 
+InputLine("Name",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Phone",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Email",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y += spacing
 
-InputLine("Dongle",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("SID",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("GUI",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("PC ID",,,, y,btnSze,BtnHeigh), y += spacing
-InputLine("Case Number",,,, y,btnSze,BtnHeigh), y += spacing
+InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("SID",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("GUI",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("PC ID",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("Case Number",,,, y,btnSze,BtnHeigh, true), y += spacing
 ; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Description"),
 descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(true))
@@ -178,23 +215,26 @@ DescriptionGUI(bool) {
 
     ; Agrega el texto correctamente formateado
     DescripGui.Add("Text", "x10 y10", "The description is:`n" issue " on " softwareVersion)
+    btnCopy := DescripGui.Add("Button", "x10 y150 w320", "Copy")
+
     
     if bool == false{
         A_Clipboard := issue " on " softwareVersion
         return
     }
     ; Botón para copiar la información
-    btnCopy := DescripGui.Add("Button", "x10 y150 w320", "Copy")
     if bool == true {
+        DescripGui.Show()
         btnCopy.OnEvent("Click", (*) => (
-        A_Clipboard := issue " on " softwareVersion,  ; Copia al portapapeles
-        DescripGui.Destroy()
-    ))
+            A_Clipboard := issue " on " softwareVersion,  ; Copia al portapapeles
+            DescripGui.Destroy()  )
+        )
+        return
     }
 
 
 
-    DescripGui.Show()
+    
 }
 ; ---------------------------------------------------------------------------------------------------------------------------------
 OutputLine("Issue",x,y, Insize ,btnSze,BtnHeigh), 
@@ -211,6 +251,8 @@ SaveBttm(SvBool) {
     
     ; Recorrer el mapa y mostrar los valores
     if SvBool==false{
+
+        
         textData2 := Jxon_dump(datos,4) ; ===> convert array to JSON
         ; MsgBox textData2
         newObj := Jxon_load(&textData2) ; ===> convert json back to array
@@ -253,9 +295,11 @@ SkrvGui.Show()
 
 
 ; 🔹 Atajos de teclado para cambiar pestañas
-!i::tab.Value := 1  ; Alt + G -> General
-!v::tab.Value := 2  ; Alt + V -> View
-!x::tab.Value := 3  ; Alt + S -> Settings
+^!i::tab.Value := 1  ; Alt + G -> General
+^!v::tab.Value := 2  ; Alt + V -> View
+^!x::tab.Value := 3  ; Alt + S -> Settings
+
+
 
 
 

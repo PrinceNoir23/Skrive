@@ -43,27 +43,35 @@ guiVisible := false
 }
 
 
-ForwardToTeamViewer(KeyToSend) { 
-    Critical  ; Evita interrupciones
+; ForwardToTeamViewer(KeyToSend) { 
+;     Critical  ; Evita interrupciones
 
-    Sleep(500)
-    Send (KeyToSend)
-    Return True
-}
-
-
-; ForwardToTeamViewer(KeyToSend) {
-;     exename := WinGetProcessName("A")
-;     if (exename = "TeamViewer.exe") {
-;         Critical  ; Evita interrupciones
-;         Sleep(1000)
-;         SendInput(KeyToSend)
-;         Return True
-;     }
-;     MsgBox A_ComputerName
-;     Return false
-;     ; 
+;     Sleep(500)
+;     Send (KeyToSend)
+;     Return True
 ; }
+
+
+ForwardToTeamViewer(KeyToSend) {
+    
+    Sleep(500)
+    WinActivate("ahk_class ClientWindowSciter")  ; Activa la ventana de TeamViewer
+    Sleep(500)
+    WinWaitActive("ahk_class ClientWindowSciter")
+    Sleep(1000)
+    exename := WinGetProcessName("A")
+    if (exename = "TeamViewer.exe") {
+        
+       
+        Critical  ; Evita interrupciones
+        Sleep(1000)
+        SendInput(KeyToSend)
+        Return True
+    }
+    MsgBox A_ComputerName
+    Return false
+    ; 
+}
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -118,34 +126,43 @@ ExplorerOpen(Folder_To_Open){
 }
 
 Ctrl_a() {
-    IB := InputBox("Input the case number `nEXAMPLE :`n CAS-XXXXXX-XXXXXX  ", " Powershell Backup ", "w289 h180")
-    if (IB.Result = "Cancel") {
-        MsgBox("Ingresaste '" IB.Value "' pero luego cancelaste.")
-    } else {
-        MsgBox("Ingresaste '" IB.Value "'.")
-        if ForwardToTeamViewer("{LWin Down}{x}{LWin Up}") {
-        Sleep(500)  ; Espera 500 milisegundos para que el Explorador se abra completamente
+    global datos
+
+    caseNumber := datos.Has("Case Number") && datos["Case Number"] != "" ? datos["Case Number"] : ""
+
+    if (caseNumber = "") {
+        IB := InputBox("Input the case number `nEXAMPLE:`n CAS-XXXXXX-XXXXXX", "Powershell Logs Backup", "w289 h180")
+        if (IB.Result = "Cancel" || IB.Value = "") {
+            MsgBox("No ingresaste un número de caso válido.")
+            return
+        }
+        caseNumber := IB.Value
+    }
+
+    MsgBox("Ingresaste '" caseNumber "'.")
+
+    if ForwardToTeamViewer("{LWin Down}{x}{LWin Up}") {
+        Sleep(500)  ; Espera a que la ventana se abra
         Send("{a}")
-        Sleep(2000)  ; Espera 1 se
+        Sleep(2000)
         Send("{Left}")
         Sleep(500)
-        Send '{Enter}'
+        Send("{Enter}")
         Sleep(1000)
-        ; Concatenar IB.Value al comando SendPlay
-        PWS := (" cd ..\..`n $programData = [System.Environment]::GetFolderPath('CommonApplicationData') `n$public = $env:PUBLIC `n$source = Join-Path -Path $programData -ChildPath '3Shape\DentalDesktop\Logs' `n$destination = Join-Path -Path $public -ChildPath 'CAS_" IB.Value "'" " `n$destination1 = Join-Path -Path $public -ChildPath 'CAS_" IB.Value ".zip' `nCopy-Item -Path $source -Destination $destination -Recurse -Force `nCompress-Archive -Path $destination  -DestinationPath $destination1 `nRemove-Item -Path $destination -Force `nStart-Process explorer.exe $public")
+
+        ; 🔹 Corrigiendo la sintaxis de PWS con comillas adecuadas
+        PWS := (" cd ..\..`n $programData = [System.Environment]::GetFolderPath('CommonApplicationData') `n$public = $env:PUBLIC `n$source = Join-Path -Path $programData -ChildPath '3Shape\DentalDesktop\Logs' `n$destination = Join-Path -Path $public -ChildPath 'CAS_" caseNumber "'" " `n$destination1 = Join-Path -Path $public -ChildPath 'CAS_" caseNumber ".zip' `nCopy-Item -Path $source -Destination $destination -Recurse -Force `nCompress-Archive -Path $destination  -DestinationPath $destination1 `nRemove-Item -Path $destination -Force `nStart-Process explorer.exe $public")
+
         Sleep(500)
         A_Clipboard := PWS
+        ClipWait  ; Espera a que el portapapeles tenga el texto
 
-        ; Send("{Raw}" PWS)
-        ; Send( PWS)
-        ; Sleep(500)
-        ; ClipWait  ; Espera a que el contenido esté disponible en el portapapeles
-        Send("{Ctrl Down}{v}{Ctrl Up}")  ; Ctrl + L
-        }
-
-        Return  ; Sale si el envío fue exitoso
+        Send("^v")  ; Pega el texto en la ventana activa
     }
+
+    return
 }
+
 
 
 ; Ctrl_a() {
@@ -162,20 +179,11 @@ Ctrl_a() {
 ;     }
     
 ;       ; Si no es TeamViewer, muestra el nombre del PC
+
+; ; PWS := (" cd ..\..`n $programData = [System.Environment]::GetFolderPath('CommonApplicationData') `n$public = $env:PUBLIC `n$source = Join-Path -Path $programData -ChildPath '3Shape\DentalDesktop\Logs' `n$destination = Join-Path -Path $public -ChildPath 'CAS_" IB.Value "'" " `n$destination1 = Join-Path -Path $public -ChildPath 'CAS_" IB.Value ".zip' `nCopy-Item -Path $source -Destination $destination -Recurse -Force `nCompress-Archive -Path $destination  -DestinationPath $destination1 `nRemove-Item -Path $destination -Force `nStart-Process explorer.exe $public")
 ; }
 
 
-; Ctrl_a() {
-;     if ForwardToTeamViewer("{LWin Down}{x}{LWin Up}") {
-;         Sleep(500)  ; Espera 500 milisegundos para que el Explorador se abra completamente
-;         Send("{a}")
-;         Sleep(10000)
-;         Send("{Ctrl Down}{v}{Ctrl Up}")  ; Envía Ctrl+V para pegar el contenido seleccionado 
-;         return  ; Salir si el envío fue exitoso
-;     }
-    
-;       ; Si no es TeamViewer, muestra el nombre del PC
-; }
 
 
 Ctrl_b() {
@@ -749,6 +757,7 @@ Ctrl_y() {
             "3 - SQL*",
             "4 - Keys*",
             "5 - DxDag / ApWiz / SysInfo / DevMng / Servs",
+            "6 - Teamviewer Automate",
         ]
 
         ; Configuración de columnas
@@ -1001,24 +1010,32 @@ Ctrl_5() {
 
 Ctrl_6() {
     global datos
-    if !WinExist("ahk_exe TeamViewer.exe") {
+    if !WinExist("ahk_class MainWindowOne") {
         WndOpen("TeamViewer")
-        MsgBox "TeamViewer no está abierto."
+        MsgBox "TeamViewer no está abierto`n Corre el codigo nuevamente."
         return
     }
+    Sleep(500)
+    WinActivate("ahk_class MainWindowOne")  ; Activa la ventana de TeamViewer
+    Sleep(500)
+    WinWaitActive("ahk_class MainWindowOne")
+      ; Espera hasta que esté activa
 
-    WinActivate  ; Activa la ventana de TeamViewer
-    WinWaitActive  ; Espera hasta que esté activa
-
+    Sleep(500)
     tvID:= datos["TV ID"] 
+    A_Clipboard := tvID
+    Sleep(200)
     tvPS:=datos["TV PSS"]
+    A_Clipboard := tvPS
+
     Send(tvID)
     Sleep(500)
     Send '{Enter}'
-    Sleep(5000)
+    Sleep(10000)
     Send(tvPS)
     Sleep(500)
     Send '{Enter}'
+    return
 
 }
 
