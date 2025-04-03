@@ -158,6 +158,14 @@ Hotkeys(Name, yOffset){
 
 }
 
+IntPhBttm(IntBool) {
+    today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
+    formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
+
+    A_Clipboard := (IntBool ? "PHONECALL " : "INT ") formattedDate  ; Usa operador ternario
+
+    return  ; Buena práctica incluirlo, aunque no es obligatorio
+}
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 1 (General)
@@ -173,13 +181,11 @@ tvsize := (750/2)-(spacing*2)
 InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh, false), y
 InputLine("TV PSS",465,570,tvsize, y,btnSze/2,BtnHeigh, false), y 
 Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y += spacing
-Int_PhBtt.OnEvent("Click", (*) => IntPhBttm())
-Int_PhBtt.OnEvent("ContextMenu", (*) => IntPhBttm())
+Int_PhBtt.OnEvent("Click", (*) => IntPhBttm(false))
+Int_PhBtt.OnEvent("ContextMenu", (*) => IntPhBttm(true))
 
 
-IntPhBttm(){
 
-}
 
 
 
