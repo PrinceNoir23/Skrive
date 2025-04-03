@@ -53,12 +53,22 @@ guiVisible := false
 
 
 ForwardToTeamViewer(KeyToSend) {
-    
+
+    if !WinExist("ahk_exe TeamViewer.exe")  {
+        MsgBox "TeamViewer no está abierto`n Abrelo y Corre el codigo nuevamente."
+        Sleep(100)
+        return
+    }
+    if !WinExist("ahk_class ClientWindowSciter"){
+        MsgBox "Sesion Remota no está abierta`n Abrela y Corre el codigo nuevamente."
+        Sleep(100)
+        return
+    }
     Sleep(500)
     WinActivate("ahk_class ClientWindowSciter")  ; Activa la ventana de TeamViewer
     Sleep(500)
     WinWaitActive("ahk_class ClientWindowSciter")
-    Sleep(1000)
+    Sleep(50)
     exename := WinGetProcessName("A")
     if (exename = "TeamViewer.exe") {
         
@@ -189,6 +199,7 @@ Ctrl_a() {
 Ctrl_b() {
     if ForwardToTeamViewer(WndOpen("Edge")) {
         
+        OpenTab("https://portal.3shapecommunicate.com/login")
         OpenTab("https://www.speedtest.net/")
         OpenTab("http://localhost:27027/")
         OpenTab("https://www.nvidia.com/en-us/drivers/")
@@ -1010,30 +1021,29 @@ Ctrl_5() {
 
 Ctrl_6() {
     global datos
-    if !WinExist("ahk_class MainWindowOne") {
-        WndOpen("TeamViewer")
-        MsgBox "TeamViewer no está abierto`n Corre el codigo nuevamente."
+    if !WinExist("ahk_class MainWindowFull") {
+        MsgBox "No se reconoce la ventana `n Ni el Acceso Remoto"
         return
     }
     Sleep(500)
-    WinActivate("ahk_class MainWindowOne")  ; Activa la ventana de TeamViewer
+    WinActivate("ahk_class MainWindowFull")   ; Activa la ventana de TeamViewer
     Sleep(500)
-    WinWaitActive("ahk_class MainWindowOne")
-      ; Espera hasta que esté activa
+    WinWaitActive("ahk_class MainWindowFull")
+    ; Espera hasta que esté activa
 
-    Sleep(500)
+    Sleep(800)
     tvID:= datos["TV ID"] 
     A_Clipboard := tvID
-    Sleep(200)
+    Sleep(800)
     tvPS:=datos["TV PSS"]
     A_Clipboard := tvPS
 
     Send(tvID)
-    Sleep(500)
+    Sleep(800)
     Send '{Enter}'
     Sleep(10000)
     Send(tvPS)
-    Sleep(500)
+    Sleep(800)
     Send '{Enter}'
     return
 
