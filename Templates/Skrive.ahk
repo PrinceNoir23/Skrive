@@ -27,11 +27,11 @@ SkrvGui := Gui(, "SKRIVE")
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 SkrvGui.SetFont("s12")
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w1000 h600", ["Information", "Add Info", "Email", "Settings"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "Settings"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
 SkrWidth := 1070
-SkrHeigh := 650 
+SkrHeigh := 700 
 BtnHeigh:=30
 btnSze:= 200
 
@@ -44,7 +44,7 @@ AutoResize(*) {
     tab.Move(10, 10, w - 20, h - 40)  ; Ajusta tamaño y posición
 }
 
-InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefltPaste?) {
+InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefltPaste?, editYplace?,editHeigh?) {
     Name2Text := Name
     
     ; Asignar valores predeterminados si los parámetros no están definidos
@@ -54,9 +54,12 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
     yOffset := IsSet(yOffset) ? yOffset : 100
     btnSze := IsSet(btnSze) ? btnSze : 80
     BtnHeigh := IsSet(BtnHeigh) ? BtnHeigh : 30
+    editYplace := IsSet(editYplace) ? editYplace : yOffset
+    editHeigh := IsSet(editHeigh) ? editHeigh : BtnHeigh
+
 
     btn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}", x, yOffset, btnSze, BtnHeigh), Name2Text)
-    edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, yOffset, widthedit, BtnHeigh), "")
+    edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, editYplace, widthedit, editHeigh), "")
 
     if buttomDefltPaste == true {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
@@ -65,6 +68,11 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
     if buttomDefltPaste == false {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
         btn.OnEvent("ContextMenu", (*) => Ctrl_6())  ; Clic izquierdo: limpia el Edit
+    }
+    if buttomDefltPaste == "paste" {
+        btn.OnEvent("Click", (*) =>   A_Clipboard:= edit.Value )  ; Clic izquierdo: pega desde el portapapeles
+        btn.OnEvent("ContextMenu", (*) =>   A_Clipboard:= edit.Value )  ; Clic izquierdo: pega desde el portapapeles
+        
     }
 
     
@@ -126,10 +134,13 @@ OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
     Name2Text := Name
     Outbtn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}",xOffset, yOffset,btnSze,BtnHeigh), Name2Text)
     outedit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}",xOffset, yOffset+BtnHeigh+8,Insize,BtnHeigh*2), "")
-    Outbtn.OnEvent("ContextMenu", (*) => outedit.Value := "")       ; Clic derecho: limpia el Edit
+    
     global datos
     datos[Name2Text] := outedit.Value
     outedit.OnEvent("Change", (*) => datos[Name2Text] := outedit.Value)
+    Outbtn.OnEvent("ContextMenu", (*) => outedit.Value := "")       ; Clic derecho: limpia el Edit
+    Outbtn.OnEvent("Click", (*) => A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]  )       ; Clic derecho: limpia el Edit
+    
 
 }
 
@@ -159,13 +170,54 @@ Hotkeys(Name, yOffset){
 }
 
 IntPhBttm(IntBool) {
+    global datos
     today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
     formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
 
-    A_Clipboard := (IntBool ? "PHONECALL " : "INT ") formattedDate  ; Usa operador ternario
+    PH := "PHONECALL " formattedDate
+    Int := "INT " formattedDate
 
-    return  ; Buena práctica incluirlo, aunque no es obligatorio
+    ; Obtiene valores, si no existen usa "N/A"
+    name := datos.Get("Name", "N/A")
+    issue := datos.Get("Issue", "N/A")
+    phone := datos.Get("Phone N", "N/A")
+    email := datos.Get("Email", "N/A")
+    dongle := datos.Get("Dongle N", "N/A")
+    tv_id := datos.Get("TV ID", "N/A")
+    tv_ps := datos.Get("TV PS", "N/A")
+    HJ := datos.Get("HJ", "N/A")
+
+    IntNote := Format("This HelpJuices was used `n{}", HJ)
+
+    PHNote := Format(
+        "{} report {}`n"
+        "Name: {}`n"
+        "Phone N: {}`n"
+        "Email: {}`n"
+        "Dongle N: {}`n"
+        "TV ID: {}`n"
+        "TV PS: {}",
+        name, issue, name, phone, email, dongle, tv_id, tv_ps
+    )
+
+    ; Copia primero el título (PHONECALL o INT)
+    A_Clipboard := (IntBool ? PHNote : IntNote)
+    
+    ; Espera un momento para asegurar que se copie
+    Sleep(500)
+
+    ; Luego copia la descripción (PHNote o IntNote)
+    A_Clipboard := (IntBool ? PH : Int)
+
+
+    Sleep(500)
+
+
+    return
 }
+
+
+
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 1 (General)
@@ -181,28 +233,59 @@ tvsize := (750/2)-(spacing*2)
 InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh, false), y
 InputLine("TV PSS",465,570,tvsize, y,btnSze/2,BtnHeigh, false), y 
 Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y += spacing
-Int_PhBtt.OnEvent("Click", (*) => IntPhBttm(false))
+Int_PhBtt.OnEvent("Click", (*) => altcheck2())
+    altcheck2() {
+        if GetKeyState("Alt"){  ; Verifica si Alt está presionado
+                IntPhBttm(false)
+                Sleep(1000)
+                A_Clipboard := " Logs and images are here "
+                return
+        }
+        else { 
+            IntPhBttm(false)
+            return
+        }
+    }
+
 Int_PhBtt.OnEvent("ContextMenu", (*) => IntPhBttm(true))
 
+c1stbttn := SkrvGui.Add("Button", Format("x890 y{} w{} h{}", y, 50, BtnHeigh), "C1st"), y += spacing
+c1stbttn.OnEvent("Click", (*) => altcheck3())
+    altcheck3() {
+        if GetKeyState("Alt"){  ; Verifica si Alt está presionado
+                IntPhBttm(false)
+                Sleep(1000)
+                A_Clipboard := " Logs and images are here "
+                return
+        }
+        else { 
+            IntPhBttm(false)
+            return
+        }
+    }
+
+c1stbttn.OnEvent("ContextMenu", (*) => IntPhBttm(true))
 
 
 
 
 
 
- 
-InputLine("Name",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("&Phone",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("&Email",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("&Phone",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("&Email",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y += spacing
 
-InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("SID",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("GUI",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("PC ID",,,, y,btnSze,BtnHeigh, true), y += spacing
-InputLine("Case Number",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("SID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("GUI",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("PC ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("Case Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("HJ",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("Survey",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("RC",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 ; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Description"),
 descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(true))
@@ -283,15 +366,18 @@ SaveBttm(SvBool) {
 
 ; PESTAÑA 2 (View)
 tab.UseTab(2)
+
+
+tab.UseTab(3)
 SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
 offset:=55
-SkrvGui.Add("Edit", "w" (SkrWidth - offset) " h" (SkrHeigh - (offset*3.5)), "")
+InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
 SkrvGui.Show()
 
 
 
 ; PESTAÑA 3 (Settings)
-tab.UseTab(3)
+tab.UseTab(4)
 
 
 ; Salir del modo de pestañas
@@ -301,9 +387,10 @@ SkrvGui.Show()
 
 
 ; 🔹 Atajos de teclado para cambiar pestañas
-^!i::tab.Value := 1  ; Alt + G -> General
-^!v::tab.Value := 2  ; Alt + V -> View
-^!x::tab.Value := 3  ; Alt + S -> Settings
+^!i::tab.Value := 1  ; Alt + G -> information
+^!r::tab.Value := 2  ; Alt + V -> Rmt Sess
+^!a::tab.Value := 3  ; Alt + S -> Add Inf
+^!e::tab.Value := 4  ; Alt + S -> Email
 
 
 
