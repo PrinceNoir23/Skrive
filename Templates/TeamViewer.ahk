@@ -1033,15 +1033,17 @@ Ctrl_6() {
 
     Sleep(800)
     tvID:= datos["TV ID"] 
-    A_Clipboard := tvID
-    Sleep(800)
     tvPS:=datos["TV PSS"]
     A_Clipboard := tvPS
 
     Send(tvID)
     Sleep(800)
     Send '{Enter}'
-    Sleep(10000)
+    WinWaitActive("TeamViewer Authentication")
+    Sleep(100)
+    WinActivate("TeamViewer Authentication")
+
+    Sleep(100)
     Send(tvPS)
     Sleep(800)
     Send '{Enter}'

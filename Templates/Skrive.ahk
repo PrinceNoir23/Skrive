@@ -49,7 +49,9 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
     edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, editYplace, widthedit, editHeigh), "")
     if buttomDefltPaste == true {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
-        btn.OnEvent("ContextMenu", (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
+        btn.OnEvent("ContextMenu", 
+        
+        (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
     } 
     if buttomDefltPaste == false {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
@@ -102,7 +104,7 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w150", ["Unite", "TRIOS Module", "Dental Desktop", "Model Builder", "Automate"])
     
     SoftwGui.Add("Text", "x180 y30", "Version:")
-    comboBox2 := SoftwGui.Add("ComboBox", "x180 y50 w150", ["1.7.83.0", "1.7.8.1", "1.8.8.0", "1.8.5.1"])
+    comboBox2 := SoftwGui.Add("ComboBox", "x180 y50 w150", ["1.7.83.0",  "1.8.8.0","1.7.8.1", "1.8.5.1","1.7.82.5"])
 
     ; Valores por defecto
     comboBox1.Text := "Dental Desktop"
@@ -164,6 +166,12 @@ Hotkeys(Name, yOffset){
 
 IntPhBttm(IntBool) {
     global datos
+
+    issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
+    softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
+    
+    UpdateEditsFromData()
+
     today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
     formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
 
@@ -172,7 +180,7 @@ IntPhBttm(IntBool) {
 
     ; Obtiene valores, si no existen usa "N/A"
     name := datos.Get("Name", "N/A")
-    description := datos.Get("Descrip&tion", "N/A")
+    description := issue " on " softwareVersion
     phone := datos.Get("&Phone", "N/A")
     email := datos.Get("&Email", "N/A")
     dongle := datos.Get("&Dongle", "N/A")
@@ -192,7 +200,6 @@ IntPhBttm(IntBool) {
         "TV PS: {}",
         name, description, name, phone, email, dongle, tv_id, tv_ps
     )
-
     ; Copia primero el título (PHONECALL o INT)
     A_Clipboard := (IntBool ? PHNote : IntNote)
     
@@ -223,9 +230,9 @@ C1stAdd(C1Bool) {
     SID := datos.Get("SID", "N/A")
     Descrp := datos.Get("Descrip&tion", "N/A")
     
+    Note := Format("{} / SID: {} / {}" ,  Cname, SID, Descrp)
 
-    C1Note := Format("{} / {} / {} / {}" , C1, Cname, SID, Descrp)
-    Note := Format("{} / {} / {}" ,  Cname, SID, Descrp)
+    C1Note :=  Format("{} / {}" , C1, Note)
 
     
 
@@ -242,7 +249,7 @@ C1stAdd(C1Bool) {
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 1 (General)
-tab.UseTab(1)
+tab.UseTab(1) ; (Information)
 y := 50 ; Posición inicial en Y
 x:= 260
 spacing := 35 ; Espaciado entre elementos
@@ -475,6 +482,7 @@ LoadMapFromFile(filePath) {
     
 
     fileContent := FileRead(filePath, "UTF-8")
+    
     MsgBox("Cargado desde el archivo: " filePath)
 
     return fileLoaded := Jxon_Load(&fileContent)
@@ -496,21 +504,73 @@ UpdateEditsFromData() {
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 2 (View)
-tab.UseTab(2)
+tab.UseTab(2) ; (Remote Session Desktop)
+NmOfSteps := 17
+Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Remote")
+Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Remote Session Desktop")
+Remote.OnEvent("Click", (*) => RemoteSessionBuild())
+Loop NmOfSteps {
+    i := A_Index
+    yTab2 := 90 + (i - 1) * spacing  ; Ajuste para calcular yTab2 en cada iteración
+    InputLine(Format("Step {}", i),,150,, yTab2,,, true,,,)
+    ; Código a ejecutar en cada iteración
+}
+
+; Función para recopilar y mostrar los pasos
+RemoteSessionBuild() {
+    stepsList := ""
+    Loop NmOfSteps {
+        i := A_Index
+        controlName := 'Step ' . i
+        stepText := EditControls[controlName].Value
+        stepsList .= Format("Step {}: {}`n", i, stepText)
+    }
+    stepsList := "Accessed to TV session `n" Format("Ask the customer to reproduce the issue {}`n", EditControls["Issue"].Value) stepsList 
+    A_Clipboard := stepsList
+    Sleep(500)
+    return
+
+}
 
 
 
 
-tab.UseTab(3)
+
+
+
+tab.UseTab(3) ;(Add info)
 SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
 offset:=55
 InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
-SkrvGui.Show()
 
 
 
-; PESTAÑA 3 (Settings)
-tab.UseTab(4)
+tab.UseTab(4) ;(Email)
+
+
+
+
+greeting := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding "
+
+body := "I'm pleased to inform you that we have resolved this request, during our interaction we have "
+
+RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
+
+
+
+Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
+Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Regarding your case number " datos["Case Number"])
+Remote.OnEvent("Click", (*) => EmailBld(greeting, datos["Issue"],body, RecommendationDflt,true))
+
+EmailBld(Greeting, Issue , Body, Recommend ,CloseSurvey?){
+    UpdateDataFromEdits()
+
+    CloseSurveyDfflt:= "Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: " "`n`n"  "https://" datos["Survey"] "`n`n" "At the end of the survey, please leave a note about your experience during this interaction. " "`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence."
+    CloseSurvey := (CloseSurvey? CloseSurveyDfflt:"" )
+    emailFinal := greeting  datos["Issue"] "`n`n" Body datos["Solution"] "`n`n" Recommend "`n`n" CloseSurvey
+    A_Clipboard := emailFinal
+
+}
 
 
 ; Salir del modo de pestañas
@@ -526,13 +586,4 @@ SkrvGui.Show()
 ^!a::tab.Value := 3  ; Alt + S -> Add Inf
 ^!e::tab.Value := 4  ; Alt + S -> Email
 
-
-
-
-
-
-
- 
-
-
-
+/*  */
