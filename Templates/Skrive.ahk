@@ -2,6 +2,8 @@
 
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
+global casesObj := Map()
+
 
 
 #Include  TeamViewer.ahk  
@@ -14,11 +16,11 @@ SkrvGui := Gui(, "SKRIVE")
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 SkrvGui.SetFont("s12")
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "Settings"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "PHOTOS"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
-SkrWidth := 1070
-SkrHeigh := 700 
+SkrWidth := 1270
+SkrHeigh := 750 
 BtnHeigh:=30
 btnSze:= 200
 
@@ -92,7 +94,8 @@ SoftwareVersionSelect(Name, yOffset, btnSze, BtnHeigh) {
 }
 
 SoftwareVersionGUI(editSoftware, Name2Text) { 
-    global datos
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
 
     SoftwGui := Gui()
     SoftwGui.Opt("+AlwaysOnTop")
@@ -140,6 +143,8 @@ OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
 }
 
 Hotkeys(Name, yOffset){
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
     ; Name2Text := Format("{}",Name)
     Name2Text := Name
     btnSze:= 200
@@ -165,12 +170,12 @@ Hotkeys(Name, yOffset){
 }
 
 IntPhBttm(IntBool) {
-    global datos
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    
 
     issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
     softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
     
-    UpdateEditsFromData()
 
     today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
     formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
@@ -217,7 +222,8 @@ IntPhBttm(IntBool) {
 }
 
 C1stAdd(C1Bool) {
-    global datos
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
     issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
     softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
@@ -245,11 +251,39 @@ C1stAdd(C1Bool) {
     return
 }
 
+UpdateEditsFromData() {
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    for key, value in datos {
+        if (EditControls.Has(key)) {  ; Usar Has() en lugar de HasKey()
+            EditControls[key].Value := value
+        }
+    }
+}
+PrintMap(m) {
+    if Type(m) != "Map" {
+        MsgBox("El valor proporcionado no es un Map.")
+        return
+    }
+
+    output := ""
+    for clave, valor in m {
+        output .= clave ": " valor "`n"
+    }
+
+    MsgBox(output)
+}
+
+
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 1 (General)
 tab.UseTab(1) ; (Information)
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+
+
 y := 50 ; Posición inicial en Y
 x:= 260
 spacing := 35 ; Espaciado entre elementos
@@ -257,12 +291,145 @@ Insize:=390
 
 SkrvGui.Add("Text",)
 tvsize := (750/2)-(spacing*2)
+Complaints := Map() 
+Request := Map()
+Miscellaneous := Map()
+
+Caseopt := ["Complaints", "Request", "Miscellaneous"]
+CaseTpC :=["New 3shape account/ New user", 
+"Specific Case", 
+"No reproducible",
+"Country Network Restrictions",
+"Slow Performance",
+"Company ID Token",
+"Cloud Storage Lost",
+"Case not able to be sent (Case Corruption)",
+"Color Calibration Expirated",
+"Server Issue Ocurred",
+"Black lines while scanning",
+"Unable to Reach",
+"TP Link Issue",
+"Reimport Streams",
+"Calibration Code 11",
+"Server Issue Ocurred / Running on PC {0}",
+"Unite Server not found",
+"Send step is not present or greyed-out in the workflow bar",
+"Slow Performance Trios 3-5 (BM-6026) IA",
+"Configuration Download not working",
+"Reimport Streams due to corruption after receiving case on a lab integration",
+"Disabled Integration on Comunicate (Invisalign)",
+"Unite not being updated automatically to Unite III on a client PC",
+"EM: (Error code:10) when performing calibration on TRIOS 3",
+"Abutment not selected EM",
+"WIFI networks are not showing on a move +",
+"Migration unsuccessfull",
+"Clear Connect conection"
+]
+CaseTpR :=["Reimport Streams",
+"Remote Routine Check",
+"Unite Setup",
+"Lab connection on Communicate",
+"Unite Update (Install)",
+"No access to the mail",
+"Set Up 3Shape Acount",
+"Request to have help to connect a TRIOS core scanner for the first time (replacement/loan)",
+"How to export stl files in TRIOS software 1.x.x.x",
+] 
+CaseTpM :=["Customer Called for X reason"]
+
+
+
+global CSTP := Caseopt
+y := 50
+
+; Primer ComboBox con opciones
+
+comboBoxCaseSelect1 := SkrvGui.Add("ComboBox", Format("x{} y{} w140", 50 , y), Caseopt), y  ; Aumentar Y para el siguiente control
+
+; Segundo ComboBox (empieza vacío)
+comboBoxCaseSelect2 := SkrvGui.Add("ComboBox", Format("x{} y{} w570", 200 , y), ["El box de la izquierda esta vacio", "Por eso nada aparecera Aqui"]), y
+; Valores por defecto
+
+; Al cambiar la selección del primer ComboBox, se actualiza el segundo
+comboBoxCaseSelect1.OnEvent("Change", (*) => check1())
+
+check1(){
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    selectedText := comboBoxCaseSelect1.Text
+
+    ; Switch con tus valores originales
+    Switch selectedText {
+        Case Caseopt[1]:
+            CSTP := CaseTpC
+        Case Caseopt[2]:
+            CSTP := CaseTpR
+        Case Caseopt[3]:
+            CSTP := CaseTpM
+        Default:
+            CSTP := ["El box de la izquierda esta vacio", "Por eso nada aparecera Aqui"]
+    }
+
+    comboBoxCaseSelect2.Delete()
+    comboBoxCaseSelect2.Add(CSTP)
+    comboBoxCaseSelect2.Text := ""  ; Limpia selección previa
+}
+
+
+
+LoadExistingcase := SkrvGui.Add("Button", Format("x780 y{} w{} h{}", y, 250, 28), "Load Existing Case Template")
+y += spacing
+
+LoadExistingcase.OnEvent("Click", (*) => eval() )
+eval(){
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    Caseoption := comboBoxCaseSelect1.Text
+    Casetype := comboBoxCaseSelect2.Text
+    MsgBox Caseoption Casetype
+    dta1 := LoadMapFromFileEXISTINGCASE(Caseoption,Casetype) 
+        if (Type(dta1) = "Map") {
+            datos := dta1 ; Sobreescribe el mapa global con los datos cargados
+            PrintMap(datos)
+            Sleep(500)
+            UpdateEditsFromData() ; Llama a la función que actualiza los edits
+        } else {
+            MsgBox("Error: El archivo JSON no es válido.")
+        }
+        return
+}
+
+LoadMapFromFileEXISTINGCASE(Caseoption, Casetype) {
+    filePathOptions := A_WorkingDir "\" Caseoption 
+    filePath1 := filePathOptions "\" Casetype ".json"
+
+    ; Crear carpeta si no existe
+    if !DirExist(filePathOptions) {
+        DirCreate(filePathOptions)
+    }
+
+    if !FileExist(filePath1) {
+        MsgBox("Archivo no encontrado: " filePath1)
+        return
+    }
+
+    
+    
+
+    fileContent := FileRead(filePath1, "UTF-8")
+    MsgBox("Cargado desde el archivo: " filePath1)
+
+    return fileLoaded := Jxon_Load(&fileContent)
+}
+
 
 InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh, false), y
 InputLine("TV PSS",465,570,tvsize, y,btnSze/2,BtnHeigh, false), y 
 Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y 
 Int_PhBtt.OnEvent("Click", (*) => altcheck2())
     altcheck2() {
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
     if GetKeyState("Alt") {  ; Verifica si Alt está presionado
         IntPhBttm(false)
@@ -316,7 +483,7 @@ descripton.OnEvent("Click", (*) => DescriptionGUI(false))
 
 #Include CompareMaps.ahk
 DescriptionGUI(bool) {
-    global datos  ; Hacer accesible el mapa de datos
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
     DescripGui := Gui()
     DescripGui.Opt("+AlwaysOnTop")
@@ -355,8 +522,8 @@ OutputLine("Solution",(x+Insize +10),y, Insize ,btnSze,BtnHeigh), y += spacing
 Hotkeys("Hotkeys", y), y
 
 
-BtnSaveInfo := SkrvGui.Add("Button", "x50 y645 w150 h40", "&Save Info-Load Info")
-clear := SkrvGui.Add("Button", " x205 y645  w45 h30", "Clear")
+BtnSaveInfo := SkrvGui.Add("Button", "x50 y680 w150 h40", "&Save Info-Load Info")
+clear := SkrvGui.Add("Button", " x205 y680  w45 h30", "Clear")
 
 clear.OnEvent("Click", (*) => ClearAll())
 
@@ -384,6 +551,7 @@ BtnSaveInfo.OnEvent("ContextMenu", (*) => SaveBttm(true))
 BtnSaveInfo.OnEvent("Click", (*) => altcheck3())
 
 altcheck3() {
+
     if GetKeyState("Alt") {  ; Verifica si Alt está presionado
         ; Permite al usuario escribir el nombre del archivo y carpeta donde guardar
         filePath := FileSelect("D", , "Guardar archivo JSON en carpeta", )
@@ -402,7 +570,8 @@ altcheck3() {
 ; Función para abrir una nueva ventana
 SaveBttm(SvBool) {
 
-    global datos
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
     C1stAdd(false) ; Actualiza el mapa con la descripción
     
     ; Recorrer el mapa y mostrar los valores
@@ -439,7 +608,8 @@ SaveBttm(SvBool) {
     
 }
 SaveMapSmart(fileDir) {
-    global datos
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
 
 
     ; Asegurarse de que haya un Case Number
@@ -487,15 +657,7 @@ LoadMapFromFile(filePath) {
 
     return fileLoaded := Jxon_Load(&fileContent)
 }
-UpdateEditsFromData() {
-    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-    for key, value in datos {
-        if (EditControls.Has(key)) {  ; Usar Has() en lugar de HasKey()
-            EditControls[key].Value := value
-        }
-    }
-}
 
 
 
@@ -505,6 +667,8 @@ UpdateEditsFromData() {
 
 ; PESTAÑA 2 (View)
 tab.UseTab(2) ; (Remote Session Desktop)
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
 NmOfSteps := 17
 Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Remote")
 Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Remote Session Desktop")
@@ -539,6 +703,8 @@ RemoteSessionBuild() {
 
 
 tab.UseTab(3) ;(Add info)
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
 SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
 offset:=55
 InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
@@ -546,13 +712,14 @@ InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580
 
 
 tab.UseTab(4) ;(Email)
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
 
 
 
-greeting := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding "
+greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding "
 
-body := "I'm pleased to inform you that we have resolved this request, during our interaction we have "
+bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have "
 
 RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
 
@@ -560,9 +727,13 @@ RecommendationDflt := "Additionally,  to prevent similar issues in the future, w
 
 Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
 Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Regarding your case number " datos["Case Number"])
-Remote.OnEvent("Click", (*) => EmailBld(greeting, datos["Issue"],body, RecommendationDflt,true))
+Remote.OnEvent("Click", (*) => EmailBld(greetingdflt, datos["Issue"],bodydflt, RecommendationDflt,true))
+
+
 
 EmailBld(Greeting, Issue , Body, Recommend ,CloseSurvey?){
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
     UpdateDataFromEdits()
 
     CloseSurveyDfflt:= "Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: " "`n`n"  "https://" datos["Survey"] "`n`n" "At the end of the survey, please leave a note about your experience during this interaction. " "`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence."
@@ -571,6 +742,11 @@ EmailBld(Greeting, Issue , Body, Recommend ,CloseSurvey?){
     A_Clipboard := emailFinal
 
 }
+tab.UseTab(5)
+
+
+
+
 
 
 ; Salir del modo de pestañas
