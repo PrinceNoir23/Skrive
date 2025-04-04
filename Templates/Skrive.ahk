@@ -31,8 +31,7 @@ AutoResize(*) {
     tab.Move(10, 10, w - 20, h - 40)  ; Ajusta tamaño y posición
 }
 
-
-InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefltPaste?, editYplace?, editHeigh?) {
+InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefltPaste?) {
     Name2Text := Name
 
     ; Valores predeterminados
@@ -42,11 +41,10 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
     yOffset := IsSet(yOffset) ? yOffset : 100
     btnSze := IsSet(btnSze) ? btnSze : 80
     BtnHeigh := IsSet(BtnHeigh) ? BtnHeigh : 30
-    editYplace := IsSet(editYplace) ? editYplace : yOffset
-    editHeigh := IsSet(editHeigh) ? editHeigh : BtnHeigh
 
     btn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}", x, yOffset, btnSze, BtnHeigh), Name2Text)
-    edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, editYplace, widthedit, editHeigh), "")
+    edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, yOffset, widthedit, BtnHeigh), "")
+
     if buttomDefltPaste == true {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
         btn.OnEvent("ContextMenu", (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
@@ -55,14 +53,11 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
         btn.OnEvent("ContextMenu", (*) => Ctrl_6())  ; Clic izquierdo: limpia el Edit
     }
-    if buttomDefltPaste == "paste" {
-        btn.OnEvent("Click", (*) =>   A_Clipboard:= edit.Value )  ; Clic izquierdo: pega desde el portapapeles
-        btn.OnEvent("ContextMenu", (*) =>   A_Clipboard:= edit.Value )  ; Clic izquierdo: pega desde el portapapeles
-        
-    }
-    ; Guardar la referencia del Edit
-    global EditControls
-    EditControls[Name2Text] := edit  
+
+    
+
+    global datos
+    datos[Name2Text] := ""  ; Asegura que el valor inicial sea vacío
 
     ; Capturar cambios en el input
     global datos
@@ -124,16 +119,10 @@ OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
     Name2Text := Name
     Outbtn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}",xOffset, yOffset,btnSze,BtnHeigh), Name2Text)
     outedit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}",xOffset, yOffset+BtnHeigh+8,Insize,BtnHeigh*2), "")
-    ; Guardar la referencia del Edit
-    global EditControls
-    EditControls[Name2Text] := outedit  
+    Outbtn.OnEvent("ContextMenu", (*) => outedit.Value := "")       ; Clic derecho: limpia el Edit
     global datos
     datos[Name2Text] := outedit.Value
     outedit.OnEvent("Change", (*) => datos[Name2Text] := outedit.Value)
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-    Outbtn.OnEvent("ContextMenu", (*) => outedit.Value := "")       ; Clic derecho: limpia el Edit
-    Outbtn.OnEvent("Click", (*) => A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]  )       ; Clic derecho: limpia el Edit
-    
 
 }
 
@@ -167,78 +156,10 @@ IntPhBttm(IntBool) {
     today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
     formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
 
-    PH := "PHONECALL " formattedDate
-    Int := "INT " formattedDate
+    A_Clipboard := (IntBool ? "PHONECALL " : "INT ") formattedDate  ; Usa operador ternario
 
-    ; Obtiene valores, si no existen usa "N/A"
-    name := datos.Get("Name", "N/A")
-    description := datos.Get("Descrip&tion", "N/A")
-    phone := datos.Get("&Phone", "N/A")
-    email := datos.Get("&Email", "N/A")
-    dongle := datos.Get("&Dongle", "N/A")
-    tv_id := datos.Get("TV ID", "N/A")
-    tv_ps := datos.Get("TV PSS", "N/A")
-    HJ := datos.Get("HJ", "N/A")
-
-    IntNote := Format("This HelpJuices was used `n{}", HJ)
-
-    PHNote := Format(
-        "{} report {}`n"
-        "Name: {}`n"
-        "Phone N: {}`n"
-        "Email: {}`n"
-        "Dongle N: {}`n"
-        "TV ID: {}`n"
-        "TV PS: {}",
-        name, description, name, phone, email, dongle, tv_id, tv_ps
-    )
-
-    ; Copia primero el título (PHONECALL o INT)
-    A_Clipboard := (IntBool ? PHNote : IntNote)
-    
-    ; Espera un momento para asegurar que se copie
-    Sleep(500)
-
-    ; Luego copia la descripción (PHNote o IntNote)
-    A_Clipboard := (IntBool ? PH : Int)
-
-
-    Sleep(500)
-
-
-    return
+    return  ; Buena práctica incluirlo, aunque no es obligatorio
 }
-
-C1stAdd(C1Bool) {
-    global datos
-    issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
-    softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-
-
-    C1 := "C1st"
-
-    ; Obtiene valores, si no existen usa "N/A"
-    Cname := datos.Get("&Company Name", "N/A")
-    SID := datos.Get("SID", "N/A")
-    Descrp := datos.Get("Descrip&tion", "N/A")
-    
-
-    C1Note := Format("{} / {} / {} / {}" , C1, Cname, SID, Descrp)
-    Note := Format("{} / {} / {}" ,  Cname, SID, Descrp)
-
-    
-
-    ; Copia primero el título (PHONECALL o INT)
-    A_Clipboard := (C1Bool ? C1Note : Note)
-    
-    
-
-
-    return
-}
-
-
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 1 (General)
@@ -253,54 +174,29 @@ tvsize := (750/2)-(spacing*2)
 
 InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh, false), y
 InputLine("TV PSS",465,570,tvsize, y,btnSze/2,BtnHeigh, false), y 
-Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y 
-Int_PhBtt.OnEvent("Click", (*) => altcheck2())
-    altcheck2() {
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-    if GetKeyState("Alt") {  ; Verifica si Alt está presionado
-        IntPhBttm(false)
-        Sleep(1000)
-        A_Clipboard := "Logs and images are here"
-        return
-    } else { 
-        IntPhBttm(false)
-        return
-    }
-}
-UpdateDataFromEdits() {
-    global datos, EditControls
-
-    for key, control in EditControls {
-        datos[key] := control.Value  ; Actualiza los valores de `datos`
-    }
-}
-
-
-
+Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y += spacing
+Int_PhBtt.OnEvent("Click", (*) => IntPhBttm(false))
 Int_PhBtt.OnEvent("ContextMenu", (*) => IntPhBttm(true))
 
-c1stbttn := SkrvGui.Add("Button", Format("x985 y{} w{} h{}", y, 45, BtnHeigh), "C1st"), y += spacing
-c1stbttn.OnEvent("Click", (*) => C1stAdd(false))
-c1stbttn.OnEvent("ContextMenu", (*) => C1stAdd(true))
 
-InputLine("Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("&Phone",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("&Email",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+
+
+
+
+
+ 
+InputLine("Name",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Phone",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Email",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y += spacing
 
-InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("SID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("GUI",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("PC ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Case Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-
-
-
-InputLine("HJ",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Survey",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("RC",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("SID",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("GUI",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("PC ID",,,, y,btnSze,BtnHeigh, true), y += spacing
+InputLine("Case Number",,,, y,btnSze,BtnHeigh, true), y += spacing
 ; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Descrip&tion"),
 descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(true))
@@ -497,11 +393,6 @@ UpdateEditsFromData() {
 
 ; PESTAÑA 2 (View)
 tab.UseTab(2)
-
-
-
-
-tab.UseTab(3)
 SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
 offset:=55
 InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
