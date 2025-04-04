@@ -5,7 +5,9 @@ We are creating an app to get the info of our customers and work with it
 {I} = Click Izquierdo
 [ Boton ] = Nombre del Boton
 
-
+[Remote]
+    - {D} --> Remote Session Desktop note
+    - {I} --> Remote Session Desktop Title
 [HotKey]
     - {D} --> COMBOS + Y :
         + abrira la pestaña que enseña la lista de comandos ¡¡¡ para la ultima version los botones de comandos !!!
