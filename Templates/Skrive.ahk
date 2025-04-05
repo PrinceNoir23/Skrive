@@ -14,9 +14,9 @@ fileDir := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 
 SkrvGui := Gui(, "SKRIVE")
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
-SkrvGui.SetFont("s12")
+SkrvGui.SetFont("s12")  
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "PHOTOS"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "Photos"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
 SkrWidth := 1270
@@ -32,7 +32,6 @@ AutoResize(*) {
     SkrvGui.GetPos(&x, &y, &w, &h)  ; Obtiene el tamaño actual de la ventana
     tab.Move(10, 10, w - 20, h - 40)  ; Ajusta tamaño y posición
 }
-
 
 InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefltPaste?, editYplace?, editHeigh?) {
     Name2Text := Name
@@ -73,8 +72,6 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
     datos[Name2Text] := ""  
     edit.OnEvent("Change", (*) => datos[Name2Text] := edit.Value)
 }
-
-
 
 SoftwareVersionSelect(Name, yOffset, btnSze, BtnHeigh) {
     Name2Text := Name
@@ -260,6 +257,7 @@ UpdateEditsFromData() {
         }
     }
 }
+
 PrintMap(m) {
     if Type(m) != "Map" {
         MsgBox("El valor proporcionado no es un Map.")
@@ -282,6 +280,20 @@ PrintMap(m) {
 tab.UseTab(1) ; (Information)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
+imagePath := A_ScriptDir . "/LogoSmall.png"
+scale := 3.5
+wd:= 843
+hi := 559
+imgWidth1 := wd / scale
+imgHeight1 := hi / scale
+
+; Obtener el tamaño actual de la ventana para posicionar la imagen
+SkrvGui.GetPos(&winX1, &winY1, &winWidth1, &winHeight1)
+imgX1 := 1050
+imgY1 := 550
+
+imgControl := SkrvGui.Add("Picture", Format("x{} y{} w{} h{}", imgX1, imgY1, imgWidth1, imgHeight1), imagePath)
+
 
 
 y := 50 ; Posición inicial en Y
@@ -294,8 +306,13 @@ tvsize := (750/2)-(spacing*2)
 Complaints := Map() 
 Request := Map()
 Miscellaneous := Map()
+CasesfolderPaths:= Map()
 
 Caseopt := ["Complaints", "Request", "Miscellaneous"]
+CaseTP := Map()
+
+
+
 CaseTpC :=["New 3shape account/ New user", 
 "Specific Case", 
 "No reproducible",
@@ -338,8 +355,6 @@ CaseTpR :=["Reimport Streams",
 CaseTpM :=["Customer Called for X reason"]
 
 
-
-global CSTP := Caseopt
 y := 50
 
 ; Primer ComboBox con opciones
@@ -354,18 +369,35 @@ comboBoxCaseSelect2 := SkrvGui.Add("ComboBox", Format("x{} y{} w570", 200 , y), 
 comboBoxCaseSelect1.OnEvent("Change", (*) => check1())
 
 check1(){
+    global CSTP := Caseopt
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    for CaseIndex, CaseO in Caseopt {
+        folderPath := A_WorkingDir "\" Caseopt[CaseIndex]
+        fileList := []
 
+        loop files folderPath "\*.*"
+        {
+            fileList.Push(A_LoopFileName)
+        }
+
+        ; Guardar la lista completa de archivos de esta carpeta
+        CaseTP[CaseIndex] := fileList
+
+        ; ; Mostrar los archivos de esta carpeta
+        ; for fileIndex, fileName in fileList {
+        ;     MsgBox "Carpeta " CaseIndex " - Archivo " fileIndex ": " fileName
+        ; }
+    }
     selectedText := comboBoxCaseSelect1.Text
 
     ; Switch con tus valores originales
     Switch selectedText {
         Case Caseopt[1]:
-            CSTP := CaseTpC
+            CSTP := CaseTP[1]
         Case Caseopt[2]:
-            CSTP := CaseTpR
+            CSTP := CaseTP[2]
         Case Caseopt[3]:
-            CSTP := CaseTpM
+            CSTP := CaseTP[3]
         Default:
             CSTP := ["El box de la izquierda esta vacio", "Por eso nada aparecera Aqui"]
     }
@@ -386,11 +418,9 @@ eval(){
 
     Caseoption := comboBoxCaseSelect1.Text
     Casetype := comboBoxCaseSelect2.Text
-    MsgBox Caseoption Casetype
     dta1 := LoadMapFromFileEXISTINGCASE(Caseoption,Casetype) 
         if (Type(dta1) = "Map") {
             datos := dta1 ; Sobreescribe el mapa global con los datos cargados
-            PrintMap(datos)
             Sleep(500)
             UpdateEditsFromData() ; Llama a la función que actualiza los edits
         } else {
@@ -401,7 +431,7 @@ eval(){
 
 LoadMapFromFileEXISTINGCASE(Caseoption, Casetype) {
     filePathOptions := A_WorkingDir "\" Caseoption 
-    filePath1 := filePathOptions "\" Casetype ".json"
+    filePath1 := filePathOptions "\" Casetype 
 
     ; Crear carpeta si no existe
     if !DirExist(filePathOptions) {
@@ -481,7 +511,6 @@ descripton.OnEvent("ContextMenu", (*) => DescriptionGUI(true))
 descripton.OnEvent("Click", (*) => DescriptionGUI(false))
     
 
-#Include CompareMaps.ahk
 DescriptionGUI(bool) {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
@@ -661,8 +690,6 @@ LoadMapFromFile(filePath) {
 
 
 
-
-
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 2 (View)
@@ -714,31 +741,56 @@ InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580
 tab.UseTab(4) ;(Email)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
+    Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
+    Remoteedit := SkrvGui.Add("Edit", " x50 y100  w990 h580", "")
+    ; Guardar la referencia del Edit
+    global EditControls
+    EditControls["EmailInputEdit"] := Remoteedit  
+
+    ; Capturar cambios en el input
+    global datos
+    datos["EmailInputEdit"] := Remoteedit
+    Remoteedit.OnEvent("Change", (*) => datos["EmailInputEdit"] := Remoteedit.Value)
+
+    Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Regarding your case number " datos["Case Number"])
+
+    Remote.OnEvent("Click", (*) =>  EmailButom())
+    EmailButom() {
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+    if GetKeyState("Alt") {  ; Verifica si Alt está presionado
+        EmailBld(false,( datos["Issue"] "`n" datos["EmailInputEdit"]),false,false ,false)
+        return
+    } else { 
+        EmailBld(false, (datos["Issue"]),false,false ,false)
+        return
+    }
+}
 
 
 
-greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding "
-
-bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have "
-
-RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
 
 
-
-Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
-Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Regarding your case number " datos["Case Number"])
-Remote.OnEvent("Click", (*) => EmailBld(greetingdflt, datos["Issue"],bodydflt, RecommendationDflt,true))
-
-
-
-EmailBld(Greeting, Issue , Body, Recommend ,CloseSurvey?){
+EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
     UpdateDataFromEdits()
+    greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
+
+    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have "
+    Issuedflt := "Case got corrupted, we have reimported the streams and the case is now working as expected."
+
+    RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
 
     CloseSurveyDfflt:= "Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: " "`n`n"  "https://" datos["Survey"] "`n`n" "At the end of the survey, please leave a note about your experience during this interaction. " "`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence."
-    CloseSurvey := (CloseSurvey? CloseSurveyDfflt:"" )
-    emailFinal := greeting  datos["Issue"] "`n`n" Body datos["Solution"] "`n`n" Recommend "`n`n" CloseSurvey
+    
+    Greeting := (Greeting? Greeting:greetingdflt )
+    Issue := (Issue? Issue:Issuedflt )
+    Body := (Body? Body:Bodydflt )
+    Recommend := (Recommend? Recommend:RecommendationDflt )
+    CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
+    emailFinal := Greeting  Issue "`n`n" Body datos["Solution"] "`n`n" Recommend "`n`n" CloseSurvey
     A_Clipboard := emailFinal
 
 }
@@ -752,14 +804,28 @@ tab.UseTab(5)
 ; Salir del modo de pestañas
 tab.UseTab()
 
-SkrvGui.Show()
-^+u::SkrvGui.Show()  ; Ctrl + L para mostrar la GUI
+
+isSkrvVisible := true
+
+^+u:: {
+    global isSkrvVisible
+    if isSkrvVisible {
+        SkrvGui.Hide()
+        isSkrvVisible := false
+    } else {
+        SkrvGui.Show("w" SkrWidth " h" SkrHeigh)  ; Esto es correcto
+        isSkrvVisible := true
+    }
+}
+
+; ^+u::SkrvGui.Show()  ; Ctrl + L para mostrar la GUI
 
 
 ; 🔹 Atajos de teclado para cambiar pestañas
-^!i::tab.Value := 1  ; Alt + G -> information
-^!r::tab.Value := 2  ; Alt + V -> Rmt Sess
-^!a::tab.Value := 3  ; Alt + S -> Add Inf
-^!e::tab.Value := 4  ; Alt + S -> Email
+^!i::tab.Value := 1  ; Ctrl + Alt + I -> information
+^!r::tab.Value := 2  ; Ctrl + Alt + R -> Rmt Sess
+^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
+^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
+^!p::tab.Value := 5  ; Ctrl + Alt + P -> Photos
 
 /*  */
