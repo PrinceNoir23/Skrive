@@ -438,6 +438,7 @@ savecase(){
     }
 
            ; Guardar el JSON
+           ; AGREGAR SOLO LOS CAMPOS QUE SON NECESARIOS
         jsonText := Jxon_Dump(datos, 4)
         FileAppend(jsonText, savedpath, "UTF-8")
 
