@@ -768,7 +768,7 @@ Ctrl_y() {
             "3 - SQL*",
             "4 - Keys*",
             "5 - DxDag / ApWiz / SysInfo / DevMng / Servs",
-            "6 - Teamviewer Automate",
+            "6 - Teamviewer Automate"
         ]
 
         ; Configuración de columnas
@@ -798,13 +798,15 @@ Ctrl_y() {
             return
         }
         scale := 3
-        imgWidth := 1080 / scale
-        imgHeight := 559 / scale
+        wd:= 843
+        hi := 559
+        imgWidth := wd / scale
+        imgHeight := hi / scale
 
         ; Obtener el tamaño actual de la ventana para posicionar la imagen
         myGui.GetPos(&winX, &winY, &winWidth, &winHeight)
-        imgX := Max(winWidth - imgWidth - 20, xText + (colWidth * cols) + 20)
-        imgY := Max(winHeight - imgHeight - 20, yText + (midIndex * rowHeight) + 40)
+        imgX := Max(winWidth - imgWidth - 40, xText + (colWidth * cols) + 50)
+        imgY := Max(winHeight - imgHeight - 60, yText + (midIndex * rowHeight) + 30)
         
         imgControl := myGui.Add("Picture", Format("x{} y{} w{} h{}", imgX, imgY, imgWidth, imgHeight), imgPath)
         
