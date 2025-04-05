@@ -9,7 +9,7 @@ global casesObj := Map()
 #Include  TeamViewer.ahk  
 #Include Json.ahk
 Persistent 1  ; Establece el script como persistente
-fileDir := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
+fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 SkrvGui := Gui(, "SKRIVE")
@@ -50,9 +50,17 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
     edit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}", xedit, editYplace, widthedit, editHeigh), "")
     if buttomDefltPaste == true {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
-        btn.OnEvent("ContextMenu", 
-        
-        (*) => edit.Value := "")    ; Clic derecho: limpia el Edit
+        btn.OnEvent("ContextMenu", (*) =>Altclick() )    ; Clic derecho: limpia el Edit
+        Altclick() {
+            if GetKeyState("Alt"){  ; Verifica si Alt está presionado
+                    A_Clipboard := edit.Value
+                    return
+            }
+            else { 
+                edit.Value := ""
+                return
+            }
+        }
     } 
     if buttomDefltPaste == false {
         btn.OnEvent("Click", (*) => edit.Value := A_Clipboard)  ; Clic izquierdo: pega desde el portapapeles
@@ -409,10 +417,33 @@ check1(){
 
 
 
-LoadExistingcase := SkrvGui.Add("Button", Format("x780 y{} w{} h{}", y, 250, 28), "Load Existing Case Template")
+LoadExistingcase := SkrvGui.Add("Button", Format("x780 y{} w{} h{}", y, 250, 28), "Save - Load Existing Template")
 y += spacing
 
-LoadExistingcase.OnEvent("Click", (*) => eval() )
+LoadExistingcase.OnEvent("ContextMenu", (*) => eval() )
+LoadExistingcase.OnEvent("Click", (*) =>  savecase())
+
+savecase(){
+    UpdateDataFromEdits()
+    Caseoption1 := comboBoxCaseSelect1.Text
+    Casetype1 := comboBoxCaseSelect2.Text
+    if Casetype1 == ""{
+        MsgBox "Coloca un nombre de caso"
+        return
+    }
+    filePathOptions1 := A_WorkingDir "\" Caseoption1 
+    savedpath := filePathOptions1 "\" Casetype1 ".json"
+    if !DirExist(filePathOptions1) {
+        DirCreate(filePathOptions1)
+    }
+
+           ; Guardar el JSON
+        jsonText := Jxon_Dump(datos, 4)
+        FileAppend(jsonText, savedpath, "UTF-8")
+
+        MsgBox("Guardado como:`n" savedpath)
+    }
+
 eval(){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
@@ -576,7 +607,7 @@ ClearAll() {
 
 
 
-BtnSaveInfo.OnEvent("ContextMenu", (*) => SaveBttm(true))
+BtnSaveInfo.OnEvent("ContextMenu", (*) => SaveBttm(true,fileDir1))
 BtnSaveInfo.OnEvent("Click", (*) => altcheck3())
 
 altcheck3() {
@@ -592,12 +623,12 @@ altcheck3() {
         }
         SaveMapSmart(filePath)  ; Llama a tu función de guardado
     } else {
-        SaveBttm(false)  ; Tu función alternativa si no se presionó Alt
+        SaveBttm(false,fileDir1)  ; Tu función alternativa si no se presionó Alt
     }
 }
 
 ; Función para abrir una nueva ventana
-SaveBttm(SvBool) {
+SaveBttm(SvBool,fileDir) {
 
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
