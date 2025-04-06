@@ -3,13 +3,16 @@
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
 global casesObj := Map()
+global NmOfSteps := 17
+global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
+
 
 
 
 #Include  TeamViewer.ahk  
 #Include Json.ahk
 Persistent 1  ; Establece el script como persistente
-fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
+
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 SkrvGui := Gui(, "SKRIVE")
@@ -427,8 +430,8 @@ savecase(){
     UpdateDataFromEdits()
     Caseoption1 := comboBoxCaseSelect1.Text
     Casetype1 := comboBoxCaseSelect2.Text
-    if Casetype1 == ""{
-        MsgBox "Coloca un nombre de caso"
+    if (Casetype1 == "" or Caseoption1 == ""){
+        MsgBox "Coloca un Tipo y Nombre de caso"
         return
     }
     filePathOptions1 := A_WorkingDir "\" Caseoption1 
@@ -436,10 +439,22 @@ savecase(){
     if !DirExist(filePathOptions1) {
         DirCreate(filePathOptions1)
     }
+    Datos2SavedCases := ["HJ","Probing Questions (Add Info)","Issue","RC","Solution",  "EmailInputEdit"]
+    global NmOfSteps
+    Loop NmOfSteps {
+        Datos2SavedCases.Push(Format("Step {}", A_Index))
+    }
+    ; Crear un nuevo Map con solo los que están en Datos2SavedCases
+    dats2 := Map()
 
+    for _, key in Datos2SavedCases {
+        if datos.Has(key)
+            dats2[key] := datos[key]
+    }
+    
            ; Guardar el JSON
            ; AGREGAR SOLO LOS CAMPOS QUE SON NECESARIOS
-        jsonText := Jxon_Dump(datos, 4)
+        jsonText := Jxon_Dump(dats2, 4)
         FileAppend(jsonText, savedpath, "UTF-8")
 
         MsgBox("Guardado como:`n" savedpath)
@@ -612,7 +627,7 @@ BtnSaveInfo.OnEvent("ContextMenu", (*) => SaveBttm(true,fileDir1))
 BtnSaveInfo.OnEvent("Click", (*) => altcheck3())
 
 altcheck3() {
-
+    global fileDir1
     if GetKeyState("Alt") {  ; Verifica si Alt está presionado
         ; Permite al usuario escribir el nombre del archivo y carpeta donde guardar
         filePath := FileSelect("D", , "Guardar archivo JSON en carpeta", )
@@ -728,10 +743,11 @@ LoadMapFromFile(filePath) {
 tab.UseTab(2) ; (Remote Session Desktop)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-NmOfSteps := 17
+
 Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Remote")
 Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Remote Session Desktop")
 Remote.OnEvent("Click", (*) => RemoteSessionBuild())
+global NmOfSteps
 Loop NmOfSteps {
     i := A_Index
     yTab2 := 90 + (i - 1) * spacing  ; Ajuste para calcular yTab2 en cada iteración
@@ -742,6 +758,7 @@ Loop NmOfSteps {
 ; Función para recopilar y mostrar los pasos
 RemoteSessionBuild() {
     stepsList := ""
+    global NmOfSteps
     Loop NmOfSteps {
         i := A_Index
         controlName := 'Step ' . i
