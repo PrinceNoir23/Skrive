@@ -3,7 +3,7 @@
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
 global casesObj := Map()
-global NmOfSteps := 17
+global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 
 
@@ -19,10 +19,10 @@ SkrvGui := Gui(, "SKRIVE")
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 SkrvGui.SetFont("s12")  
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "Photos"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
-SkrWidth := 1270
+SkrWidth := 1250
 SkrHeigh := 750 
 BtnHeigh:=30
 btnSze:= 200
@@ -292,7 +292,7 @@ tab.UseTab(1) ; (Information)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
 imagePath := A_ScriptDir . "/LogoSmall.png"
-scale := 3.5
+scale := 2.65
 wd:= 843
 hi := 559
 imgWidth1 := wd / scale
@@ -431,7 +431,7 @@ savecase(){
     Caseoption1 := comboBoxCaseSelect1.Text
     Casetype1 := comboBoxCaseSelect2.Text
     if (Casetype1 == "" or Caseoption1 == ""){
-        MsgBox "Coloca un Tipo y Nombre de caso"
+        MsgBox "Coloca un Tipo y Nombre de caso para guardar"
         return
     }
     filePathOptions1 := A_WorkingDir "\" Caseoption1 
@@ -452,6 +452,7 @@ savecase(){
             dats2[key] := datos[key]
     }
     
+    
            ; Guardar el JSON
            ; AGREGAR SOLO LOS CAMPOS QUE SON NECESARIOS
         jsonText := Jxon_Dump(dats2, 4)
@@ -462,9 +463,13 @@ savecase(){
 
 eval(){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
-
+    
     Caseoption := comboBoxCaseSelect1.Text
     Casetype := comboBoxCaseSelect2.Text
+    if (Casetype == "" or Caseoption == ""){
+        MsgBox "Coloca un Tipo y Nombre de caso para cargar"
+        return
+    }
     dta1 := LoadMapFromFileEXISTINGCASE(Caseoption,Casetype) 
         if (Type(dta1) = "Map") {
             datos := dta1 ; Sobreescribe el mapa global con los datos cargados
@@ -845,9 +850,95 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
 }
 tab.UseTab(5)
 
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    CallBack := SkrvGui.Add("Button", " x50 y50  w205 h30", "2nd Line - Call Back")
+    CallBackEdit := SkrvGui.Add("Edit", " x50 y100  w990 h580", "")
+    ; Guardar la referencia del Edit
+    EditControls["Call Back"] := CallBackEdit  
+
+    ; Capturar cambios en el input
+    datos["Call Back"] := CallBackEdit
+    CallBackEdit.OnEvent("Change", (*) => datos["Call Back"] := CallBackEdit.Value)
+
+    CallBack.OnEvent("ContextMenu", (*) => A_Clipboard:= "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to coninue resolving the issue" )
+
+    CallBack.OnEvent("Click", (*) =>  CallBackCuild())
+
+
+    CallBackCuild() {
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+        UpdateDataFromEdits()
+        A_Clipboard := "2nd Line Title"
+        Sleep(500)
+        A_Clipboard := "2nd Line Body email" EditControls["Case Number"].Value
+        Sleep(500)
+
+            ; Crear objeto Excel
+            xl := ComObject("Excel.Application")
+            xl.Visible := true ; Muestra Excel
+            wb := xl.Workbooks.Add()
+            ws := wb.Worksheets(1)
+            UpdateDataFromEdits()
+
+            ; Datos de ejemplo para la tabla
+            datosTabla := [
+                ["Item", "Value"],
+                ["Name", EditControls["Name"].Value],
+                ["Email", EditControls["&Email"].Value],
+                ["Phone Number", EditControls["&Phone"].Value],
+                ["Company Name", EditControls["&Company Name"].Value],
+                ["Software Version", EditControls["Software Version"].Value],
+                ["Dongle", EditControls["&Dongle"].Value],
+                ["Case Number", EditControls["Case Number"].Value]
+                ; ["GUI", EditControls["GUI"].Value],
+                ; ["Scanner S/N", EditControls["Scanner S/N"].Value],
+                ; ["PC ID", EditControls["PC ID"].Value],
+                ; ["HJ", EditControls["HJ"].Value],
+                ; ["Survey", EditControls["Survey"].Value],
+                ; ["SID", EditControls["SID"].Value],
+                ; ["Issue", EditControls["Issue"].Value],
+                ; ["TV ID", EditControls["TV ID"].Value],
+                ; ["TV PSS", EditControls["TV PSS"].Value]
+                ; ["RC", EditControls["RC"].Value],
+                ; ["Solution", EditControls["Solution"].Value],
+                ; ["Call Back", EditControls["Call Back"].Value]
+            ]
+
+            ; Escribir los datosTabla en la hoja
+            for filaIndex, fila in datosTabla {
+                for colIndex, valor in fila {
+                    ws.Cells(filaIndex, colIndex).Value := valor
+                }
+            }
+
+            ; Opcional: convertir en tabla "oficial" de Excel
+            lastRow := datosTabla.Length
+            lastCol := datosTabla[1].Length
+            rango := ws.Range("A1", ws.Cells(lastRow, lastCol))
+            missing := ComValue(13, 0) ; Equivale a "missing" en COM
+            ws.ListObjects.Add(1, rango, missing, 1).Name := "MiTabla"
+            ; Construir texto de la tabla (sin la primera fila)
+            tablaTexto := ""
+            Loop datosTabla.Length - 1 {
+                fila := datosTabla[A_Index + 1]  ; empieza desde la segunda fila
+                filaTexto := ""
+                for colIndex, valor in fila {
+                    filaTexto .= (colIndex > 1 ? "`t" : "") . valor
+                }
+                tablaTexto .= filaTexto . "`r`n"
+            }
+
+            ; Copiar al portapapeles
+            A_Clipboard := tablaTexto
 
 
 
+        Sleep(500)
+        A_Clipboard := EditControls["Call Back"].Value
+        Sleep(500)
+        MsgBox "Tabla Copiada al portapapeles"	
+    }
 
 
 ; Salir del modo de pestañas
@@ -875,6 +966,6 @@ isSkrvVisible := true
 ^!r::tab.Value := 2  ; Ctrl + Alt + R -> Rmt Sess
 ^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
-^!p::tab.Value := 5  ; Ctrl + Alt + P -> Photos
+^!p::tab.Value := 5  ; Ctrl + Alt + P -> Call Back
 
 /*  */
