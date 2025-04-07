@@ -873,7 +873,6 @@ tab.UseTab(5)
         Sleep(500)
         A_Clipboard := "2nd Line Body email" EditControls["Case Number"].Value
         Sleep(500)
-
             ; Crear objeto Excel
             xl := ComObject("Excel.Application")
             xl.Visible := true ; Muestra Excel
@@ -912,16 +911,17 @@ tab.UseTab(5)
                 }
             }
 
-            ; Opcional: convertir en tabla "oficial" de Excel
+            ; Convertir en tabla oficial de Excel
             lastRow := datosTabla.Length
             lastCol := datosTabla[1].Length
             rango := ws.Range("A1", ws.Cells(lastRow, lastCol))
-            missing := ComValue(13, 0) ; Equivale a "missing" en COM
+            missing := ComValue(13, 0)
             ws.ListObjects.Add(1, rango, missing, 1).Name := "MiTabla"
-            ; Construir texto de la tabla (sin la primera fila)
+
+            ; Construir texto de la tabla
             tablaTexto := ""
             Loop datosTabla.Length - 1 {
-                fila := datosTabla[A_Index + 1]  ; empieza desde la segunda fila
+                fila := datosTabla[A_Index + 1]
                 filaTexto := ""
                 for colIndex, valor in fila {
                     filaTexto .= (colIndex > 1 ? "`t" : "") . valor
@@ -931,13 +931,18 @@ tab.UseTab(5)
 
             ; Copiar al portapapeles
             A_Clipboard := tablaTexto
+            Sleep(500)
 
+            ; Copiar valor individual
+            A_Clipboard := EditControls["Call Back"].Value
+            Sleep(500)
 
+            ; Liberar referencias (sin cerrar Excel)
+            rango := "", ws := "", wb := ""
 
-        Sleep(500)
-        A_Clipboard := EditControls["Call Back"].Value
-        Sleep(500)
-        MsgBox "Tabla Copiada al portapapeles"	
+            MsgBox "Tabla Copiada al portapapeles"
+
+                
     }
 
 
