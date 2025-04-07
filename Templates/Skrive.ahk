@@ -115,7 +115,7 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w150", ["Unite", "TRIOS Module", "Dental Desktop", "Model Builder", "Automate"])
     
     SoftwGui.Add("Text", "x180 y30", "Version:")
-    comboBox2 := SoftwGui.Add("ComboBox", "x180 y50 w150", ["1.7.83.0",  "1.8.8.0","1.7.8.1", "1.8.5.1","1.7.82.5"])
+    comboBox2 := SoftwGui.Add("ComboBox", "x180 y50 w150", ["1.7.83.0",  "1.8.8.0", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
 
     ; Valores por defecto
     comboBox1.Text := "Dental Desktop"
@@ -179,6 +179,7 @@ Hotkeys(Name, yOffset){
 
 IntPhBttm(IntBool) {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    UpdateDataFromEdits()
     
 
     issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
@@ -231,10 +232,11 @@ IntPhBttm(IntBool) {
 
 C1stAdd(C1Bool) {
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    UpdateDataFromEdits()
+
 
     issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
     softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
 
 
     C1 := "C1st"
@@ -242,7 +244,10 @@ C1stAdd(C1Bool) {
     ; Obtiene valores, si no existen usa "N/A"
     Cname := datos.Get("&Company Name", "N/A")
     SID := datos.Get("SID", "N/A")
-    Descrp := datos.Get("Descrip&tion", "N/A")
+    issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
+    softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
+    Descrp := issue " on " softwareVersion
+
     
     Note := Format("{} / SID: {} / {}" ,  Cname, SID, Descrp)
 
@@ -261,6 +266,7 @@ C1stAdd(C1Bool) {
 
 UpdateEditsFromData() {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    
 
     for key, value in datos {
         if (EditControls.Has(key)) {  ; Usar Has() en lugar de HasKey()
@@ -270,6 +276,8 @@ UpdateEditsFromData() {
 }
 
 PrintMap(m) {
+    UpdateDataFromEdits()
+
     if Type(m) != "Map" {
         MsgBox("El valor proporcionado no es un Map.")
         return
@@ -603,7 +611,7 @@ OutputLine("Solution",(x+Insize +10),y, Insize ,btnSze,BtnHeigh), y += spacing
 Hotkeys("Hotkeys", y), y
 
 
-BtnSaveInfo := SkrvGui.Add("Button", "x50 y680 w150 h40", "&Save Info-Load Info")
+BtnSaveInfo := SkrvGui.Add("Button", "x50 y680 w150 h40", "&Save - Load Info")
 clear := SkrvGui.Add("Button", " x205 y680  w45 h30", "Clear")
 
 clear.OnEvent("Click", (*) => ClearAll())
@@ -761,21 +769,35 @@ Loop NmOfSteps {
 }
 
 ; Función para recopilar y mostrar los pasos
-RemoteSessionBuild() {
+RemoteSessionBuild()
+{
     stepsList := ""
     global NmOfSteps
-    Loop NmOfSteps {
+    Loop NmOfSteps
+    {
         i := A_Index
-        controlName := 'Step ' . i
+        controlName := "Step " . i
         stepText := EditControls[controlName].Value
-        stepsList .= Format("Step {}: {}`n", i, stepText)
+        if (stepText != "")
+        {
+            stepsList .= Format("Step {}: {}`n", i, stepText)
+        }
     }
-    stepsList := "Accessed to TV session `n" Format("Ask the customer to reproduce the issue {}`n", EditControls["Issue"].Value) stepsList 
-    A_Clipboard := stepsList
-    Sleep(500)
-    return
+    ; Agregar información adicional
+    issueText := EditControls["Issue"].Value
 
+    if (issueText == "") {
+        MsgBox "Introduce un Issue"
+        return
+    }
+    stepsList := "Accessed to TV session`n" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
+
+
+    ; Copiar al portapapeles
+    A_Clipboard := stepsList
+    Sleep 500
 }
+
 
 
 
@@ -853,6 +875,8 @@ tab.UseTab(5)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
     CallBack := SkrvGui.Add("Button", " x50 y50  w205 h30", "2nd Line - Call Back")
+    Earlyacces := SkrvGui.Add("Button", " x265 y50  w205 h30", "Early Access")
+
     CallBackEdit := SkrvGui.Add("Edit", " x50 y100  w990 h580", "")
     ; Guardar la referencia del Edit
     EditControls["Call Back"] := CallBackEdit  
@@ -861,7 +885,19 @@ tab.UseTab(5)
     datos["Call Back"] := CallBackEdit
     CallBackEdit.OnEvent("Change", (*) => datos["Call Back"] := CallBackEdit.Value)
 
-    CallBack.OnEvent("ContextMenu", (*) => A_Clipboard:= "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to coninue resolving the issue" )
+    CallBack.OnEvent("ContextMenu", (*) =>  callbacktitle())
+
+    callbacktitle(){
+        UpdateDataFromEdits()
+        today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
+        formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
+        A_Clipboard := "CALLBACK " formattedDate 
+        Sleep(500)
+        A_Clipboard:= "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to coninue resolving the issue"
+        Sleep(500)
+        return
+
+    }
 
     CallBack.OnEvent("Click", (*) =>  CallBackCuild())
 
@@ -869,9 +905,9 @@ tab.UseTab(5)
     CallBackCuild() {
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
         UpdateDataFromEdits()
-        A_Clipboard := "2nd Line Title"
+        A_Clipboard := "CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN: " datos["&Dongle"]
         Sleep(500)
-        A_Clipboard := "2nd Line Body email" EditControls["Case Number"].Value
+        A_Clipboard := " Buenos días, ayuda para agendar este callback de escalación de 2nd Line Clinic. " 
         Sleep(500)
             ; Crear objeto Excel
             xl := ComObject("Excel.Application")
@@ -883,25 +919,13 @@ tab.UseTab(5)
             ; Datos de ejemplo para la tabla
             datosTabla := [
                 ["Item", "Value"],
-                ["Name", EditControls["Name"].Value],
-                ["Email", EditControls["&Email"].Value],
-                ["Phone Number", EditControls["&Phone"].Value],
-                ["Company Name", EditControls["&Company Name"].Value],
-                ["Software Version", EditControls["Software Version"].Value],
-                ["Dongle", EditControls["&Dongle"].Value],
-                ["Case Number", EditControls["Case Number"].Value]
-                ; ["GUI", EditControls["GUI"].Value],
-                ; ["Scanner S/N", EditControls["Scanner S/N"].Value],
-                ; ["PC ID", EditControls["PC ID"].Value],
-                ; ["HJ", EditControls["HJ"].Value],
-                ; ["Survey", EditControls["Survey"].Value],
-                ; ["SID", EditControls["SID"].Value],
-                ; ["Issue", EditControls["Issue"].Value],
-                ; ["TV ID", EditControls["TV ID"].Value],
-                ; ["TV PSS", EditControls["TV PSS"].Value]
-                ; ["RC", EditControls["RC"].Value],
-                ; ["Solution", EditControls["Solution"].Value],
-                ; ["Call Back", EditControls["Call Back"].Value]
+                ["Case Number", datos["Case Number"]],
+                ["Caller Name", datos["Name"]],
+                ["Request/Issue", datos["Issue"]],
+                ["Dongle", datos["&Dongle"]],
+                ["Company Name", datos["&Company Name"]],
+                ["Phone Number", datos["&Phone"]],
+                ["BEST CALL BACK TIME WITH TIME ZONE (URGENCY)", "ASAP"]
             ]
 
             ; Escribir los datosTabla en la hoja
@@ -945,6 +969,23 @@ tab.UseTab(5)
                 
     }
 
+    Earlyacces.OnEvent("Click", (*) =>  Earlyacces1())
+    Earlyacces1(){
+        UpdateDataFromEdits()
+        today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
+        formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
+        A_Clipboard := "3Q " formattedDate "EARLY ACESS"
+        Sleep(500)
+
+        earlyBody := "Dear 3rd Line team`n" "I hope this message finds you well. I am writing to request early access to Unite III for this Company. Their licenses didn't migrate to the cloud, and the modules and labs are missing. the dongle has access to Unite III but the company it's still in Unite" datos["Software Version"] "`n" "Dongle ID " datos["&Dongle"] "`n" "SID " datos["SID"] "`n" "Company Name " datos["&Company Name"] "`n" "Email " datos["&Email"] "`n" "GUID " datos["GUI"] "`n" "Phone " datos["&Phone"] "`n" "TV " datos["TV ID"] "`n" "TVPSS " datos["TV PSS"] "`n"
+
+        A_Clipboard := earlyBody
+        Sleep(500)
+        return
+
+    }
+
+
 
 ; Salir del modo de pestañas
 tab.UseTab()
@@ -971,6 +1012,6 @@ isSkrvVisible := true
 ^!r::tab.Value := 2  ; Ctrl + Alt + R -> Rmt Sess
 ^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
-^!p::tab.Value := 5  ; Ctrl + Alt + P -> Call Back
+^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
 
 /*  */
