@@ -394,12 +394,12 @@ check1(){
         folderPath := A_WorkingDir "\" Caseopt[CaseIndex]
         fileList := []
 
-        loop files folderPath "\*.*"
-        {
-            fileList.Push(A_LoopFileName)
+        loop files folderPath "\*.*" {
+            SplitPath A_LoopFileName, , , , &NameNoExt
+            fileList.Push(NameNoExt)
         }
 
-        ; Guardar la lista completa de archivos de esta carpeta
+        ; Guardar la lista completa de archivos de esta carpeta (sin extensiones)
         CaseTP[CaseIndex] := fileList
 
         ; ; Mostrar los archivos de esta carpeta
@@ -407,6 +407,7 @@ check1(){
         ;     MsgBox "Carpeta " CaseIndex " - Archivo " fileIndex ": " fileName
         ; }
     }
+
     selectedText := comboBoxCaseSelect1.Text
 
     ; Switch con tus valores originales
@@ -434,46 +435,46 @@ y += spacing
 LoadExistingcase.OnEvent("ContextMenu", (*) => eval() )
 LoadExistingcase.OnEvent("Click", (*) =>  savecase())
 
-savecase(){
+savecase() {
     UpdateDataFromEdits()
     Caseoption1 := comboBoxCaseSelect1.Text
     Casetype1 := comboBoxCaseSelect2.Text
-    if (Casetype1 == "" or Caseoption1 == ""){
+    if (Casetype1 == "" or Caseoption1 == "") {
         MsgBox "Coloca un Tipo y Nombre de caso para guardar"
         return
     }
-    filePathOptions1 := A_WorkingDir "\" Caseoption1 
+    filePathOptions1 := A_WorkingDir "\" Caseoption1
     savedpath := filePathOptions1 "\" Casetype1 ".json"
     if !DirExist(filePathOptions1) {
         DirCreate(filePathOptions1)
     }
-    Datos2SavedCases := ["HJ","Probing Questions (Add Info)","Issue","RC","Solution",  "EmailInputEdit"]
+    Datos2SavedCases := ["HJ", "Probing Questions (Add Info)", "Issue", "RC", "Solution", "EmailInputEdit"]
     global NmOfSteps
     Loop NmOfSteps {
         Datos2SavedCases.Push(Format("Step {}", A_Index))
     }
     ; Crear un nuevo Map con solo los que están en Datos2SavedCases
     dats2 := Map()
-
     for _, key in Datos2SavedCases {
         if datos.Has(key)
             dats2[key] := datos[key]
     }
-    
-    
-           ; Guardar el JSON
-           ; AGREGAR SOLO LOS CAMPOS QUE SON NECESARIOS
-        jsonText := Jxon_Dump(dats2, 4)
-        FileAppend(jsonText, savedpath, "UTF-8")
-
-        MsgBox("Guardado como:`n" savedpath)
+    if FileExist(savedpath){
+        ; Eliminar el archivo existente si existe
+        FileDelete(savedpath)
     }
+    ; Guardar el JSON
+    jsonText := Jxon_Dump(dats2, 4)
+    FileAppend(jsonText, savedpath, "UTF-8")
+    MsgBox("Guardado como:`n" savedpath)
+}
+
 
 eval(){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
     
     Caseoption := comboBoxCaseSelect1.Text
-    Casetype := comboBoxCaseSelect2.Text
+    Casetype := comboBoxCaseSelect2.Text ".json"
     if (Casetype == "" or Caseoption == ""){
         MsgBox "Coloca un Tipo y Nombre de caso para cargar"
         return
@@ -828,7 +829,13 @@ tab.UseTab(4) ;(Email)
     datos["EmailInputEdit"] := Remoteedit
     Remoteedit.OnEvent("Change", (*) => datos["EmailInputEdit"] := Remoteedit.Value)
 
-    Remote.OnEvent("ContextMenu", (*) => A_Clipboard:="Regarding your case number " datos["Case Number"])
+    Remote.OnEvent("ContextMenu", (*) => emTit())
+
+    emTit(){
+        UpdateDataFromEdits()
+        A_Clipboard:="Regarding your case number " datos["Case Number"]
+
+    }
 
     Remote.OnEvent("Click", (*) =>  EmailButom())
     EmailButom() {
@@ -836,7 +843,7 @@ tab.UseTab(4) ;(Email)
 
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
     if GetKeyState("Alt") {  ; Verifica si Alt está presionado
-        EmailBld(false,( datos["Issue"] "`n" datos["EmailInputEdit"]),false,false ,false)
+        EmailBld(false,( datos["Issue"] "`n" ),datos["EmailInputEdit"] "`n" ,false ,false)
         return
     } else { 
         EmailBld(false, (datos["Issue"]),false,false ,false)
@@ -905,7 +912,7 @@ tab.UseTab(5)
     CallBackCuild() {
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
         UpdateDataFromEdits()
-        A_Clipboard := "CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN: " datos["&Dongle"]
+        A_Clipboard := "CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"]
         Sleep(500)
         A_Clipboard := " Buenos días, ayuda para agendar este callback de escalación de 2nd Line Clinic. " 
         Sleep(500)
