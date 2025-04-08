@@ -752,7 +752,7 @@ Ctrl_y() {
             "D - Migration Failed Solution",
             "F - Clean Temp Files",
             "G - Support Mode",
-            "H - Hardware Test* || Firmware / Scan Suit",
+            "H - Hardware Test* || Firmware / ScanLabTrios",
             "I - Firewall Advanced",
             "K - Clear Clipboard",
             "N - ",

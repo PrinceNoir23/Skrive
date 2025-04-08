@@ -86,8 +86,9 @@ Las dos primeras listas de arriba permiten seleccionar una opcion y tipo de caso
 
 [Email]
     - {D} --> default email 
-    - {I} --> 
-    - Alt + {D} --> 
+    - {I} --> email title
+    - Alt + {D} --> email con la informacion ingresada
+    
 
 
 
