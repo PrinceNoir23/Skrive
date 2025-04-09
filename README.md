@@ -85,9 +85,19 @@ Las dos primeras listas de arriba permiten seleccionar una opcion y tipo de caso
 +++ Email +++
 
 [Email]
-    - {D} --> default email 
+    - {D} --> email con la informacion ingresada 
     - {I} --> email title
-    - Alt + {D} --> email con la informacion ingresada
+    - Alt + {D} --> default email
+
++++ 2ndline - CallBack +++
+
+[2ndline - CallBack]
+    - {D} --> 2ndline title email, body email, and opens an excel 
+    - {I} --> CallBack note 
+[Early Access]
+    - {D} --> Early Acess title and note
+
+
     
 
 

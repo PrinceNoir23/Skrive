@@ -16,6 +16,7 @@ Persistent 1  ; Establece el script como persistente
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 SkrvGui := Gui(, "SKRIVE")
+
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 SkrvGui.SetFont("s12")  
 
@@ -136,7 +137,7 @@ OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
     ; Name2Text := Format("{}",Name)
     Name2Text := Name
     Outbtn := SkrvGui.Add("Button", Format("x{} y{} w{} h{}",xOffset, yOffset,btnSze,BtnHeigh), Name2Text)
-    outedit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}",xOffset, yOffset+BtnHeigh+8,Insize,BtnHeigh*2), "")
+    outedit := SkrvGui.Add("Edit", Format("x{} y{} w{} h{}",xOffset, yOffset+BtnHeigh+8,Insize,BtnHeigh*2.6), "")
     ; Guardar la referencia del Edit
     global EditControls
     EditControls[Name2Text] := outedit  
@@ -440,7 +441,7 @@ savecase() {
     Caseoption1 := comboBoxCaseSelect1.Text
     Casetype1 := comboBoxCaseSelect2.Text
     if (Casetype1 == "" or Caseoption1 == "") {
-        MsgBox "Coloca un Tipo y Nombre de caso para guardar"
+        MsgBox("Coloca un Tipo y Nombre de caso para guardar", "Guardar Template", "48")
         return
     }
     filePathOptions1 := A_WorkingDir "\" Caseoption1
@@ -463,10 +464,14 @@ savecase() {
         ; Eliminar el archivo existente si existe
         FileDelete(savedpath)
     }
+
+    Rt:= MsgBox(Format("Seguro que desea guardar el caso {} como {}? ",Caseoption1,Casetype1), "Confirmacion Para Guardar Template", "292")
+    if (Rt = "No")  ; Si el usuario elige "No", cancela la acción
+        return
     ; Guardar el JSON
     jsonText := Jxon_Dump(dats2, 4)
     FileAppend(jsonText, savedpath, "UTF-8")
-    MsgBox("Guardado como:`n" savedpath)
+    MsgBox("Guardado como:`n" savedpath, "Guardando Template", "64")
 }
 
 
@@ -476,7 +481,7 @@ eval(){
     Caseoption := comboBoxCaseSelect1.Text
     Casetype := comboBoxCaseSelect2.Text ".json"
     if (Casetype == "" or Caseoption == ""){
-        MsgBox "Coloca un Tipo y Nombre de caso para cargar"
+        MsgBox("Coloca un Tipo y Nombre de caso para cargar", "Cargar Template", "48")
         return
     }
     dta1 := LoadMapFromFileEXISTINGCASE(Caseoption,Casetype) 
@@ -485,7 +490,7 @@ eval(){
             Sleep(500)
             UpdateEditsFromData() ; Llama a la función que actualiza los edits
         } else {
-            MsgBox("Error: El archivo JSON no es válido.")
+            MsgBox("El archivo JSON no es válido.", "Error de Archivo","16")
         }
         return
 }
@@ -500,7 +505,7 @@ LoadMapFromFileEXISTINGCASE(Caseoption, Casetype) {
     }
 
     if !FileExist(filePath1) {
-        MsgBox("Archivo no encontrado: " filePath1)
+        MsgBox("Archivo no encontrado: " filePath1,"Error de Path","16")
         return
     }
 
@@ -508,7 +513,7 @@ LoadMapFromFileEXISTINGCASE(Caseoption, Casetype) {
     
 
     fileContent := FileRead(filePath1, "UTF-8")
-    MsgBox("Cargado desde el archivo: " filePath1)
+    MsgBox("Cargado desde el archivo: " filePath1,"Cargando Template","64")
 
     return fileLoaded := Jxon_Load(&fileContent)
 }
@@ -516,7 +521,7 @@ LoadMapFromFileEXISTINGCASE(Caseoption, Casetype) {
 
 InputLine("TV ID",,(btnSze/2)+55,tvsize, y,btnSze/2,BtnHeigh, false), y
 InputLine("TV PSS",465,570,tvsize, y,btnSze/2,BtnHeigh, false), y 
-Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-PH"), y 
+Int_PhBtt := SkrvGui.Add("Button", Format("x880 y{} w{} h{}", y, btnSze-100, BtnHeigh), "INT-P&H"), y 
 Int_PhBtt.OnEvent("Click", (*) => altcheck2())
     altcheck2() {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
@@ -544,7 +549,7 @@ UpdateDataFromEdits() {
 
 Int_PhBtt.OnEvent("ContextMenu", (*) => IntPhBttm(true))
 
-c1stbttn := SkrvGui.Add("Button", Format("x985 y{} w{} h{}", y, 45, BtnHeigh), "C1st"), y += spacing
+c1stbttn := SkrvGui.Add("Button", Format("x985 y{} w{} h{}", y, 45, BtnHeigh), "C&1st"), y += spacing
 c1stbttn.OnEvent("Click", (*) => C1stAdd(false))
 c1stbttn.OnEvent("ContextMenu", (*) => C1stAdd(true))
 
@@ -559,7 +564,7 @@ InputLine("SID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("GUI",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("PC ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Case Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("C&ase Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 
 
 
@@ -620,7 +625,7 @@ clear.OnEvent("Click", (*) => ClearAll())
 ClearAll() {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-    respuesta := MsgBox("¿Está seguro de que desea borrar todos los campos?", "Borrar Datos", "YesNo")
+    respuesta := MsgBox("¿Está seguro de que desea borrar todos los campos?", "Borrar Datos", "292")
     if (respuesta = "No")  ; Si el usuario elige "No", cancela la acción
         return
     Sleep(800)
@@ -648,7 +653,7 @@ altcheck3() {
         
         ; Si el usuario canceló, termina
         if (!filePath) {
-            MsgBox("Guardado cancelado.")
+            MsgBox("Guardado cancelado.","Guardar Caso","64")
             return
         }
         SaveMapSmart(filePath)  ; Llama a tu función de guardado
@@ -671,7 +676,7 @@ SaveBttm(SvBool,fileDir) {
 
 
     if SvBool==true{
-        caseNumber := datos.Get("Case Number")
+        caseNumber := datos.Get("C&ase Number")
 
         if caseNumber != "" {
             filePath := fileDir "\" caseNumber ".json"
@@ -680,7 +685,7 @@ SaveBttm(SvBool,fileDir) {
         }
 
         if (!filePath) {
-            MsgBox("Recuperación cancelada.")
+            MsgBox("Recuperación cancelada.", "Cargar Caso", "64")
             return
         }
 
@@ -690,7 +695,7 @@ SaveBttm(SvBool,fileDir) {
             Sleep(500)
             UpdateEditsFromData() ; Llama a la función que actualiza los edits
         } else {
-            MsgBox("Error: El archivo JSON no es válido.")
+            MsgBox("El archivo JSON no es válido.","Error de Archivo","16")
         }
 
         return
@@ -703,9 +708,9 @@ SaveMapSmart(fileDir) {
 
 
     ; Asegurarse de que haya un Case Number
-    caseNumber := datos.Get("Case Number")
+    caseNumber := datos.Get("C&ase Number")
     if !caseNumber or caseNumber = "" {
-        MsgBox("No hay 'Case Number' definido, coloque uno.")
+        MsgBox("No hay 'Case Number' definido, coloque uno.","Requiere Case Number", "48" )
         return
     }
 
@@ -731,19 +736,19 @@ SaveMapSmart(fileDir) {
     jsonText := Jxon_Dump(datos, 4)
     FileAppend(jsonText, filePath, "UTF-8")
 
-    MsgBox("Guardado como:`n" filePath)
+    MsgBox("Guardado como:`n" filePath, "Guardando Caso", "64")
 }
 
 LoadMapFromFile(filePath) {
     if !FileExist(filePath) {
-        MsgBox("Archivo no encontrado: " filePath)
+        MsgBox("Archivo no encontrado: " filePath,"Error de Path","16")
         return   ; Devuelve mapa vacío
     }
     
 
     fileContent := FileRead(filePath, "UTF-8")
     
-    MsgBox("Cargado desde el archivo: " filePath)
+    MsgBox("Cargado desde el archivo: " filePath,"Cargando Caso","64")
 
     return fileLoaded := Jxon_Load(&fileContent)
 }
@@ -788,7 +793,7 @@ RemoteSessionBuild()
     issueText := EditControls["Issue"].Value
 
     if (issueText == "") {
-        MsgBox "Introduce un Issue"
+        MsgBox("Introduce un Issue por favor.", "Error de Info", "16")
         return
     }
     stepsList := "Accessed to TV session`n" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
@@ -809,9 +814,9 @@ RemoteSessionBuild()
 tab.UseTab(3) ;(Add info)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
-offset:=55
-InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
+    SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
+    offset:=55
+    InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
 
 
 
@@ -833,23 +838,23 @@ tab.UseTab(4) ;(Email)
 
     emTit(){
         UpdateDataFromEdits()
-        A_Clipboard:="Regarding your case number " datos["Case Number"]
+        A_Clipboard:="Regarding your case number " datos["C&ase Number"]
 
     }
 
     Remote.OnEvent("Click", (*) =>  EmailButom())
     EmailButom() {
-    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-    if GetKeyState("Alt") {  ; Verifica si Alt está presionado
-        EmailBld(false,( datos["Issue"] "`n" ),datos["EmailInputEdit"] "`n" ,false ,false)
-        return
-    } else { 
-        EmailBld(false, (datos["Issue"]),false,false ,false)
-        return
+        UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+        if GetKeyState("Alt") {  ; Verifica si Alt está presionado
+            EmailBld(false, (datos["Issue"]),false,false ,false)
+            return
+        } else { 
+            EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+            return
+        }
     }
-}
 
 
 
@@ -912,7 +917,7 @@ tab.UseTab(5)
     CallBackCuild() {
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
         UpdateDataFromEdits()
-        A_Clipboard := "CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"]
+        A_Clipboard := ("CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"])
         Sleep(500)
         A_Clipboard := " Buenos días, ayuda para agendar este callback de escalación de 2nd Line Clinic. " 
         Sleep(500)
@@ -926,7 +931,7 @@ tab.UseTab(5)
             ; Datos de ejemplo para la tabla
             datosTabla := [
                 ["Item", "Value"],
-                ["Case Number", datos["Case Number"]],
+                ["Case Number", datos["C&ase Number"]],
                 ["Caller Name", datos["Name"]],
                 ["Request/Issue", datos["Issue"]],
                 ["Dongle", datos["&Dongle"]],
@@ -971,7 +976,7 @@ tab.UseTab(5)
             ; Liberar referencias (sin cerrar Excel)
             rango := "", ws := "", wb := ""
 
-            MsgBox "Tabla Copiada al portapapeles"
+            MsgBox("Tabla Copiada al portapapeles", "2ndLine Clinic Info", "64")
 
                 
     }
@@ -1020,5 +1025,36 @@ isSkrvVisible := true
 ^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
+^!q::Automatic()  ; Ctrl + Alt + 3 -> Early Access
 
 /*  */
+Automatic(){
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+        Sleep(500)
+    DescriptionGUI(false)
+        Sleep(500)
+    C1stAdd(false)
+        Sleep(500)
+    IntPhBttm(true)
+        Sleep(500)
+    IntPhBttm(false)
+        Sleep(500)
+
+
+    A_Clipboard:="Remote Session Desktop"
+        Sleep(500)
+    RemoteSessionBuild()
+        Sleep(500)
+
+    A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
+        Sleep(500)
+
+    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+        Sleep(500)
+
+    EmailButom()
+        Sleep(500)
+    MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
+        Sleep(500)
+        return
+}
