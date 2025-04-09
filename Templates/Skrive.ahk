@@ -848,7 +848,7 @@ tab.UseTab(4) ;(Email)
 
         UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
         if GetKeyState("Alt") {  ; Verifica si Alt está presionado
-            EmailBld(false, (datos["Issue"]),false,false ,false)
+            EmailBld(false, (datos["Issue"] "`n"),false,false ,false)
             return
         } else { 
             EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
@@ -866,7 +866,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     UpdateDataFromEdits()
     greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
 
-    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have "
+    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "The issue was caused by " datos["RC"] 
     Issuedflt := "Case got corrupted, we have reimported the streams and the case is now working as expected."
 
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
@@ -878,7 +878,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     Body := (Body? Body:Bodydflt )
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
-    emailFinal := Greeting  Issue "`n`n" Body datos["Solution"] "`n`n" Recommend "`n`n" CloseSurvey
+    emailFinal := Greeting  Issue "`n`n" Body  "`n`n" Recommend "`n`n" CloseSurvey
     A_Clipboard := emailFinal
 
 }

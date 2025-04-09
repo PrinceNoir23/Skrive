@@ -1,111 +1,114 @@
 # Skrive
-Estamos creando una aplicación para obtener la información de nuestros clientes.
 
-{D} = Click Derecho 
-{I} = Click Izquierdo
-[ Boton ] = Nombre del Boton
+Estamos desarrollando una aplicación para obtener la información de nuestros clientes.
 
+**Teclas de acceso rápido:**
 
+- **{D}**: Click Derecho
+- **{I}**: Click Izquierdo
+- **[Botón]**: Nombre del Botón
 
-La aplicacion tiene 5 tabs de navegacion, que pueden ser activados con las siguientes combinaciones de teclas 
-Ctrl + Alt + I -> Information
-Ctrl + Alt + R -> Rmt Session
-Ctrl + Alt + A -> Add Info
-Ctrl + Alt + E -> Email
-Ctrl + Alt + 2 -> 2nd Line - Call Back
+La aplicación cuenta con 5 pestañas de navegación, que pueden activarse con las siguientes combinaciones de teclas:
 
+- **Ctrl + Alt + I**: Información
+- **Ctrl + Alt + R**: Sesión Remota
+- **Ctrl + Alt + A**: Añadir Información
+- **Ctrl + Alt + E**: Correo Electrónico
+- **Ctrl + Alt + 2**: Segunda Línea - Callback
 
-Ctrl + Shift + U -> Muestra y Oculta la herramienta
-Ctrl + Shift + Y -> Muestra y Oculta la lista de hotkeys para procesos automatizados
+- **Ctrl + Shift + U**: Muestra y oculta la herramienta
+- **Ctrl + Shift + Y**: Muestra y oculta la lista de teclas rápidas para procesos automatizados
 
-+++ INFO TAB +++
+## Pestaña de Información
 
-[Save - Load Existing Template]
+### [Guardar - Cargar Plantilla Existente]
 
-Las dos primeras listas de arriba permiten seleccionar una opcion y tipo de caso, para guardar o cargar un Template de un caso, va a guarda y a cargar solo las casillas que no poseen datos personales, y ambas casillas deben estar llenas para que funcione.
-    - {D} --> Guarda el caso con los datos actuales
-    - {I} --> Llama un template de los que se encuentren en las carpetas de Complaint Request Miscellaneous
+Las dos primeras listas permiten seleccionar una opción y tipo de caso para guardar o cargar una plantilla. Estas acciones afectan solo las casillas que no contienen datos personales, y ambas casillas deben estar llenas para que funcionen.
 
+- **{D}**: Guarda el caso con los datos actuales.
+- **{I}**: Carga una plantilla de las disponibles en las carpetas de "Complaint Request Miscellaneous".
 
-[TVID-TVPSS]
-    - {D} --> Pega el ultimo valor del clipboard
-    - {I} --> Abre remote session automatico con los datos del tv si tv esta abierto
-[INT-PH] 
-    - {D} --> Internal Note + HelpJuice note 
-    - {I} --> Phone Call Note 
-    - Alt + {D} --> Internal Note + HelpJuice + Logs note
+### [TVID-TVPSS]
 
-[C1st]
-    - {D} --> Titulo
-    - {I} --> Titulo + C1st 
-[Name-Phone-Email-Company Name-Dongle-SID-GUI-Scanner S/N-PC ID-Case Number-HJ-Survey-RC]
-    - {D} -->  pegar
-    - {I} -->  eliminar
-    - Alt + {I} --> copiar al portapapeles 
-[SoftwareVersion]
-    - {D} -->  Abre las opciones de modulo y version, se puede escribir lo que se desee tambien
-[Description]
-    - {D} -->  Copia el description note al portapapeles
-    - {I} --> muestra como queda la descripcion 
-[Issue-Solution]
-    - {D} -->  crea conclsuion note (RC: S:)
-    - {I} --> eliminar
-[HotKey]
-    - {D} --> COMBOS + Y :
-        + abrira la pestaña que enseña la lista de comandos ¡¡¡ para la ultima version los botones de comandos !!!
-    - {I} --> COMBOS + A:
-        + si case number colocado en la casilla corre el comando que saca los logs desde powershell
-        + si no case number colocado en la casilla va a pedirte que llenes la casilla (Permite ingresar cualquier valor e.i. "aaaaaaa")
-    - Alt + {D} --> COMBOS + 2 :
-        + abrira logs folder !!!
-[Save - Load Info]
+- **{D}**: Pega el último valor del portapapeles.
+- **{I}**: Abre una sesión remota automática con los datos del televisor si está abierto.
 
-    -{D} --> Guarda en la carpeta por default Escritorio\CasesJSON, por case number
-    -{I} --> Cargamos un JSON guardado para recuperar info de un caso, si hay un case number 
-    -Alt + {D} --> Permite seleccionar una carpeta diferente para guardar
+### [INT-PH]
 
-[Clear]
-    - {D} -->  Limpia todas las casillas
+- **{D}**: Añade una nota interna y una nota en HelpJuice.
+- **{I}**: Añade una nota de llamada telefónica.
+- **Alt + {D}**: Añade una nota con nota interna, HelpJuice y registros.
 
+### [C1st]
 
-+++ Remote Session +++
+- **{D}**: Título.
+- **{I}**: Título + C1st.
 
-[Remote]
-    - {D} --> pega al portapapeles los pasos de las casillas que no esten vacias
-    - {I} --> pega al portapapeles remote session title
+### [Campos: Nombre, Teléfono, Correo Electrónico, Nombre de la Empresa, Dongle, SID, GUI, Número de Serie del Escáner, ID de PC, Número de Caso, Encuesta HJ, RC]
 
+- **{D}**: Pega el contenido.
+- **{I}**: Elimina el contenido.
+- **Alt + {I}**: Copia al portapapeles.
 
-+++ Add Info +++
+### [Versión de Software]
 
-[ProbingQuestion]
-    - {D} --> Copia al portapapeles lo escrito en ese box
-    - {I} --> Copia al portapapeles lo escrito en ese box
+- **{D}**: Abre las opciones de módulo y versión; también se puede escribir lo que se desee.
 
+### [Descripción]
 
-+++ Email +++
+- **{D}**: Copia la nota de descripción al portapapeles.
+- **{I}**: Muestra cómo queda la descripción.
 
-[Email]
-    - {D} --> email con la informacion ingresada 
-    - {I} --> email title
-    - Alt + {D} --> default email
+### [Problema-Solución]
 
-+++ 2ndline - CallBack +++
+- **{D}**: Crea una nota de conclusión (RC: S:).
+- **{I}**: Elimina la nota.
 
-[2ndline - CallBack]
-    - {D} --> 2ndline title email, body email, and opens an excel 
-    - {I} --> CallBack note 
-[Early Access]
-    - {D} --> Early Acess title and note
+### [Tecla Rápida]
 
+- **{D}**: Abre la lista de comandos.
+- **{I}**: Ejecuta comandos relacionados con el número de caso.
+- **Alt + {D}**: Abre la carpeta de registros.
 
-    
+### [Guardar - Cargar Información]
 
+- **{D}**: Guarda en la carpeta predeterminada `Escritorio\CasesJSON`, por número de caso.
+- **{I}**: Carga un JSON guardado para recuperar información de un caso, si hay un número de caso.
+- **Alt + {D}**: Permite seleccionar una carpeta diferente para guardar.
 
+### [Limpiar]
 
+- **{D}**: Limpia todas las casillas.
 
+## Sesión Remota
 
+### [Remoto]
 
+- **{D}**: Copia al portapapeles los pasos de las casillas que no estén vacías.
+- **{I}**: Copia al portapapeles el título de la sesión remota.
 
+## Añadir Información
 
+### [Pregunta de Sondeo]
 
+- **{D}**: Copia al portapapeles lo escrito en este campo.
+- **{I}**: Copia al portapapeles lo escrito en este campo.
 
+## Correo Electrónico
+
+### [Correo]
+
+- **{D}**: Envía un correo con la información ingresada.
+- **{I}**: Título del correo.
+- **Alt + {D}**: Correo electrónico predeterminado.
+
+## Segunda Línea - Callback
+
+### [Segunda Línea - Callback]
+
+- **{D}**: Título del correo, cuerpo del correo y abre un archivo de Excel.
+- **{I}**: Nota de Callback.
+
+### [Acceso Anticipado]
+
+- **{D}**: Título y nota de Early Access.
