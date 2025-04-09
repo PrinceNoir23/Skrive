@@ -2,6 +2,8 @@
 
 Estamos desarrollando una aplicación para obtener la información de nuestros clientes.
 
+Si tienes algun error, diferente a los mostrados por la app, guarda el caso con un numero de caso y luego corre Ctrl + Shif + R, carga el numero de caso 
+
 **Teclas de acceso rápido:**
 
 - **{D}**: Click Derecho
@@ -16,8 +18,15 @@ La aplicación cuenta con 5 pestañas de navegación, que pueden activarse con l
 - **Ctrl + Alt + E**: Correo Electrónico
 - **Ctrl + Alt + 2**: Segunda Línea - Callback
 
-- **Ctrl + Shift + U**: Muestra y oculta la herramienta
-- **Ctrl + Shift + Y**: Muestra y oculta la lista de teclas rápidas para procesos automatizados
+Tenemos un shortcut que copia TODO lo necesario para el CRM en el portapaeles, se sugiere llenar todos los campos y llenar bien el issue, problem y root cause, tambien de dejar recommendaciones en el espacio del email.
+Para no perderse entre casos se sugiere limpiar el portapapeles antes de correr el comando, para limpiarlo puedes usar  Ctrl + Shif + K, de la ventana de Hotkeys (solo para windows 10):
+
+- **Ctrl + Alt + Q**: Copia todo lo necesario para CRM
+
+Shortcuts para activar/ocultar las herramientas:
+
+- **Ctrl + Shift + U**: Muestra y oculta la herramienta SKRIVE
+- **Ctrl + Shift + Y**: Muestra y oculta la lista de Hotkeys rápidas para procesos automatizados
 
 ## Pestaña de Información
 

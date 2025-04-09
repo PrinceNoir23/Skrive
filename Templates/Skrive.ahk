@@ -244,7 +244,7 @@ C1stAdd(C1Bool) {
 
     ; Obtiene valores, si no existen usa "N/A"
     Cname := datos.Get("&Company Name", "N/A")
-    SID := datos.Get("SID", "N/A")
+    SID := datos.Get("S&ID", "N/A")
     issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
     softwareVersion := datos.Has("Software Version") ? datos["Software Version"] : "Unknown version"
     Descrp := issue " on " softwareVersion
@@ -560,7 +560,7 @@ InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y += spacing
 
 InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("SID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("S&ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("GUI",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("PC ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
@@ -866,7 +866,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     UpdateDataFromEdits()
     greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
 
-    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "The issue was caused by " datos["RC"] 
+    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "Bringing to your attention, it ocurred due to " datos["RC"] 
     Issuedflt := "Case got corrupted, we have reimported the streams and the case is now working as expected."
 
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
@@ -989,7 +989,7 @@ tab.UseTab(5)
         A_Clipboard := "3Q " formattedDate "EARLY ACESS"
         Sleep(500)
 
-        earlyBody := "Dear 3rd Line team`n" "I hope this message finds you well. I am writing to request early access to Unite III for this Company. Their licenses didn't migrate to the cloud, and the modules and labs are missing. the dongle has access to Unite III but the company it's still in Unite" datos["Software Version"] "`n" "Dongle ID " datos["&Dongle"] "`n" "SID " datos["SID"] "`n" "Company Name " datos["&Company Name"] "`n" "Email " datos["&Email"] "`n" "GUID " datos["GUI"] "`n" "Phone " datos["&Phone"] "`n" "TV " datos["TV ID"] "`n" "TVPSS " datos["TV PSS"] "`n"
+        earlyBody := "Dear 3rd Line team`n" "I hope this message finds you well. I am writing to request early access to Unite III for this Company. Their licenses didn't migrate to the cloud, and the modules and labs are missing. the dongle has access to Unite III but the company it's still in Unite" datos["Software Version"] "`n" "Dongle ID " datos["&Dongle"] "`n" "SID " datos["S&ID"] "`n" "Company Name " datos["&Company Name"] "`n" "Email " datos["&Email"] "`n" "GUID " datos["GUI"] "`n" "Phone " datos["&Phone"] "`n" "TV " datos["TV ID"] "`n" "TVPSS " datos["TV PSS"] "`n"
 
         A_Clipboard := earlyBody
         Sleep(500)
@@ -1030,10 +1030,13 @@ isSkrvVisible := true
 /*  */
 Automatic(){
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+    SaveBttm(false,fileDir1)
         Sleep(500)
     DescriptionGUI(false)
         Sleep(500)
     C1stAdd(false)
+        Sleep(500)
+    A_Clipboard:= datos["&Email"]
         Sleep(500)
     IntPhBttm(true)
         Sleep(500)
@@ -1052,7 +1055,11 @@ Automatic(){
     A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
         Sleep(500)
 
+    A_Clipboard:="Regarding your case number " datos["C&ase Number"]
+        Sleep(500)
     EmailButom()
+
+
         Sleep(500)
     MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
         Sleep(500)
