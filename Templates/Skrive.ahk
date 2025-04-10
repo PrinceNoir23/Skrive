@@ -20,7 +20,7 @@ SkrvGui := Gui(, "SKRIVE")
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 SkrvGui.SetFont("s12")  
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back","Photos"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
 SkrWidth := 1250
@@ -823,18 +823,18 @@ tab.UseTab(3) ;(Add info)
 tab.UseTab(4) ;(Email)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-    Remote := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
-    Remoteedit := SkrvGui.Add("Edit", " x50 y100  w990 h580", "")
+    EmailTab := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
+    EmailTabedit := SkrvGui.Add("Edit", " x50 y100  w990 h580", "")
     ; Guardar la referencia del Edit
     global EditControls
-    EditControls["EmailInputEdit"] := Remoteedit  
+    EditControls["EmailInputEdit"] := EmailTabedit  
 
     ; Capturar cambios en el input
     global datos
-    datos["EmailInputEdit"] := Remoteedit
-    Remoteedit.OnEvent("Change", (*) => datos["EmailInputEdit"] := Remoteedit.Value)
+    datos["EmailInputEdit"] := EmailTabedit
+    EmailTabedit.OnEvent("Change", (*) => datos["EmailInputEdit"] := EmailTabedit.Value)
 
-    Remote.OnEvent("ContextMenu", (*) => emTit())
+    EmailTab.OnEvent("ContextMenu", (*) => emTit())
 
     emTit(){
         UpdateDataFromEdits()
@@ -842,7 +842,7 @@ tab.UseTab(4) ;(Email)
 
     }
 
-    Remote.OnEvent("Click", (*) =>  EmailButom())
+    EmailTab.OnEvent("Click", (*) =>  EmailButom())
     EmailButom() {
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
@@ -1000,6 +1000,27 @@ tab.UseTab(5)
 
 
 ; Salir del modo de pestañas
+tab.UseTab(6)
+UpdateDataFromEdits()
+PhotosTab := SkrvGui.Add("Button", " x50 y50  w75 h30", "Photos")
+PhotosTab.OnEvent("Click", (*) =>  PhotosOpenExcel())
+
+PhotosOpenExcel(){
+    UpdateDataFromEdits()
+
+    filePath := A_WorkingDir ".\Photos.xlsm"
+
+    excel := ComObject("Excel.Application")
+    excel.Visible := true
+
+    workbook := excel.Workbooks.Open(filePath)
+    sheet := workbook.Sheets(1)
+
+    sheet.Cells(1, 2).Value := datos["C&ase Number"]
+
+}
+
+
 tab.UseTab()
 
 
@@ -1025,12 +1046,13 @@ isSkrvVisible := true
 ^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
+^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
 ^!q::Automatic()  ; Ctrl + Alt + 3 -> Early Access
 
 !d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !p::EditControls["&Phone"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !e::EditControls["&Email"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
-!c::EditControls["&Company"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!c::EditControls["&Company Name"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !i::EditControls["S&ID"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !v::EditControls["Sur&vey"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive

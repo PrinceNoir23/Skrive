@@ -17,6 +17,7 @@ La aplicación cuenta con 5 pestañas de navegación, que pueden activarse con l
 - **Ctrl + Alt + A**: Añadir Información
 - **Ctrl + Alt + E**: Correo Electrónico
 - **Ctrl + Alt + 2**: Segunda Línea - Callback
+- **Ctrl + Alt + P**: Photos - Excel
 
 Tenemos un shortcut que copia TODO lo necesario para el CRM en el portapaeles, se sugiere llenar todos los campos y llenar bien el issue, problem y root cause, tambien de dejar recommendaciones en el espacio del email.
 Para no perderse entre casos se sugiere limpiar el portapapeles antes de correr el comando, para limpiarlo puedes usar  Ctrl + Shif + K, de la ventana de Hotkeys (solo para windows 10):
