@@ -1035,7 +1035,11 @@ isSkrvVisible := true
 !a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !v::EditControls["Sur&vey"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !t::DescriptionGUI(false)  ; Ctrl + Alt + S -> Fwd2Skrive
-!h::IntPhBttm(true)  ; Ctrl + Alt + S -> Fwd2Skrive
+!h::{
+    IntPhBttm(true) 
+    Sleep(500) 
+    IntPhBttm(false)
+}  ; Ctrl + Alt + S -> Fwd2Skrive
 !s::SaveBttm(false,fileDir1)  ; Ctrl + Alt + S -> Fwd2Skrive
 !y::Ctrl_a()  ; Ctrl + Alt + S -> Fwd2Skrive
 
