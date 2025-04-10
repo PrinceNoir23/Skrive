@@ -878,7 +878,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     Body := (Body? Body:Bodydflt )
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
-    emailFinal := Greeting  Issue "`n`n" Body  "`n`n" Recommend "`n`n" CloseSurvey
+    emailFinal := Greeting "`n`n" Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n" CloseSurvey
     A_Clipboard := emailFinal
 
 }
