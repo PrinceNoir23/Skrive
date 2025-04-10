@@ -569,7 +569,7 @@ InputLine("C&ase Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 
 
 InputLine("HJ",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Survey",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("Sur&vey",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("RC",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 ; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Descrip&tion"),
@@ -614,7 +614,7 @@ DescriptionGUI(bool) {
 ; ---------------------------------------------------------------------------------------------------------------------------------
 OutputLine("Issue",x,y, Insize ,btnSze,BtnHeigh), 
 OutputLine("Solution",(x+Insize +10),y, Insize ,btnSze,BtnHeigh), y += spacing
-Hotkeys("Hotkeys", y), y
+Hotkeys("Hotke&ys", y), y
 
 
 BtnSaveInfo := SkrvGui.Add("Button", "x50 y680 w150 h40", "&Save - Load Info")
@@ -871,7 +871,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
 
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
 
-    CloseSurveyDfflt:= "Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: " "`n`n"  "https://" datos["Survey"] "`n`n" "At the end of the survey, please leave a note about your experience during this interaction. " "`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence."
+    CloseSurveyDfflt:= "Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: " "`n`n"  "https://" datos["Sur&vey"] "`n`n" "At the end of the survey, please leave a note about your experience during this interaction. " "`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence."
     
     Greeting := (Greeting? Greeting:greetingdflt )
     Issue := (Issue? Issue:Issuedflt )
@@ -1027,6 +1027,18 @@ isSkrvVisible := true
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
 ^!q::Automatic()  ; Ctrl + Alt + 3 -> Early Access
 
+!d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!p::EditControls["&Phone"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!e::EditControls["&Email"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!c::EditControls["&Company"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!i::EditControls["S&ID"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!v::EditControls["Sur&vey"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!t::DescriptionGUI(false)  ; Ctrl + Alt + S -> Fwd2Skrive
+!h::IntPhBttm(true)  ; Ctrl + Alt + S -> Fwd2Skrive
+!s::SaveBttm(false,fileDir1)  ; Ctrl + Alt + S -> Fwd2Skrive
+!y::Ctrl_a()  ; Ctrl + Alt + S -> Fwd2Skrive
+
 /*  */
 Automatic(){
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
@@ -1065,3 +1077,5 @@ Automatic(){
         Sleep(500)
         return
 }
+
+

@@ -27,6 +27,26 @@ Shortcuts para activar/ocultar las herramientas:
 
 - **Ctrl + Shift + U**: Muestra y oculta la herramienta SKRIVE
 - **Ctrl + Shift + Y**: Muestra y oculta la lista de Hotkeys rápidas para procesos automatizados
+**COMBOS**: Se le llama asi a la combinacion *Ctrl + Shift*
+
+---
+
+**Atajos para pegar valores en SKRIVE desde el portapapeles**
+
+Al presionar las siguientes combinaciones de teclas (`Alt` + letra), se pegan automáticamente el ultimo valor del portapapeles en los respectivos campos de SKRIVE, además de ejecutar acciones adicionales como guardar o correr comandos:
+
+- **Alt + D** → Pega valor en **Dongle**
+- **Alt + P** → Pega valor en **Phone**
+- **Alt + E** → Pega valor en **Email**
+- **Alt + C** → Pega valor en **Company**
+- **Alt + I** → Pega valor en **SID**
+- **Alt + A** → Pega valor en **Case Number**
+- **Alt + V** → Pega valor en **Survey**
+- **Alt + T** → Copia el valor de **Descripción**
+- **Alt + H** → Acceso rápido a **Phone Call**
+- **Alt + S** → Guarda caso por su **Info**
+- **Alt + Y** → Ejecuta el comando que toma los logs (**Ctrl + A**)
+
 
 ## Pestaña de Información
 

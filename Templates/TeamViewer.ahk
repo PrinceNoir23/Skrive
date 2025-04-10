@@ -137,8 +137,9 @@ ExplorerOpen(Folder_To_Open){
 
 Ctrl_a() {
     global datos
+    UpdateDataFromEdits()
 
-    caseNumber := datos.Has("Case Number") && datos["Case Number"] != "" ? datos["Case Number"] : ""
+    caseNumber := datos.Has("C&ase Number") && datos["C&ase Number"] != "" ? datos["C&ase Number"] : ""
 
     if (caseNumber = "") {
         IB := InputBox("Input the case number `nEXAMPLE:`n CAS-XXXXXX-XXXXXX", "Powershell Logs Backup", "w289 h180")
