@@ -43,45 +43,46 @@ guiVisible := false
 }
 
 
-; ForwardToTeamViewer(KeyToSend) { 
-;     Critical  ; Evita interrupciones
+ForwardToTeamViewer(KeyToSend) { 
+    Critical  ; Evita interrupciones
 
+    Sleep(500)
+    Send (KeyToSend)
+    Return True
+}
+
+
+; ForwardToTeamViewer(KeyToSend) {
+    
+
+;     if !WinExist("ahk_exe TeamViewer.exe")  {
+;         MsgBox "TeamViewer no está abierto`n Abrelo y Corre el codigo nuevamente."
+;         Sleep(100)
+;         return
+;     }
+;     if !WinExist("ahk_class ClientWindowSciter"){
+;         MsgBox "Sesion Remota no está abierta`n Abrela y Corre el codigo nuevamente."
+;         Sleep(100)
+;         return
+;     }
 ;     Sleep(500)
-;     Send (KeyToSend)
-;     Return True
-; }
-
-
-ForwardToTeamViewer(KeyToSend) {
-
-    if !WinExist("ahk_exe TeamViewer.exe")  {
-        MsgBox "TeamViewer no está abierto`n Abrelo y Corre el codigo nuevamente."
-        Sleep(100)
-        return
-    }
-    if !WinExist("ahk_class ClientWindowSciter"){
-        MsgBox "Sesion Remota no está abierta`n Abrela y Corre el codigo nuevamente."
-        Sleep(100)
-        return
-    }
-    Sleep(500)
-    WinActivate("ahk_class ClientWindowSciter")  ; Activa la ventana de TeamViewer
-    Sleep(500)
-    WinWaitActive("ahk_class ClientWindowSciter")
-    Sleep(50)
-    exename := WinGetProcessName("A")
-    if (exename = "TeamViewer.exe") {
+;     WinActivate("ahk_class ClientWindowSciter")  ; Activa la ventana de TeamViewer
+;     Sleep(500)
+;     WinWaitActive("ahk_class ClientWindowSciter")
+;     Sleep(50)
+;     exename := WinGetProcessName("A")
+;     if (exename = "TeamViewer.exe") {
         
        
-        Critical  ; Evita interrupciones
-        Sleep(1000)
-        SendInput(KeyToSend)
-        Return True
-    }
-    MsgBox A_ComputerName
-    Return false
-    ; 
-}
+;         Critical  ; Evita interrupciones
+;         Sleep(1000)
+;         SendInput(KeyToSend)
+;         Return True
+;     }
+;     MsgBox A_ComputerName
+;     Return false
+;     ; 
+; }
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -334,6 +335,13 @@ Ctrl_f() {
     ; Si no es TeamViewer, muestra el nombre del PC
 }
 
+pegarValor(valor){
+    A_Clipboard := valor
+    Sleep(100)
+    ClipWait  ; Espera a que el portapapeles tenga el texto
+    Sleep(2000)
+    Send("^v")  ; Pega el texto en la ventana activa
+}
 
 AbrirFirewall_1(port,Name) {
     PRT := port 
@@ -366,11 +374,7 @@ AbrirFirewall_1(port,Name) {
     Send '{Enter}'
     Sleep(2000)
     
-    A_Clipboard := PRT
-    Sleep(100)
-    ClipWait  ; Espera a que el portapapeles tenga el texto
-    Sleep(2000)
-    Send("^v")  ; Pega el texto en la ventana activa
+    pegarValor(PRT)
     ; Send(PRT)
     Sleep(2000)
     Send '{Enter}'
@@ -387,7 +391,7 @@ AbrirFirewall_1(port,Name) {
     Sleep(2000)
     Send '{Enter}'
     Sleep(2000)
-    Send(Name)
+    pegarValor(Name)
     Sleep(2000)
     Send '{Enter}'
     Sleep(2000)
@@ -435,11 +439,8 @@ AbrirFirewall_2(port,Name,IP,Protocol) {
         Sleep(1000)
         Send '{Down}'
         Sleep(2000)
-        A_Clipboard := PRT
+        pegarValor(PRT)
         Sleep(100)
-        ClipWait  ; Espera a que el portapapeles tenga el texto
-        Sleep(2000)
-        Send("^v")  ; Pega el texto en la ventana activa
         ; Send(PRT)
     }
     
@@ -460,7 +461,7 @@ AbrirFirewall_2(port,Name,IP,Protocol) {
         }
         Send '{Enter}'
         Sleep(2000)
-        Send(IP) 
+        pegarValor(IP)
         Send '{Enter}'
         loop 2 {
             Send '{Tab}'
@@ -482,7 +483,7 @@ AbrirFirewall_2(port,Name,IP,Protocol) {
     Sleep(2000)
     Send '{Enter}'
     Sleep(2000)
-    Send(Name)
+    pegarValor(Name)
     Sleep(2000)
     Send '{Enter}'
     Sleep(2000)
