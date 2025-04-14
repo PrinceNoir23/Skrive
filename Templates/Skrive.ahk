@@ -796,7 +796,7 @@ RemoteSessionBuild()
         MsgBox("Introduce un Issue por favor.", "Error de Info", "16")
         return
     }
-    stepsList := "Accessed to TV session`n" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
+    stepsList := "Accessed to TV session`n" "Logs and photos are in a .zip at an Internal NOTE" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
 
 
     ; Copiar al portapapeles
@@ -864,7 +864,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
     UpdateDataFromEdits()
-    greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
+    greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
 
     bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "Bringing to your attention, it ocurred due to " datos["RC"] 
     Issuedflt := "Case got corrupted, we have reimported the streams and the case is now working as expected."
@@ -878,7 +878,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     Body := (Body? Body:Bodydflt )
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
-    emailFinal := Greeting "`n`n" Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n" CloseSurvey
+    emailFinal := Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n" CloseSurvey
     A_Clipboard := emailFinal
 
 }

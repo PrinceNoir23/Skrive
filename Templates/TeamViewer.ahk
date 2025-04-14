@@ -365,7 +365,13 @@ AbrirFirewall_1(port,Name) {
     Sleep(2000)
     Send '{Enter}'
     Sleep(2000)
-    Send(PRT)
+    
+    A_Clipboard := PRT
+    Sleep(100)
+    ClipWait  ; Espera a que el portapapeles tenga el texto
+    Sleep(2000)
+    Send("^v")  ; Pega el texto en la ventana activa
+    ; Send(PRT)
     Sleep(2000)
     Send '{Enter}'
     if (Name = "3Shape Outbound Ports" or Name = "3Shape TRIOS 3 & 4 TCP_O" or Name = "3Shape TRIOS 5 UDP_O" or Name = "3Shape TRIOS 5_O" or Name="3Shape coDiagnostix Port_o"){
@@ -429,7 +435,12 @@ AbrirFirewall_2(port,Name,IP,Protocol) {
         Sleep(1000)
         Send '{Down}'
         Sleep(2000)
-        Send(PRT)
+        A_Clipboard := PRT
+        Sleep(100)
+        ClipWait  ; Espera a que el portapapeles tenga el texto
+        Sleep(2000)
+        Send("^v")  ; Pega el texto en la ventana activa
+        ; Send(PRT)
     }
     
     Sleep(2000)
@@ -480,6 +491,7 @@ AbrirFirewall_2(port,Name,IP,Protocol) {
 }
 
 Ctrl_i() {
+    SaveBttm(true,fileDir1)
     if (ForwardToTeamViewer("{LWin Down}{LWin Up}")) {
         Sleep(2000)  ; Espera antes de enviar el texto
 
@@ -1023,6 +1035,7 @@ Ctrl_5() {
 }
 
 Ctrl_6() {
+    UpdateDataFromEdits()
     global datos
     if !WinExist("ahk_class MainWindowFull") {
         MsgBox "No se reconoce la ventana `n Ni el Acceso Remoto"
