@@ -201,9 +201,18 @@ IntPhBttm(IntBool) {
     dongle := datos.Get("&Dongle", "N/A")
     tv_id := datos.Get("TV ID", "N/A")
     tv_ps := datos.Get("TV PSS", "N/A")
-    HJ := datos.Get("HJ", "N/A")
+    HJ := datos.Get("HJ", "")
 
-    IntNote := Format("This HelpJuices was used `n{}", HJ)
+    if HJ == ""{
+        IntNote := Format("No helpjuice used, as no article found for this proccess")
+
+    }
+    else{
+        IntNote := Format("This HelpJuices was used `n{}", HJ)
+    }
+
+
+    
 
     PHNote := Format(
         "{} report {}`n"
@@ -786,7 +795,7 @@ RemoteSessionBuild()
         stepText := EditControls[controlName].Value
         if (stepText != "")
         {
-            stepsList .= Format("Step {}: {}`n", i, stepText)
+            stepsList .= Format("- {}`n", stepText)
         }
     }
     ; Agregar información adicional
@@ -796,7 +805,7 @@ RemoteSessionBuild()
         MsgBox("Introduce un Issue por favor.", "Error de Info", "16")
         return
     }
-    stepsList := "Accessed to TV session`n" "Logs and photos are in a .zip at an Internal NOTE" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
+    stepsList := "Accessed to TV session`n" "Logs and photos are in a .zip at an Internal NOTE `n" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
 
 
     ; Copiar al portapapeles
@@ -866,7 +875,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     UpdateDataFromEdits()
     greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
 
-    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "Bringing to your attention, it ocurred due to " datos["RC"] 
+    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "Bringing to your attention, it occurred due to " datos["RC"] 
     Issuedflt := "Case got corrupted, we have reimported the streams and the case is now working as expected."
 
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
@@ -905,7 +914,7 @@ tab.UseTab(5)
         formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
         A_Clipboard := "CALLBACK " formattedDate 
         Sleep(500)
-        A_Clipboard:= "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to coninue resolving the issue"
+        A_Clipboard:= "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to continue resolving the issue"
         Sleep(500)
         return
 
@@ -1048,14 +1057,29 @@ isSkrvVisible := true
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
 ^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
 ^!q::Automatic()  ; Ctrl + Alt + 3 -> Early Access
+^!w::CRM()  ; Ctrl + Alt + 3 -> Early Access
 
 !d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !p::EditControls["&Phone"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !e::EditControls["&Email"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !c::EditControls["&Company Name"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !i::EditControls["S&ID"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
-!a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !v::EditControls["Sur&vey"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+; !a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!a::{
+    ClipWait  ; Espera a que el portapapeles tenga contenido
+    ; Elimina los corchetes y conserva solo el texto interno
+    Clipbd := A_Clipboard
+    texto := RegExReplace(Clipbd, ".*\[(.*?)\].*", "$1")
+    ; Asigna el texto procesado al campo correspondiente
+    A_Clipboard :=texto
+    EditControls["C&ase Number"].Value := texto
+    return
+}
+
+
+
+
 !t::DescriptionGUI(false)  ; Ctrl + Alt + S -> Fwd2Skrive
 !h::{
     IntPhBttm(true) 
@@ -1104,4 +1128,188 @@ Automatic(){
         return
 }
 
+FindBar(item){
+    Sleep(400)
+    Send('^f')
+    Sleep(400)
+    Send(item)
+    Sleep(400)
+    Send('{Enter}')
+    Sleep(400)
+    Send('{Esc}')
+    Sleep(400)
+    Send('{Enter}')
+    Sleep(400)
 
+}
+
+CreateNote(){
+    ; Send()
+}
+
+
+CRM(){
+    global datos,EditControls
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+        ; Sleep(200)
+    ; SaveBttm(false,fileDir1)
+
+        Sleep(500)
+    DescriptionGUI(false)
+        Sleep(500)
+    Send('^v')
+        Sleep(500)
+    Send('{Tab}')
+    ;     Sleep(500)
+    ; Send('{Left}')
+    ;     Sleep(250)    
+    ; C1stAdd(false)
+    ;     Sleep(250)
+    ; Send('^v')
+        Sleep(500)
+    Send('{Tab}')
+        Sleep(500)
+    Send('{N}')
+        Sleep(500)
+    Send('{Enter}')
+    Sleep(400)
+    Loop 4 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+    Send("unite") ;Product
+        Sleep(1500)
+    Send('{Enter}')
+    Sleep(180)
+    Loop 6 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+    Send('{S}') ;Serious
+    Sleep(180)
+    Send('{Enter}')
+    Sleep(180)
+    Send('{Tab}')
+    Sleep(180)
+    Send('{P}') ;Phone
+    Sleep(180)
+    Send('{Enter}')
+    Sleep(180)
+    Loop 4 {
+        Send('{Tab}')
+        Sleep(180)
+    }
+    
+    A_Clipboard:= datos["&Dongle"]
+        Sleep(180)
+    Send('^v')
+        Sleep(1500)
+    Send('{Enter}')
+    Loop 13 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(1000)
+    Send("/187") ;version
+        Sleep(1000)
+    Send('{Enter}')
+        Sleep(1500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+    Send("compl") ;Category
+        Sleep(1500)
+    Send('{Enter}')
+    Sleep(500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(445)
+    Send("Solved") ;Category Area
+        Sleep(1500)
+    Send('{Enter}')
+    Sleep(500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(445)
+    Send("Expec") ;Case Type
+        Sleep(1500)
+    Send('{Enter}')
+    Sleep(1500)
+    Loop 2 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+    A_Clipboard:= datos["&Email"]
+        Sleep(400)
+    Send('^v')
+        Sleep(1500)
+    Send('{Enter}')
+        Sleep(800)
+    Send('^s')  ; ------------------------------ Descommentar esto despues de terminar todo
+
+
+    Sleep(12000)
+
+    Sleep(2000)
+
+    FindBar("IDENTIFICATION")
+    Sleep(200)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(500)
+    Send('^c')
+        Sleep(500)
+    Send('!a')
+        Sleep(500)
+    Send('{Left}')
+        Sleep(250)    
+    C1stAdd(false)
+        Sleep(250)
+    Send('^v')
+
+    
+    FindBar("Enter a note")
+
+
+
+
+        
+    
+
+
+    ;     Sleep(500)
+    ; IntPhBttm(true)
+    ;     Sleep(500)
+    ; IntPhBttm(false)
+    ;     Sleep(500)
+
+
+    ; A_Clipboard:="Remote Session Desktop"
+    ;     Sleep(500)
+    ; RemoteSessionBuild()
+    ;     Sleep(500)
+
+    ; A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
+    ;     Sleep(500)
+
+    ; A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+    ;     Sleep(500)
+
+    ; A_Clipboard:="Regarding your case number " datos["C&ase Number"]
+    ;     Sleep(500)
+    ; EmailButom()
+
+
+    ;     Sleep(500)
+    ; MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
+    ;     Sleep(500)
+        return
+
+}

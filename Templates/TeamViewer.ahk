@@ -492,7 +492,7 @@ AbrirFirewall_2(port,Name,IP,Protocol) {
 }
 
 Ctrl_i() {
-    SaveBttm(true,fileDir1)
+    SaveBttm(false,fileDir1)
     if (ForwardToTeamViewer("{LWin Down}{LWin Up}")) {
         Sleep(2000)  ; Espera antes de enviar el texto
 
@@ -627,7 +627,8 @@ Ctrl_s() {
 }
 
 Ctrl_g() {
-    if ForwardToTeamViewer(Sleep(500)) {
+    if ForwardToTeamViewer(Send('{BackSpace}')) {
+        Sleep(500)
         Send("joel.hurtado@3shape.com")
         Sleep(9000)  ; Espera dos segundos antes de enviar el texto
         Send("LaScarlata2024*")
@@ -1026,6 +1027,7 @@ Ctrl_4() {
 Ctrl_5() {
     if ForwardToTeamViewer(WndRun("dxdiag")) {
         WndRun("appwiz.cpl")
+        WndRun("ncpa.cpl")
         WndOpen("system info")
         WndOpen("Device manager")
         WndOpen("services")
