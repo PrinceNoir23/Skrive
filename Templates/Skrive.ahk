@@ -224,6 +224,11 @@ IntPhBttm(IntBool) {
         "TV PS: {}",
         name, description, name, phone, email, dongle, tv_id, tv_ps
     )
+
+    datos["PhT"] := PH 
+    datos["PhN"] := PHNote
+    datos["InT"] := Int
+    datos["InN"] := IntNote
     ; Copia primero el título (PHONECALL o INT)
     A_Clipboard := (IntBool ? PHNote : IntNote)
     
@@ -299,6 +304,371 @@ PrintMap(m) {
     }
 
     MsgBox(output)
+}
+
+
+/*  */
+Automatic(){
+    UpdateDataFromEdits() ; Refresca `datos` con los valores actuales de los Edits
+    SaveBttm(false,fileDir1)
+        Sleep(500)
+    DescriptionGUI(false)
+        Sleep(500)
+    C1stAdd(false)
+        Sleep(500)
+    A_Clipboard:= datos["&Email"]
+        Sleep(500)
+    IntPhBttm(true)
+        Sleep(500)
+    IntPhBttm(false)
+        Sleep(500)
+
+
+    A_Clipboard:="Remote Session Desktop"
+        Sleep(500)
+    RemoteSessionBuild()
+        Sleep(500)
+
+    A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
+        Sleep(500)
+
+    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+        Sleep(500)
+
+    A_Clipboard:="Regarding your case number " datos["C&ase Number"]
+        Sleep(500)
+    EmailButom()
+
+
+        Sleep(500)
+    MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
+        Sleep(500)
+    return
+}
+
+FindBar(item){
+    Sleep(800)
+    Send('^f')
+    Sleep(400)
+    Send(item)
+    Sleep(400)
+    Send('{Enter}')
+    Sleep(400)
+    Send('{Esc}')
+    Sleep(400)
+    Send('{Enter}')
+    Sleep(600)
+    return
+
+}
+
+CreateNote(TitleNote,BodyNote,addlog){
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    
+    Sleep(1000)
+    Send(TitleNote)
+    Sleep(800)
+    Send('{Tab}')
+    Sleep(800)
+    A_Clipboard := BodyNote
+    Sleep(500)
+    Send('{Control Down}{V}{Control Up}')
+    Sleep(500)
+    if addlog == true {
+        Loop 2 {
+            Send('{Tab}')
+            Sleep(445)
+        }
+        Sleep(445)
+        Send('{Enter}')
+        Sleep(1000)
+        Loop 2 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(800)
+        }
+        Send('{Down}')
+        Sleep(445)
+        Send('{Up}')
+        Sleep(445)
+        Send('{Enter}')
+        Sleep(6000)
+        Loop 2 {
+            Send('{Tab}')
+            Sleep(445)
+        }
+        Send('{Enter}')
+        Sleep(6000)
+        return
+    }
+    if addlog == false {
+        Loop 3 {
+            Send('{Tab}')
+            Sleep(445)
+        }
+        Send('{Enter}')
+        Sleep(800)
+        return
+    }
+
+}
+
+CRM(){
+    global datos,EditControls
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+        ; Sleep(200)
+    ; SaveBttm(false,fileDir1)
+
+    ;     Sleep(500)
+    ; DescriptionGUI(false)
+    ;     Sleep(500)
+    ; Send('^v')
+    ;     Sleep(500)
+    ; Send('{Tab}')
+    ; ;     Sleep(500)
+    ; ; Send('{Left}')
+    ; ;     Sleep(250)    
+    ; ; C1stAdd(false)
+    ; ;     Sleep(250)
+    ; ; Send('^v')
+    ;     Sleep(500)
+    ; Send('{Tab}')
+    ;     Sleep(500)
+    ; Send('{N}')
+    ;     Sleep(500)
+    ; Send('{Enter}')
+    ; Sleep(400)
+    ; Loop 4 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    ; Send("unite") ;Product
+    ;     Sleep(1500)
+    ; Send('{Enter}')
+    ; Sleep(800)
+    ; Loop 4 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    
+    ; Send('{S}') ;Serious
+    ; Sleep(300)
+    ; Send('{Enter}')
+    ; Sleep(300)
+    ; Send('{Tab}')
+    ; Sleep(300)
+    ; Send('{P}') ;Phone
+    ; Sleep(300)
+    ; Send('{Enter}')
+    ; Sleep(300)
+    ; Loop 4 {
+    ;     Send('{Tab}')
+    ;     Sleep(300)
+    ; }
+    
+    ; A_Clipboard:= datos["&Dongle"]
+    ;     Sleep(300)
+    ; Send('^v')
+    ;     Sleep(1500)
+    ; Send('{Enter}')
+    ; Loop 13 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    ;     Sleep(1000)
+    ; Send("1.8.8.0") ;version
+    ;     Sleep(1000)
+    ; Send('{Enter}')
+    ;     Sleep(1500)
+    ; Loop 3 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    ;     Sleep(1000)
+    ; Send("compl") ;Category
+    ;     Sleep(3500)
+    ; Send('{Enter}')
+    ; Sleep(500)
+    ; Loop 3 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    ;     Sleep(445)
+    ;     Sleep(1000)
+    ; Send("Solved") ;Category Area
+    ;     Sleep(3500)
+    ; Send('{Enter}')
+    ; Sleep(500)
+    ; Loop 3 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    ;     Sleep(445)
+    ;     Sleep(1000)
+    ; Send("Expec") ;Case Type
+    ;     Sleep(3500)
+    ; Send('{Enter}')
+    ; Sleep(1500)
+    ; Loop 2 {
+    ;     Send('{Tab}')
+    ;     Sleep(445)
+    ; }
+    ; A_Clipboard:= datos["&Email"]
+    ;     Sleep(400)
+    ; Send('^v')
+    ;     Sleep(3500)
+    ; Send('{Enter}')
+    ;     Sleep(1000)
+
+    ; FindBar("save &")
+    ; Loop 1 {
+    ;         Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+    ;         Sleep(1000)
+    ; }
+    ; Sleep(1000)
+    ; Send('{Enter}')
+
+
+    
+
+
+    ; Sleep(20000)
+
+    Sleep(2000)
+
+    FindBar("IDENTIFICATION")
+    Sleep(500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(500)
+    Send('{Control Down}{C}{Control Up}')  
+        Sleep(500)
+    Send('!a')
+        Sleep(500)
+    Send('{Left}')
+        Sleep(250)    
+    C1stAdd(false)
+        Sleep(250)
+    Send('^v')
+        Sleep(400)
+
+    IntPhBttm(false)
+    RemoteSessionBuild() 
+
+    ; MsgBox datos["PhT"] "`n`n" datos["PhN"] "`n`n" datos["InT"] "`n`n" datos["InN"] "`n`n"
+
+    ; MsgBox Type(datos["PhT"]) "`n`n" Type(datos["PhN"]) "`n`n" Type(datos["InT"]) "`n`n" Type(datos["InN"]) "`n`n"
+    Ph1 := datos["PhT"]         
+
+    PHNote1 := datos["PhN"]
+    Int1 := datos["InT"]
+    IntNote1 := datos["InN"]
+
+    Sleep(500)
+    FindBar("Enter a note")
+    Sleep(100)
+    CreateNote(Ph1,PHNote1,false)
+    Sleep(100)
+    FindBar("Enter a note")
+    Sleep(100)
+    CreateNote(Int1,IntNote1,false)
+    Sleep(100)
+    FindBar("Enter a note")
+    Sleep(200)
+    rmtsession:= datos["RMTSS"]
+    Sleep(100)
+    CreateNote("Remote Session Desktop",rmtsession,false)
+    Sleep(100)
+    FindBar("Enter a note")
+    Sleep(100)
+    CreateNote(Int1,"Logs and images are here `n",true)
+    Sleep(5000)
+
+    FindBar("save &")
+    Loop 1 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(1000)
+    }
+    Sleep(1000)
+    Send('{Enter}')
+
+    Sleep(1000)
+    FindBar("system")
+    Sleep(500)
+    Loop 5 {
+            Send('{Shift Down}{Shift Up}')
+            Sleep(500)
+    }
+
+        Sleep(500)
+    Send('{Control Down}{C}{Control Up}')  
+        Sleep(500)
+    Send('!v')
+    Sleep(500)
+    FindBar("summary")
+    Sleep(1000)
+
+    Sleep(1000)
+    FindBar("Search timeline")
+    Sleep(100)
+    Loop 5 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(500)
+    }
+    Sleep(445)
+    Send('{Enter}')
+    Sleep(445)
+    Send('{Enter}')
+    Sleep(3000)
+    Loop 12 {
+            Send('{Tab}')
+            Sleep(445)
+    }
+    Sleep(445)
+    A_Clipboard:="Regarding your case number " datos["C&ase Number"]
+    Sleep(445)
+    Send('{Control Down}{V}{Control Up}')
+    Sleep(445)
+    Loop 2 {
+            Send('{Tab}')
+            Sleep(445)
+    }
+    Sleep(445)
+    EmailButom()
+    Sleep(445)
+    Send('{Control Down}{V}{Control Up}')
+    R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
+    if (R_CRM = "No")  ; Si el usuario elige "No", cancela la acción
+        return 
+    Sleep(5000)
+    FindBar("Description &")
+    Sleep(445)
+    Send('{Tab}')
+    Sleep(445)
+    Send('{Enter}')
+    Sleep(445)
+    A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
+    Sleep(500)
+    Send('{Control Down}{V}{Control Up}')
+    Sleep(445)
+    Loop 3 {
+            Send('{Tab}')
+            Sleep(445)
+    }
+    Sleep(445)
+    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+    Sleep(500)
+    Send('{Control Down}{V}{Control Up}')
+    Sleep(445)
+        Sleep(200)
+    SaveBttm(false,fileDir1)
+
+   MsgBox("CRM Completado", "CRM AUTOMATIZATION","64")
+        Sleep(500)
+    
+    return
+
 }
 
 
@@ -481,6 +851,7 @@ savecase() {
     jsonText := Jxon_Dump(dats2, 4)
     FileAppend(jsonText, savedpath, "UTF-8")
     MsgBox("Guardado como:`n" savedpath, "Guardando Template", "64")
+    return
 }
 
 
@@ -501,7 +872,7 @@ eval(){
         } else {
             MsgBox("El archivo JSON no es válido.", "Error de Archivo","16")
         }
-        return
+    return
 }
 
 LoadMapFromFileEXISTINGCASE(Caseoption, Casetype) {
@@ -552,6 +923,7 @@ UpdateDataFromEdits() {
     for key, control in EditControls {
         datos[key] := control.Value  ; Actualiza los valores de `datos`
     }
+    return
 }
 
 
@@ -666,25 +1038,30 @@ altcheck3() {
             return
         }
         SaveMapSmart(filePath)  ; Llama a tu función de guardado
+        return
     } else {
         SaveBttm(false,fileDir1)  ; Tu función alternativa si no se presionó Alt
+        return
     }
+    return
 }
 
 ; Función para abrir una nueva ventana
 SaveBttm(SvBool,fileDir) {
 
-        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
     C1stAdd(false) ; Actualiza el mapa con la descripción
     
     ; Recorrer el mapa y mostrar los valores
     if SvBool==false{
         SaveMapSmart(fileDir)  ; Guardar el mapa en un archivo JSON
+        return
     }
 
 
     if SvBool==true{
+        
         caseNumber := datos.Get("C&ase Number")
 
         if caseNumber != "" {
@@ -709,6 +1086,7 @@ SaveBttm(SvBool,fileDir) {
 
         return
     }
+    return
     
 }
 SaveMapSmart(fileDir) {
@@ -746,6 +1124,7 @@ SaveMapSmart(fileDir) {
     FileAppend(jsonText, filePath, "UTF-8")
 
     MsgBox("Guardado como:`n" filePath, "Guardando Caso", "64")
+    return
 }
 
 LoadMapFromFile(filePath) {
@@ -784,8 +1163,7 @@ Loop NmOfSteps {
 }
 
 ; Función para recopilar y mostrar los pasos
-RemoteSessionBuild()
-{
+RemoteSessionBuild() {
     stepsList := ""
     global NmOfSteps
     Loop NmOfSteps
@@ -807,7 +1185,7 @@ RemoteSessionBuild()
     }
     stepsList := "Accessed to TV session`n" "Logs and photos are in a .zip at an Internal NOTE `n" . Format("Ask the customer to reproduce the issue: {}`n", issueText) . stepsList
 
-
+    datos["RMTSS"] := stepsList
     ; Copiar al portapapeles
     A_Clipboard := stepsList
     Sleep 500
@@ -872,22 +1250,26 @@ tab.UseTab(4) ;(Email)
 EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
-    UpdateDataFromEdits()
-    greetingdflt := Format("Dear {}`n`n", datos["&Company Name"] ) "I hope this email finds you well.`n`n" "`n`n" "I am writing in reference to your recent call to our technical support center regarding your issue "
 
-    bodydflt := "I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n" "Bringing to your attention, it occurred due to " datos["RC"] 
-    Issuedflt := "Case got corrupted, we have reimported the streams and the case is now working as expected."
+    UpdateDataFromEdits()
+    G1:=Format("Dear {}", datos["&Company Name"] )
+    G2:="I hope this email finds you well."
+    G3:= "I am writing in reference to your recent call to our technical support center regarding your issue "
+    greetingdflt := (  G1 "`n`n`n`n" G2 "`n`n`n`n" G3)
+
+    bodydflt := ("I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n`n`nBringing to your attention, it occurred due to " datos["RC"] "." "`n`n`n`n") 
+    Issuedflt := ("Case got corrupted, we have reimported the streams and the case is now working as expected.")
 
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
 
-    CloseSurveyDfflt:= "Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: " "`n`n"  "https://" datos["Sur&vey"] "`n`n" "At the end of the survey, please leave a note about your experience during this interaction. " "`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence."
+    CloseSurveyDfflt:= ("Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: `n`n`n`n"  "https://" datos["Sur&vey"] "`n`n`n`n At the end of the survey, please leave a note about your experience during this interaction. " "`n`n`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence." "`n`n`n")
     
     Greeting := (Greeting? Greeting:greetingdflt )
     Issue := (Issue? Issue:Issuedflt )
     Body := (Body? Body:Bodydflt )
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
-    emailFinal := Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n" CloseSurvey
+    emailFinal := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" CloseSurvey)
     A_Clipboard := emailFinal
 
 }
@@ -912,9 +1294,9 @@ tab.UseTab(5)
         UpdateDataFromEdits()
         today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
         formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
-        A_Clipboard := "CALLBACK " formattedDate 
+        A_Clipboard := "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to continue resolving the issue"
         Sleep(500)
-        A_Clipboard:= "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to continue resolving the issue"
+        A_Clipboard:= "CALLBACK " formattedDate 
         Sleep(500)
         return
 
@@ -986,6 +1368,7 @@ tab.UseTab(5)
             rango := "", ws := "", wb := ""
 
             MsgBox("Tabla Copiada al portapapeles", "2ndLine Clinic Info", "64")
+            return
 
                 
     }
@@ -1026,6 +1409,7 @@ PhotosOpenExcel(){
     sheet := workbook.Sheets(1)
 
     sheet.Cells(1, 2).Value := datos["C&ase Number"]
+    return
 
 }
 
@@ -1040,11 +1424,16 @@ isSkrvVisible := true
     if isSkrvVisible {
         SkrvGui.Hide()
         isSkrvVisible := false
+        return
     } else {
         SkrvGui.Show("w" SkrWidth " h" SkrHeigh)  ; Esto es correcto
         isSkrvVisible := true
+        return
     }
 }
+
+
+
 
 ; ^+u::SkrvGui.Show()  ; Ctrl + L para mostrar la GUI
 
@@ -1056,8 +1445,8 @@ isSkrvVisible := true
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
 ^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
-^!q::Automatic()  ; Ctrl + Alt + 3 -> Early Access
-^!w::CRM()  ; Ctrl + Alt + 3 -> Early Access
+^!f::Automatic()  ; Ctrl + Alt + 3 -> Early Access
+^!t::CRM()  ; Ctrl + Alt + 3 -> Early Access
 
 !d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !p::EditControls["&Phone"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
@@ -1089,227 +1478,3 @@ isSkrvVisible := true
 !s::SaveBttm(false,fileDir1)  ; Ctrl + Alt + S -> Fwd2Skrive
 !y::Ctrl_a()  ; Ctrl + Alt + S -> Fwd2Skrive
 
-/*  */
-Automatic(){
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-    SaveBttm(false,fileDir1)
-        Sleep(500)
-    DescriptionGUI(false)
-        Sleep(500)
-    C1stAdd(false)
-        Sleep(500)
-    A_Clipboard:= datos["&Email"]
-        Sleep(500)
-    IntPhBttm(true)
-        Sleep(500)
-    IntPhBttm(false)
-        Sleep(500)
-
-
-    A_Clipboard:="Remote Session Desktop"
-        Sleep(500)
-    RemoteSessionBuild()
-        Sleep(500)
-
-    A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
-        Sleep(500)
-
-    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
-        Sleep(500)
-
-    A_Clipboard:="Regarding your case number " datos["C&ase Number"]
-        Sleep(500)
-    EmailButom()
-
-
-        Sleep(500)
-    MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
-        Sleep(500)
-        return
-}
-
-FindBar(item){
-    Sleep(400)
-    Send('^f')
-    Sleep(400)
-    Send(item)
-    Sleep(400)
-    Send('{Enter}')
-    Sleep(400)
-    Send('{Esc}')
-    Sleep(400)
-    Send('{Enter}')
-    Sleep(400)
-
-}
-
-CreateNote(){
-    ; Send()
-}
-
-
-CRM(){
-    global datos,EditControls
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-        ; Sleep(200)
-    ; SaveBttm(false,fileDir1)
-
-        Sleep(500)
-    DescriptionGUI(false)
-        Sleep(500)
-    Send('^v')
-        Sleep(500)
-    Send('{Tab}')
-    ;     Sleep(500)
-    ; Send('{Left}')
-    ;     Sleep(250)    
-    ; C1stAdd(false)
-    ;     Sleep(250)
-    ; Send('^v')
-        Sleep(500)
-    Send('{Tab}')
-        Sleep(500)
-    Send('{N}')
-        Sleep(500)
-    Send('{Enter}')
-    Sleep(400)
-    Loop 4 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-    Send("unite") ;Product
-        Sleep(1500)
-    Send('{Enter}')
-    Sleep(180)
-    Loop 6 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-    Send('{S}') ;Serious
-    Sleep(180)
-    Send('{Enter}')
-    Sleep(180)
-    Send('{Tab}')
-    Sleep(180)
-    Send('{P}') ;Phone
-    Sleep(180)
-    Send('{Enter}')
-    Sleep(180)
-    Loop 4 {
-        Send('{Tab}')
-        Sleep(180)
-    }
-    
-    A_Clipboard:= datos["&Dongle"]
-        Sleep(180)
-    Send('^v')
-        Sleep(1500)
-    Send('{Enter}')
-    Loop 13 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(1000)
-    Send("/187") ;version
-        Sleep(1000)
-    Send('{Enter}')
-        Sleep(1500)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-    Send("compl") ;Category
-        Sleep(1500)
-    Send('{Enter}')
-    Sleep(500)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(445)
-    Send("Solved") ;Category Area
-        Sleep(1500)
-    Send('{Enter}')
-    Sleep(500)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(445)
-    Send("Expec") ;Case Type
-        Sleep(1500)
-    Send('{Enter}')
-    Sleep(1500)
-    Loop 2 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-    A_Clipboard:= datos["&Email"]
-        Sleep(400)
-    Send('^v')
-        Sleep(1500)
-    Send('{Enter}')
-        Sleep(800)
-    Send('^s')  ; ------------------------------ Descommentar esto despues de terminar todo
-
-
-    Sleep(12000)
-
-    Sleep(2000)
-
-    FindBar("IDENTIFICATION")
-    Sleep(200)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(500)
-    Send('^c')
-        Sleep(500)
-    Send('!a')
-        Sleep(500)
-    Send('{Left}')
-        Sleep(250)    
-    C1stAdd(false)
-        Sleep(250)
-    Send('^v')
-
-    
-    FindBar("Enter a note")
-
-
-
-
-        
-    
-
-
-    ;     Sleep(500)
-    ; IntPhBttm(true)
-    ;     Sleep(500)
-    ; IntPhBttm(false)
-    ;     Sleep(500)
-
-
-    ; A_Clipboard:="Remote Session Desktop"
-    ;     Sleep(500)
-    ; RemoteSessionBuild()
-    ;     Sleep(500)
-
-    ; A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
-    ;     Sleep(500)
-
-    ; A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
-    ;     Sleep(500)
-
-    ; A_Clipboard:="Regarding your case number " datos["C&ase Number"]
-    ;     Sleep(500)
-    ; EmailButom()
-
-
-    ;     Sleep(500)
-    ; MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
-    ;     Sleep(500)
-        return
-
-}
