@@ -208,6 +208,7 @@ Ctrl_b() {
         OpenTab("http://localhost:8000/3ShapeWirelessService//")
         OpenTab("updates.3shape.com")
         OpenTab("3shapeconfig.com")
+        OpenTab("https://www.cpuid.com/softwares/hwmonitor.html")
         ; response := MsgBox(4, "Continue?", "¿You want to open Wireless Drivers?")
         ; If (response = 6)  ; 6 es el código de respuesta cuando se presiona "Sí"
         ; {
@@ -1028,9 +1029,11 @@ Ctrl_5() {
     if ForwardToTeamViewer(WndRun("dxdiag")) {
         WndRun("appwiz.cpl")
         WndRun("ncpa.cpl")
-        WndOpen("system info")
+        WndRun("msinfo32")
+        WndRun("perfmon /rel")
         WndOpen("Device manager")
         WndOpen("services")
+        WndOpen("Event Viewer")
         return  ; Salir si el envío fue exitoso
     }
     

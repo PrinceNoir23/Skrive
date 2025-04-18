@@ -9,9 +9,9 @@ global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 ; ; tag v1.2.2.0 Msgboxes 
 ; ; tag v1.2.2.1 25 segundos
 
+; ; https://benchmark.unigine.com/heaven
 
 
-    
 #Include  TeamViewer.ahk  
 #Include Json.ahk
 Persistent 1  ; Establece el script como persistente
@@ -734,7 +734,47 @@ Sleep(25000)
     A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
     Sleep(500)
     Send('^v') 
-    Sleep(445)
+    Sleep(1000)
+    Sleep(800)
+    Send('^f')
+    Sleep(650)
+    Send("americas 1st")
+    Sleep(650)
+    Send('{Enter}')
+    Sleep(650)
+    Send('{Esc}')
+    Sleep(650)
+    Loop 2 {
+            Send('{Tab}')
+            Sleep(445)
+    }
+    Sleep(650)
+    Send('{Enter}')
+    Sleep(2000)
+    FindBar("Next Stage")
+    Sleep(2000)
+    FindBar("Next Stage")
+    Sleep(2000)
+    Loop 3 {
+            Send('{Tab}')
+            Sleep(445)
+    }
+    Sleep(800)
+    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+    Sleep(500)
+    Send('^v') 
+    Sleep(1000)
+    FindBar("Finished")
+    Sleep(10000)
+    FindBar("Resolve Case")
+    Sleep(10000)
+
+
+
+
+
+
+
         Sleep(200)
     SaveBttm(false,fileDir1)
 
