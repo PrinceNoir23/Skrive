@@ -6,9 +6,12 @@ global casesObj := Map()
 global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 
+; ; tag v1.2.2.0 Msgboxes 
+; ; tag v1.2.2.1 25 segundos
 
 
 
+    
 #Include  TeamViewer.ahk  
 #Include Json.ahk
 Persistent 1  ; Establece el script como persistente
@@ -540,16 +543,16 @@ CRM(){
     Send('{Enter}')
     Sleep(500)
 
-    ; Sleep(25000)
+    Sleep(25000)
 
     ; ; ; MsgBoxSteps
-    R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
-    if (R_save = "No") {
-         ; Si el usuario elige "No", cancela la acción
-        Automatic()
-        return
+    ; R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
+    ; if (R_save = "No") {
+    ;      ; Si el usuario elige "No", cancela la acción
+    ;     Automatic()
+    ;     return
 
-    }
+    ; }
 
 
     Sleep(1000)
@@ -605,17 +608,17 @@ CRM(){
     CreateNote(Int1,"Logs and images are here `n",true)
     Sleep(1000)
 
-; Sleep(25000)
+Sleep(25000)
 
 ; ; ; MsgBoxSteps
 ; ; ; Si el usuario elige "No", cancela la acción
-    R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
-    if (R_logs = "No") {
+    ; R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
+    ; if (R_logs = "No") {
          
-        Automatic()
-        return
+    ;     Automatic()
+    ;     return
 
-    }
+    ; }
     
     ; SAVE
     Sleep(800)
@@ -704,15 +707,15 @@ CRM(){
     Sleep(445)
 
 
-; Sleep(25000)
+Sleep(25000)
 
 ; ; ; MsgBoxSteps
-    R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
-    if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
-        Automatic()
-        return 
-    }
-    Sleep(5000)
+    ; R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
+    ; if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
+    ;     Automatic()
+    ;     return 
+    ; }
+    ; Sleep(5000)
     FindBar("Description &")
     Sleep(445)
     Send('{Tab}')
