@@ -542,7 +542,7 @@ CRM(){
 
     ; Sleep(25000)
 
-    ; MsgBoxSteps
+    ; ; ; MsgBoxSteps
     R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
     if (R_save = "No") {
          ; Si el usuario elige "No", cancela la acción
@@ -550,7 +550,7 @@ CRM(){
         return
 
     }
-    ; Sleep(20000)
+
 
     Sleep(1000)
 
@@ -607,10 +607,11 @@ CRM(){
 
 ; Sleep(25000)
 
-; MsgBoxSteps
+; ; ; MsgBoxSteps
+; ; ; Si el usuario elige "No", cancela la acción
     R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
     if (R_logs = "No") {
-         ; Si el usuario elige "No", cancela la acción
+         
         Automatic()
         return
 
@@ -691,10 +692,21 @@ CRM(){
     EmailButom()
     Sleep(445)
     Send('^v') 
+    Sleep(1000)
+    FindBar("RECIPIENT INFO")
+    Sleep(445)
+    Loop 6 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(500)
+    }
+    Sleep(445)
+    Send('{Enter}')
+    Sleep(445)
+
 
 ; Sleep(25000)
 
-; MsgBoxSteps
+; ; ; MsgBoxSteps
     R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
     if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
         Automatic()
