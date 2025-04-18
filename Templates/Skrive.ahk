@@ -320,6 +320,8 @@ Automatic(){
         Sleep(500)
     IntPhBttm(true)
         Sleep(500)
+    A_Clipboard:= "Logs and images are here"
+        Sleep(500)
     IntPhBttm(false)
         Sleep(500)
 
@@ -349,15 +351,15 @@ Automatic(){
 FindBar(item){
     Sleep(800)
     Send('^f')
-    Sleep(400)
+    Sleep(650)
     Send(item)
-    Sleep(400)
+    Sleep(650)
     Send('{Enter}')
-    Sleep(400)
+    Sleep(650)
     Send('{Esc}')
-    Sleep(400)
+    Sleep(650)
     Send('{Enter}')
-    Sleep(600)
+    Sleep(900)
     return
 
 }
@@ -375,7 +377,7 @@ CreateNote(TitleNote,BodyNote,addlog){
     Send('{Control Down}{V}{Control Up}')
     Sleep(500)
     if addlog == true {
-        Loop 2 {
+        Loop 1 {
             Send('{Tab}')
             Sleep(445)
         }
@@ -401,7 +403,7 @@ CreateNote(TitleNote,BodyNote,addlog){
         return
     }
     if addlog == false {
-        Loop 3 {
+        Loop 2   {
             Send('{Tab}')
             Sleep(445)
         }
@@ -418,138 +420,156 @@ CRM(){
         ; Sleep(200)
     ; SaveBttm(false,fileDir1)
 
-    ;     Sleep(500)
-    ; DescriptionGUI(false)
-    ;     Sleep(500)
-    ; Send('^v')
-    ;     Sleep(500)
-    ; Send('{Tab}')
-    ; ;     Sleep(500)
-    ; ; Send('{Left}')
-    ; ;     Sleep(250)    
-    ; ; C1stAdd(false)
-    ; ;     Sleep(250)
-    ; ; Send('^v')
-    ;     Sleep(500)
-    ; Send('{Tab}')
-    ;     Sleep(500)
-    ; Send('{N}')
-    ;     Sleep(500)
-    ; Send('{Enter}')
-    ; Sleep(400)
-    ; Loop 4 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
-    ; Send("unite") ;Product
-    ;     Sleep(1500)
-    ; Send('{Enter}')
-    ; Sleep(800)
-    ; Loop 4 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
+        Sleep(500)
+    DescriptionGUI(false)
+        Sleep(500)
+    Send('{Control Down}{v}{Control Up}')  
+        Sleep(500)
+    Send('{Tab}')
+
+        Sleep(500)
+    Send('{Tab}')
+        Sleep(500)
+    Send('{N}')
+        Sleep(500)
+    Send('{Enter}')
+    Sleep(400)
+    Loop 4 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+    Send("unite") ;Product
+        Sleep(1500)
+    Send('{Enter}')
+    Sleep(800)
+    Loop 4 {
+        Send('{Tab}')
+        Sleep(445)
+    }
     
-    ; Send('{S}') ;Serious
-    ; Sleep(300)
-    ; Send('{Enter}')
-    ; Sleep(300)
-    ; Send('{Tab}')
-    ; Sleep(300)
-    ; Send('{P}') ;Phone
-    ; Sleep(300)
-    ; Send('{Enter}')
-    ; Sleep(300)
-    ; Loop 4 {
-    ;     Send('{Tab}')
-    ;     Sleep(300)
-    ; }
+    Send('{S}') ;Serious
+    Sleep(445)
+    Send('{Enter}')
+    Sleep(445)
+    Send('{Tab}')
+    Sleep(445)
+    Send('{P}') ;Phone
+    Sleep(445)
+    Send('{Enter}')
+    Sleep(445)
+    Loop 4 {
+        Send('{Tab}')
+        Sleep(445)
+    }
     
-    ; A_Clipboard:= datos["&Dongle"]
-    ;     Sleep(300)
-    ; Send('^v')
-    ;     Sleep(1500)
-    ; Send('{Enter}')
-    ; Loop 13 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
-    ;     Sleep(1000)
-    ; Send("1.8.8.0") ;version
-    ;     Sleep(1000)
-    ; Send('{Enter}')
-    ;     Sleep(1500)
-    ; Loop 3 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
-    ;     Sleep(1000)
-    ; Send("compl") ;Category
-    ;     Sleep(3500)
-    ; Send('{Enter}')
-    ; Sleep(500)
-    ; Loop 3 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
-    ;     Sleep(445)
-    ;     Sleep(1000)
-    ; Send("Solved") ;Category Area
-    ;     Sleep(3500)
-    ; Send('{Enter}')
-    ; Sleep(500)
-    ; Loop 3 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
-    ;     Sleep(445)
-    ;     Sleep(1000)
-    ; Send("Expec") ;Case Type
-    ;     Sleep(3500)
-    ; Send('{Enter}')
-    ; Sleep(1500)
-    ; Loop 2 {
-    ;     Send('{Tab}')
-    ;     Sleep(445)
-    ; }
-    ; A_Clipboard:= datos["&Email"]
-    ;     Sleep(400)
-    ; Send('^v')
-    ;     Sleep(3500)
-    ; Send('{Enter}')
-    ;     Sleep(1000)
-
-    ; FindBar("save &")
-    ; Loop 1 {
-    ;         Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-    ;         Sleep(1000)
-    ; }
-    ; Sleep(1000)
-    ; Send('{Enter}')
+    A_Clipboard:= datos["&Dongle"]
+        Sleep(445)
+    Send('^v')
+        Sleep(1500)
+    Send('{Enter}')
+    Loop 13 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(500)
+    Send('{Enter}')
+        Sleep(1000)    
+    Send("1.8.8.0") ;version
+        Sleep(1000)
+    Send('{Enter}')
+        Sleep(1500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(445)
+    }
+        Sleep(1000)
+    Send("compl") ;Category
+        Sleep(3500)
+    Send('{Enter}')
+    Sleep(1500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(600)
+    }
+        Sleep(445)
+    Send('{Enter}')
+        Sleep(1000)
+    Send("Solved") ;Category Area
+        Sleep(3500)
+    Send('{Enter}')
+    Sleep(1500)
+    Loop 3 {
+        Send('{Tab}')
+        Sleep(600)
+    }
+        Sleep(445)
+    Send('{Enter}')
+        Sleep(1000)
+    Send("Expec") ;Case Type
+        Sleep(3500)
+    Send('{Enter}')
+    Sleep(1500)
+    Loop 2 {
+        Send('{Tab}')
+        Sleep(600)
+    }
+    A_Clipboard:= datos["&Email"]
+        Sleep(400)
+    Send('^v')
+        Sleep(3500)
+    Send('{Enter}')
+        Sleep(1000)
 
 
-    
+    ; SAVE
+    Sleep(800)
+    Send('^f')
+    Sleep(650)
+    Send("save &")
+    Sleep(650)
+    Send('{Enter}')
+    Sleep(650)
+    Send('{Esc}')
+    Sleep(800)
 
+    Loop 1 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(1000)
+    }
+    Sleep(1000)
+    Send('{Enter}')
+    Sleep(500)
 
+    ; Sleep(25000)
+
+    ; MsgBoxSteps
+    R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
+    if (R_save = "No") {
+         ; Si el usuario elige "No", cancela la acción
+        Automatic()
+        return
+
+    }
     ; Sleep(20000)
 
-    Sleep(2000)
+    Sleep(1000)
 
-    FindBar("IDENTIFICATION")
-    Sleep(500)
+    FindBar("Summary")
+    Sleep(1000)
     Loop 3 {
         Send('{Tab}')
         Sleep(445)
     }
         Sleep(500)
-    Send('{Control Down}{C}{Control Up}')  
-        Sleep(500)
-    Send('!a')
-        Sleep(500)
+    Send('^c') 
+        Sleep(1000)
+    Alt_a()
+
+        Sleep(1000)
     Send('{Left}')
-        Sleep(250)    
+        Sleep(500)    
     C1stAdd(false)
-        Sleep(250)
+        Sleep(500)
     Send('^v')
         Sleep(400)
 
@@ -569,23 +589,44 @@ CRM(){
     FindBar("Enter a note")
     Sleep(100)
     CreateNote(Ph1,PHNote1,false)
-    Sleep(100)
+    Sleep(500)
     FindBar("Enter a note")
     Sleep(100)
     CreateNote(Int1,IntNote1,false)
-    Sleep(100)
+    Sleep(500)
     FindBar("Enter a note")
     Sleep(200)
     rmtsession:= datos["RMTSS"]
     Sleep(100)
     CreateNote("Remote Session Desktop",rmtsession,false)
-    Sleep(100)
+    Sleep(500)
     FindBar("Enter a note")
     Sleep(100)
     CreateNote(Int1,"Logs and images are here `n",true)
-    Sleep(5000)
+    Sleep(1000)
 
-    FindBar("save &")
+; Sleep(25000)
+
+; MsgBoxSteps
+    R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
+    if (R_logs = "No") {
+         ; Si el usuario elige "No", cancela la acción
+        Automatic()
+        return
+
+    }
+    
+    ; SAVE
+    Sleep(800)
+    Send('^f')
+    Sleep(650)
+    Send("save &")
+    Sleep(650)
+    Send('{Enter}')
+    Sleep(650)
+    Send('{Esc}')
+    Sleep(800)
+
     Loop 1 {
             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
             Sleep(1000)
@@ -593,25 +634,37 @@ CRM(){
     Sleep(1000)
     Send('{Enter}')
 
-    Sleep(1000)
-    FindBar("system")
+
+    Sleep(15000)
+    Sleep(800)
+    Send('^f')
+    Sleep(650)
+    Send("merged cases")
+    Sleep(650)
+    Send('{Enter}')
+    Sleep(650)
+    Send('{Esc}')
+    Sleep(800)
+    Send('{Right}')
     Sleep(500)
+    Send('{Enter}')
+    Sleep(650)
     Loop 5 {
-            Send('{Shift Down}{Shift Up}')
+            Send('{Tab}')
             Sleep(500)
     }
 
         Sleep(500)
-    Send('{Control Down}{C}{Control Up}')  
+    Send('^c') 
         Sleep(500)
-    Send('!v')
+    EditControls["Sur&vey"].Value := A_Clipboard
+    ; Send('¡v') 
     Sleep(500)
     FindBar("summary")
     Sleep(1000)
 
-    Sleep(1000)
     FindBar("Search timeline")
-    Sleep(100)
+    Sleep(800)
     Loop 5 {
             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
             Sleep(500)
@@ -620,15 +673,15 @@ CRM(){
     Send('{Enter}')
     Sleep(445)
     Send('{Enter}')
-    Sleep(3000)
-    Loop 12 {
+    Sleep(3500)
+    Loop 13 {
             Send('{Tab}')
             Sleep(445)
     }
-    Sleep(445)
+    Sleep(800)
     A_Clipboard:="Regarding your case number " datos["C&ase Number"]
     Sleep(445)
-    Send('{Control Down}{V}{Control Up}')
+    Send('^V')
     Sleep(445)
     Loop 2 {
             Send('{Tab}')
@@ -637,10 +690,16 @@ CRM(){
     Sleep(445)
     EmailButom()
     Sleep(445)
-    Send('{Control Down}{V}{Control Up}')
+    Send('^v') 
+
+; Sleep(25000)
+
+; MsgBoxSteps
     R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
-    if (R_CRM = "No")  ; Si el usuario elige "No", cancela la acción
+    if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
+        Automatic()
         return 
+    }
     Sleep(5000)
     FindBar("Description &")
     Sleep(445)
@@ -650,7 +709,7 @@ CRM(){
     Sleep(445)
     A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
     Sleep(500)
-    Send('{Control Down}{V}{Control Up}')
+    Send('^v') 
     Sleep(445)
     Loop 3 {
             Send('{Tab}')
@@ -659,7 +718,7 @@ CRM(){
     Sleep(445)
     A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
     Sleep(500)
-    Send('{Control Down}{V}{Control Up}')
+    Send('^v') 
     Sleep(445)
         Sleep(200)
     SaveBttm(false,fileDir1)
@@ -1455,7 +1514,9 @@ isSkrvVisible := true
 !i::EditControls["S&ID"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !v::EditControls["Sur&vey"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 ; !a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
-!a::{
+!a:: Alt_a()
+
+Alt_a(){
     ClipWait  ; Espera a que el portapapeles tenga contenido
     ; Elimina los corchetes y conserva solo el texto interno
     Clipbd := A_Clipboard
