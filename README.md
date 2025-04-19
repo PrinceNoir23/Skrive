@@ -55,6 +55,14 @@ Al presionar las siguientes combinaciones de teclas (`Alt` + letra), se pegan au
 
 ## Pestaña de Información
 
+### [SKRIVE!]
+
+Es el boton mas importante y debe ser usado solo al final de llenar todas las casillas correctamente
+
+- **{D}**: Abre CRM en new case y llena caso automatizado.
+- **{I}**: Espera 6 segundos para abrir CRM en new case y llena caso automatizado.
+- **Alt + {D}**: Solo corre *Ctrl + Alt + F* - Copia todo lo necesario en portapapeles para CRM.
+
 ### [Guardar - Cargar Plantilla Existente]
 
 Las dos primeras listas permiten seleccionar una opción y tipo de caso para guardar o cargar una plantilla. Estas acciones afectan solo las casillas que no contienen datos personales, y ambas casillas deben estar llenas para que funcionen.
@@ -118,11 +126,7 @@ Las dos primeras listas permiten seleccionar una opción y tipo de caso para gua
 
 - **{D}**: Limpia todas las casillas.
 
-### [SKRIVE!]
 
-- **{D}**: Abre CRM en new case y llena caso automatizado.
-- **{I}**: Espera 6 segundos para abrir CRM en new case y llena caso automatizado.
-- **Alt + {D}**: Solo corre *Ctrl + Alt + F* - Copia todo lo necesario en portapapeles para CRM.
 
 ## Sesión Remota
 

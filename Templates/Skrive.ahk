@@ -864,7 +864,7 @@ Sleep(25000)
     Send('^v') 
     Sleep(1000)
 
-    R_Close:= MsgBox("¿Ya desea guardar el caso?", "Confirmacion Para terminar flow", "36")
+    R_Close:= MsgBox("¿Ya desea Terminar el caso?", "Confirmacion Para terminar flow", "36")
     if (R_Close = "No"){  ; Si el usuario elige "No", cancela la acción
         Automatic()
         return 
