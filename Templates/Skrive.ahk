@@ -30,6 +30,11 @@ SkrWidth := 1250
 SkrHeigh := 750 
 BtnHeigh:=30
 btnSze:= 200
+datos["Modulo"] := "Dental Desktop"
+datos["Version"] := "1.7.83.0"
+datos["Categ"] := "Complaint",
+datos["CategoryArea"] := "Solved Remotely" ,
+datos["CaseType"] := "Expected Behaviour" ,
 
 SkrvGui.Show("w" SkrWidth " h" SkrHeigh)  ; Esto es correcto
 
@@ -91,7 +96,7 @@ InputLine(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, buttomDefl
 SoftwareVersionSelect(Name, yOffset, btnSze, BtnHeigh) {
     Name2Text := Name
     btnSoftware := SkrvGui.Add("Button", Format("x50 y{} w{} h{}", yOffset, btnSze, BtnHeigh), Name2Text)
-    editSoftware := SkrvGui.Add("Edit", Format("x260 y{} w770 h{}", yOffset, BtnHeigh), "")
+    editSoftware := SkrvGui.Add("Edit", Format("x260 y{} w255 h{}", yOffset, BtnHeigh), "")
     
     btnSoftware.OnEvent("Click", (*) => SoftwareVersionGUI(editSoftware, Name2Text))
     ; Guardar la referencia del Edit
@@ -116,7 +121,7 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     SoftwGui.Add("Text", "x10 y10", "Select Software Versions:")
     
     SoftwGui.Add("Text", "x10 y30", "Module:")
-    comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w150", ["Unite", "TRIOS Module", "Dental Desktop", "Model Builder", "Automate"])
+    comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w150", ["Unite", "TRIOS Software", "Dental Desktop", "Model Builder", "Automate"])
     
     SoftwGui.Add("Text", "x180 y30", "Version:")
     comboBox2 := SoftwGui.Add("ComboBox", "x180 y50 w150", ["1.7.83.0",  "1.8.8.0", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
@@ -128,13 +133,75 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     btnSelect := SoftwGui.Add("Button", "x10 y120 w320", "Select")
     
     btnSelect.OnEvent("Click", (*) => (
-        editSoftware.Value := comboBox1.Text " version " comboBox2.Text,  ; Actualiza el Edit
-        datos[Name2Text] := editSoftware.Value,  ; 🔥 También actualiza el Map()
+        datos["Modulo"] := comboBox1.Text,
+        datos["Version"] := comboBox2.Text,
+        editSoftware.Value := datos["Modulo"] " version " datos["Version"],
+        datos[Name2Text] := editSoftware.Value,
         SoftwGui.Destroy()
     ))
     
+    
     SoftwGui.Show()
 }
+
+CategorySelect(Name, yOffset, btnSze, BtnHeigh) {
+    Name2Text := Name
+    btnCategory := SkrvGui.Add("Button", Format("x520 y{} w{} h{}", yOffset, btnSze/2, BtnHeigh), Name2Text)
+    editCategory := SkrvGui.Add("Edit", Format("x625 y{} w405 h{}", yOffset, BtnHeigh), "")
+    
+    btnCategory.OnEvent("Click", (*) => CategoryGUI(editCategory, Name2Text))
+    ; Guardar la referencia del Edit
+    global EditControls
+    EditControls[Name2Text] := editCategory  
+
+    global datos
+    datos[Name2Text] := editCategory.Value
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+
+    editCategory.OnEvent("Change", (*) => datos[Name2Text] := editCategory.Value)
+}
+
+
+CategoryGUI(editCategory, Name2Text) { 
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+
+    CategorGui := Gui()
+    CategorGui.Opt("+AlwaysOnTop")
+    CategorGui.SetFont("s10")
+
+    CategorGui.Add("Text", "x10 y10", "Select Category:")
+    
+    CategorGui.Add("Text", "x10 y30", "Module:")
+    comboBoxCat1 := CategorGui.Add("ComboBox", "x10 y50 w150", ["Complaint", "Request", "Miscellaneous"])
+    
+    CategorGui.Add("Text", "x180 y30", "Version:")
+    comboBoxCat2 := CategorGui.Add("ComboBox", "x180 y50 w150", ["Solved Remotely",  "Support Fee Rejected" ])
+
+    CategorGui.Add("Text", "x350 y30", "Version:")
+    comboBoxCat3 := CategorGui.Add("ComboBox", "x350 y50 w150", ["PC/OS/Network",  "Expected Behaviour","Performance"])
+
+    ; Valores por defecto
+    comboBoxCat1.Text := "Complaint"
+    comboBoxCat2.Text := "Solved Remotely"
+    comboBoxCat3.Text := "Expected Behaviour"
+
+    btnSelect := CategorGui.Add("Button", "x10 y100 w510", "Select")
+    
+    btnSelect.OnEvent("Click", (*) => (
+        datos["Categ"] := comboBoxCat1.Text,
+        datos["CategoryArea"] := comboBoxCat2.Text,
+        datos["CaseType"] := comboBoxCat3.Text,
+        editCategory.Value := datos["Categ"] " || " datos["CategoryArea"] " || " datos["CaseType"],
+        datos[Name2Text] := editCategory.Value,
+        CategorGui.Destroy()
+    ))
+    
+    
+    CategorGui.Show()
+}
+
+
 
 OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
     ; Name2Text := Format("{}",Name)
@@ -441,10 +508,15 @@ CRM(){
         Send('{Tab}')
         Sleep(445)
     }
-    Send("unite") ;Product
+        ; Sleep(500)
+    ; Send('{Enter}')
+        Sleep(1000)
+    A_Clipboard := datos["Modulo"] ;Product
+        Sleep(1000)
+    Send('{Control Down}{v}{Control Up}')  
         Sleep(1500)
     Send('{Enter}')
-    Sleep(800)
+    Sleep(1500)
     Loop 4 {
         Send('{Tab}')
         Sleep(445)
@@ -464,7 +536,7 @@ CRM(){
         Send('{Tab}')
         Sleep(445)
     }
-    
+        Sleep(1000)
     A_Clipboard:= datos["&Dongle"]
         Sleep(445)
     Send('^v')
@@ -474,19 +546,25 @@ CRM(){
         Send('{Tab}')
         Sleep(445)
     }
-        Sleep(500)
-    Send('{Enter}')
-        Sleep(1000)    
-    Send("1.8.8.0") ;version
+        ; Sleep(500)
+    ; Send('{Enter}')
         Sleep(1000)
+    A_Clipboard := datos["Version"] ;Version
+        Sleep(1000)
+    Send('{Control Down}{v}{Control Up}')   
+        Sleep(1500)
     Send('{Enter}')
         Sleep(1500)
     Loop 3 {
         Send('{Tab}')
         Sleep(445)
     }
+        Sleep(445)
+    Send('{Enter}')
         Sleep(1000)
-    Send("compl") ;Category
+    A_Clipboard := datos["Categ"] ;Category
+        Sleep(1000)
+    Send('{Control Down}{v}{Control Up}')  
         Sleep(3500)
     Send('{Enter}')
     Sleep(1500)
@@ -497,7 +575,9 @@ CRM(){
         Sleep(445)
     Send('{Enter}')
         Sleep(1000)
-    Send("Solved") ;Category Area
+    A_Clipboard := datos["CategoryArea"] ;Category Area
+        Sleep(1000)
+    Send('{Control Down}{v}{Control Up}') 
         Sleep(3500)
     Send('{Enter}')
     Sleep(1500)
@@ -508,7 +588,9 @@ CRM(){
         Sleep(445)
     Send('{Enter}')
         Sleep(1000)
-    Send("Expec") ;Case Type
+    A_Clipboard := datos["CaseType"] ;CaseType
+        Sleep(1000)
+    Send('{Control Down}{v}{Control Up}') 
         Sleep(3500)
     Send('{Enter}')
     Sleep(1500)
@@ -516,6 +598,9 @@ CRM(){
         Send('{Tab}')
         Sleep(600)
     }
+        Sleep(500)
+    Send('{Enter}')
+        Sleep(500)
     A_Clipboard:= datos["&Email"]
         Sleep(400)
     Send('^v')
@@ -543,16 +628,16 @@ CRM(){
     Send('{Enter}')
     Sleep(500)
 
-    Sleep(25000)
+    ; Sleep(25000)
 
     ; ; ; MsgBoxSteps
-    ; R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
-    ; if (R_save = "No") {
-    ;      ; Si el usuario elige "No", cancela la acción
-    ;     Automatic()
-    ;     return
+    R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
+    if (R_save = "No") {
+         ; Si el usuario elige "No", cancela la acción
+        Automatic()
+        return
 
-    ; }
+    }
 
 
     Sleep(1000)
@@ -608,17 +693,17 @@ CRM(){
     CreateNote(Int1,"Logs and images are here `n",true)
     Sleep(1000)
 
-Sleep(25000)
+; Sleep(25000)
 
 ; ; ; MsgBoxSteps
 ; ; ; Si el usuario elige "No", cancela la acción
-    ; R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
-    ; if (R_logs = "No") {
+    R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
+    if (R_logs = "No") {
          
-    ;     Automatic()
-    ;     return
+        Automatic()
+        return
 
-    ; }
+    }
     
     ; SAVE
     Sleep(800)
@@ -707,15 +792,18 @@ Sleep(25000)
     Sleep(445)
 
 
-Sleep(25000)
+; Sleep(25000)
 
 ; ; ; MsgBoxSteps
-    ; R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
-    ; if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
-    ;     Automatic()
-    ;     return 
-    ; }
-    ; Sleep(5000)
+    R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
+    if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
+        Automatic()
+        return 
+    }
+    Sleep(5000)
+    ; ; ; |||
+
+
     FindBar("Description &")
     Sleep(445)
     Send('{Tab}')
@@ -735,6 +823,12 @@ Sleep(25000)
     Sleep(500)
     Send('^v') 
     Sleep(1000)
+
+    R_Close:= MsgBox("¿Ya desea guardar el caso?", "Confirmacion Para terminar flow", "36")
+    if (R_Close = "No"){  ; Si el usuario elige "No", cancela la acción
+        Automatic()
+        return 
+    }
     Sleep(800)
     Send('^f')
     Sleep(650)
@@ -767,7 +861,17 @@ Sleep(25000)
     FindBar("Finished")
     Sleep(10000)
     FindBar("Resolve Case")
-    Sleep(10000)
+    Sleep(1000)
+    Loop 3 {
+            Send('{Tab}')
+            Sleep(445)
+    }
+    Sleep(500)
+    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+    Sleep(500)
+    Send('^v') 
+    Sleep(1000)
+    FindBar("Save & Close")
 
 
 
@@ -775,11 +879,14 @@ Sleep(25000)
 
 
 
-        Sleep(200)
+
+        Sleep(1500)
     SaveBttm(false,fileDir1)
 
-   MsgBox("CRM Completado", "CRM AUTOMATIZATION","64")
+    MsgBox("CRM Completado", "CRM AUTOMATIZATION","64")
         Sleep(500)
+    
+    Reload
     
     return
 
@@ -1052,7 +1159,8 @@ InputLine("Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("&Phone",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("&Email",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y += spacing
+SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y 
+CategorySelect("Category", y,btnSze,BtnHeigh), y += spacing
 
 InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("S&ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
