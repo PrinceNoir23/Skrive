@@ -22,7 +22,7 @@ La aplicación cuenta con 5 pestañas de navegación, que pueden activarse con l
 Tenemos un shortcut que copia TODO lo necesario para el CRM en el portapaeles, se sugiere llenar todos los campos y llenar bien el issue, problem y root cause, tambien de dejar recommendaciones en el espacio del email.
 Para no perderse entre casos se sugiere limpiar el portapapeles antes de correr el comando, para limpiarlo puedes usar  Ctrl + Shif + K, de la ventana de Hotkeys (solo para windows 10):
 
-- **Ctrl + Alt + F**: Copia todo lo necesario para CRM
+- **Ctrl + Alt + F**: Copia todo lo necesario en portapapeles para CRM
 - **Ctrl + Alt + T**: Automatizacion para CRM
 
 
@@ -43,6 +43,7 @@ Al presionar las siguientes combinaciones de teclas (`Alt` + letra), se pegan au
 - **Alt + E** → Pega valor en **Email**
 - **Alt + C** → Pega valor en **Company**
 - **Alt + I** → Pega valor en **SID**
+- **Alt + R** → Pega valor en **Serial Number**
 - **Alt + A** → Pega valor en **Case Number**
 - **Alt + V** → Pega valor en **Survey**
 - **Alt + T** → Copia el valor de **Descripción**
@@ -86,6 +87,10 @@ Las dos primeras listas permiten seleccionar una opción y tipo de caso para gua
 
 - **{D}**: Abre las opciones de módulo y versión; también se puede escribir lo que se desee.
 
+### [Categorizacion]
+
+- **{D}**: Abre las opciones de Categorización; también se puede escribir lo que se desee.
+
 ### [Descripción]
 
 - **{D}**: Copia la nota de descripción al portapapeles.
@@ -96,7 +101,7 @@ Las dos primeras listas permiten seleccionar una opción y tipo de caso para gua
 - **{D}**: Crea una nota de conclusión (RC: S:).
 - **{I}**: Elimina la nota.
 
-### [Tecla Rápida]
+### [Hotkeys]
 
 - **{D}**: Abre la lista de comandos.
 - **{I}**: Ejecuta comandos relacionados con el número de caso.
@@ -111,6 +116,12 @@ Las dos primeras listas permiten seleccionar una opción y tipo de caso para gua
 ### [Limpiar]
 
 - **{D}**: Limpia todas las casillas.
+
+### [SKRIVE!]
+
+- **{D}**: Abre CRM en new case y llena caso automatizado.
+- **{I}**: Espera 6 segundos para abrir CRM en new case y llena caso automatizado.
+- **Alt + {D}**: Solo corre *Ctrl + Alt + F* - Copia todo lo necesario en portapapeles para CRM.
 
 ## Sesión Remota
 
