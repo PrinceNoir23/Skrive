@@ -15,6 +15,37 @@ global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 #Include  TeamViewer.ahk  
 #Include Json.ahk
 Persistent 1  ; Establece el script como persistente
+; ChatGPT - Google Chrome
+; ahk_class Chrome_WidgetWin_1
+; ahk_exe chrome.exe
+
+
+ForwardToDynamics() {
+    
+
+    if !WinExist("ahk_exe chrome.exe")  {
+        MsgBox "Chrome no está abierto`n Abrelo y Corre el codigo nuevamente."
+        Sleep(100)
+        return
+    }
+    if !WinExist("ChatGPT - Google Chrome"){
+        MsgBox "El Tab de CRM (New Case) no esta abierta`n Abrela y Corre el codigo nuevamente."
+        Sleep(100)
+        return
+    }
+    Sleep(500)
+    WinActivate("ChatGPT - Google Chrome")  ; Activa la ventana de TeamViewer
+    Sleep(500)
+    WinWaitActive("ChatGPT - Google Chrome")
+    Sleep(50)
+    exename := WinGetProcessName("A")
+    if (exename = "chrome.exe") {
+        CRM()
+    }
+    MsgBox A_ComputerName
+    Return false
+    ; 
+}
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -23,11 +54,11 @@ SkrvGui := Gui(, "SKRIVE")
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 SkrvGui.SetFont("s12")  
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w900 h600", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back","Photos"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h800", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back","Photos"])
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
-SkrWidth := 1250
-SkrHeigh := 750 
+SkrWidth := 1280
+SkrHeigh := 880 
 BtnHeigh:=30
 btnSze:= 200
 datos["Modulo"] := "Dental Desktop"
@@ -379,6 +410,7 @@ PrintMap(m) {
 
 /*  */
 Automatic(){
+    Sleep(1000)
     UpdateDataFromEdits() ; Refresca `datos` con los valores actuales de los Edits
     SaveBttm(false,fileDir1)
         Sleep(500)
@@ -489,8 +521,16 @@ CRM(){
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
         ; Sleep(200)
     ; SaveBttm(false,fileDir1)
+    Sleep(1000)
+    
+    FindBar("Summary")
+    Sleep(1000)
+    Loop 2 {
+        Send('{Tab}')
+        Sleep(445)
+    }
 
-        Sleep(500)
+        Sleep(1000)
     DescriptionGUI(false)
         Sleep(500)
     Send('{Control Down}{v}{Control Up}')  
@@ -901,7 +941,7 @@ tab.UseTab(1) ; (Information)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
 imagePath := A_ScriptDir . "/LogoSmall.png"
-scale := 2.65
+scale := 2.4
 wd:= 843
 hi := 559
 imgWidth1 := wd / scale
@@ -909,7 +949,7 @@ imgHeight1 := hi / scale
 
 ; Obtener el tamaño actual de la ventana para posicionar la imagen
 SkrvGui.GetPos(&winX1, &winY1, &winWidth1, &winHeight1)
-imgX1 := 1050
+imgX1 := 1060
 imgY1 := 550
 
 imgControl := SkrvGui.Add("Picture", Format("x{} y{} w{} h{}", imgX1, imgY1, imgWidth1, imgHeight1), imagePath)
@@ -1165,7 +1205,7 @@ CategorySelect("Category", y,btnSze,BtnHeigh), y += spacing
 InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("S&ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("GUI",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Scanner S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("Scanne&r S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("PC ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("C&ase Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 
@@ -1363,7 +1403,28 @@ LoadMapFromFile(filePath) {
     return fileLoaded := Jxon_Load(&fileContent)
 }
 
+BtnSKRIVE := SkrvGui.Add("Button", "x50 y780 w450 h60", "S&KRIVE!")
+BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
+BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
 
+SKRIVE_Autom(SKR_Boool){
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    
+
+    ; Si el usuario elige "No", cancela la acción
+    if (SKR_Boool == true) {
+        if GetKeyState("Alt") {  ; Verifica si Alt está presionado
+            Automatic()
+            return
+        } else {
+            Sleep(6000)  ; Tu función alternativa si no se presionó Alt
+            CRM()
+            return
+        }
+    }
+    ForwardToDynamics()
+    return
+}
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -1669,6 +1730,7 @@ isSkrvVisible := true
 ^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
 ^!f::Automatic()  ; Ctrl + Alt + 3 -> Early Access
 ^!t::CRM()  ; Ctrl + Alt + 3 -> Early Access
+^!k::SKRIVE_Autom(false)
 
 !d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !p::EditControls["&Phone"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
@@ -1676,6 +1738,7 @@ isSkrvVisible := true
 !c::EditControls["&Company Name"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !i::EditControls["S&ID"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !v::EditControls["Sur&vey"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
+!r::EditControls["Scanne&r S/N"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 ; !a::EditControls["C&ase Number"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !a:: Alt_a()
 

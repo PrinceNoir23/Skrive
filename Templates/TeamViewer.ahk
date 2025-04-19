@@ -43,46 +43,46 @@ guiVisible := false
 }
 
 
-ForwardToTeamViewer(KeyToSend) { 
-    Critical  ; Evita interrupciones
+; ForwardToTeamViewer(KeyToSend) { 
+;     Critical  ; Evita interrupciones
 
-    Sleep(500)
-    Send (KeyToSend)
-    Return True
-}
+;     Sleep(500)
+;     Send (KeyToSend)
+;     Return True
+; }
 
 
-; ForwardToTeamViewer(KeyToSend) {
+ForwardToTeamViewer(KeyToSend) {
     
 
-;     if !WinExist("ahk_exe TeamViewer.exe")  {
-;         MsgBox "TeamViewer no está abierto`n Abrelo y Corre el codigo nuevamente."
-;         Sleep(100)
-;         return
-;     }
-;     if !WinExist("ahk_class ClientWindowSciter"){
-;         MsgBox "Sesion Remota no está abierta`n Abrela y Corre el codigo nuevamente."
-;         Sleep(100)
-;         return
-;     }
-;     Sleep(500)
-;     WinActivate("ahk_class ClientWindowSciter")  ; Activa la ventana de TeamViewer
-;     Sleep(500)
-;     WinWaitActive("ahk_class ClientWindowSciter")
-;     Sleep(50)
-;     exename := WinGetProcessName("A")
-;     if (exename = "TeamViewer.exe") {
+    if !WinExist("ahk_exe TeamViewer.exe")  {
+        MsgBox "TeamViewer no está abierto`n Abrelo y Corre el codigo nuevamente."
+        Sleep(100)
+        return
+    }
+    if !WinExist("ahk_class ClientWindowSciter"){
+        MsgBox "Sesion Remota no está abierta`n Abrela y Corre el codigo nuevamente."
+        Sleep(100)
+        return
+    }
+    Sleep(500)
+    WinActivate("ahk_class ClientWindowSciter")  ; Activa la ventana de TeamViewer
+    Sleep(500)
+    WinWaitActive("ahk_class ClientWindowSciter")
+    Sleep(50)
+    exename := WinGetProcessName("A")
+    if (exename = "TeamViewer.exe") {
         
        
-;         Critical  ; Evita interrupciones
-;         Sleep(1000)
-;         SendInput(KeyToSend)
-;         Return True
-;     }
-;     MsgBox A_ComputerName
-;     Return false
-;     ; 
-; }
+        Critical  ; Evita interrupciones
+        Sleep(1000)
+        SendInput(KeyToSend)
+        Return True
+    }
+    MsgBox A_ComputerName
+    Return false
+    ; 
+}
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
