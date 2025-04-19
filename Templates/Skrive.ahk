@@ -51,10 +51,17 @@ ForwardToDynamics() {
 
 SkrvGui := Gui(, "SKRIVE")
 
+
 SkrvGui.Opt("+Resize +MinSize400x300 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
-SkrvGui.SetFont("s12")  
+SkrvGui.SetFont("s15 ", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+SkrvGui.SetFont("q5")
+; SkrvGui.SetFont("cA53860")
+SkrvGui.SetFont("s12 italic", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 tab := SkrvGui.Add("Tab3", "x10 y10 w900 h800", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back","Photos"])
+SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
 SkrWidth := 1280
@@ -147,7 +154,9 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
 
     SoftwGui := Gui()
     SoftwGui.Opt("+AlwaysOnTop")
-    SoftwGui.SetFont("s10")
+    SoftwGui.SetFont("s12 ", "Segoe UI")
+    SoftwGui.SetFont("q5")
+
 
     SoftwGui.Add("Text", "x10 y10", "Select Software Versions:")
     
@@ -199,7 +208,8 @@ CategoryGUI(editCategory, Name2Text) {
 
     CategorGui := Gui()
     CategorGui.Opt("+AlwaysOnTop")
-    CategorGui.SetFont("s10")
+    CategorGui.SetFont("s12 ", "Segoe UI")
+    CategorGui.SetFont("q5 ")
 
     CategorGui.Add("Text", "x10 y10", "Select Category:")
     
@@ -1225,7 +1235,10 @@ DescriptionGUI(bool) {
 
     DescripGui := Gui()
     DescripGui.Opt("+AlwaysOnTop")
-    DescripGui.SetFont("s10")
+
+
+    DescripGui.SetFont("s12 ", "Segoe UI")
+    DescripGui.SetFont("q5 ")
 
     ; Verifica si las claves existen antes de usarlas
     issue := datos.Has("Issue") ? datos["Issue"] : "No issue"
@@ -1403,9 +1416,11 @@ LoadMapFromFile(filePath) {
     return fileLoaded := Jxon_Load(&fileContent)
 }
 
-BtnSKRIVE := SkrvGui.Add("Button", "x50 y780 w450 h60", "S&KRIVE!")
+SkrvGui.SetFont("s34 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+BtnSKRIVE := SkrvGui.Add("Button", "x50 y780 w450 h60 ", "S&KRIVE!")
 BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
 BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
+
 
 SKRIVE_Autom(SKR_Boool){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
@@ -1425,6 +1440,7 @@ SKRIVE_Autom(SKR_Boool){
     ForwardToDynamics()
     return
 }
+SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
