@@ -21,6 +21,8 @@ Persistent 1  ; Establece el script como persistente
 
 
 ForwardToDynamics() {
+;     Case: 3Shape v3: New Case - Dynamics 365 - Google Chrome
+; ahk_class Chrome_WidgetWin_1
     
 
     if !WinExist("ahk_exe chrome.exe")  {
@@ -28,15 +30,15 @@ ForwardToDynamics() {
         Sleep(100)
         return
     }
-    if !WinExist("ChatGPT - Google Chrome"){
+    if !WinExist("Case: 3Shape v3: New Case - Dynamics 365 - Google Chrome"){
         MsgBox "El Tab de CRM (New Case) no esta abierta`n Abrela y Corre el codigo nuevamente."
         Sleep(100)
         return
     }
     Sleep(500)
-    WinActivate("ChatGPT - Google Chrome")  ; Activa la ventana de TeamViewer
+    WinActivate("Case: 3Shape v3: New Case - Dynamics 365 - Google Chrome")  ; Activa la ventana de TeamViewer
     Sleep(500)
-    WinWaitActive("ChatGPT - Google Chrome")
+    WinWaitActive("Case: 3Shape v3: New Case - Dynamics 365 - Google Chrome")
     Sleep(50)
     exename := WinGetProcessName("A")
     if (exename = "chrome.exe") {
@@ -65,14 +67,10 @@ SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
 SkrWidth := 1280
-SkrHeigh := 880 
+SkrHeigh := 830 
 BtnHeigh:=30
 btnSze:= 200
-datos["Modulo"] := "Dental Desktop"
-datos["Version"] := "1.7.83.0"
-datos["Categ"] := "Complaint",
-datos["CategoryArea"] := "Solved Remotely" ,
-datos["CaseType"] := "Expected Behaviour" ,
+
 
 SkrvGui.Show("w" SkrWidth " h" SkrHeigh)  ; Esto es correcto
 
@@ -161,13 +159,13 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     SoftwGui.Add("Text", "x10 y10", "Select Software Versions:")
     
     SoftwGui.Add("Text", "x10 y30", "Module:")
-    comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w150", ["Unite", "TRIOS Software", "Dental Desktop", "Model Builder", "Automate"])
+    comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w200", ["Unite", "TRIOS Software", "Dental Desktop (unite)","Unite Cloud", "Model Builder", "Automate","3shape Account"])
     
-    SoftwGui.Add("Text", "x180 y30", "Version:")
-    comboBox2 := SoftwGui.Add("ComboBox", "x180 y50 w150", ["1.7.83.0",  "1.8.8.0", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
+    SoftwGui.Add("Text", "x230 y30", "Version:")
+    comboBox2 := SoftwGui.Add("ComboBox", "x230 y50 w150", ["1.7.83.0",  "1.8.8.0", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
 
     ; Valores por defecto
-    comboBox1.Text := "Dental Desktop"
+    comboBox1.Text := "Unite"
     comboBox2.Text := "1.7.83.0"
 
     btnSelect := SoftwGui.Add("Button", "x10 y120 w320", "Select")
@@ -213,14 +211,16 @@ CategoryGUI(editCategory, Name2Text) {
 
     CategorGui.Add("Text", "x10 y10", "Select Category:")
     
-    CategorGui.Add("Text", "x10 y30", "Module:")
+    CategorGui.Add("Text", "x10 y30", "Category:")
     comboBoxCat1 := CategorGui.Add("ComboBox", "x10 y50 w150", ["Complaint", "Request", "Miscellaneous"])
     
-    CategorGui.Add("Text", "x180 y30", "Version:")
-    comboBoxCat2 := CategorGui.Add("ComboBox", "x180 y50 w150", ["Solved Remotely",  "Support Fee Rejected" ])
+    CategorGui.Add("Text", "x180 y30", "Category Area:")
+    comboBoxCat2 := CategorGui.Add("ComboBox", "x180 y50 w150", ["Solved Remotely",  "Support Fee Rejected","Data Migration",  "Installation","General Product Information","Onboarding","Partner","Remote" ])
 
-    CategorGui.Add("Text", "x350 y30", "Version:")
-    comboBoxCat3 := CategorGui.Add("ComboBox", "x350 y50 w150", ["PC/OS/Network",  "Expected Behaviour","Performance"])
+    CategorGui.Add("Text", "x350 y30", "Case Type:")
+    comboBoxCat3 := CategorGui.Add("ComboBox", "x350 y50 w150", ["PC/OS/Network",  "Expected Behaviour","Performance","Not Reproducible","Solved by customer","How to question", "Product Info"])
+
+
 
     ; Valores por defecto
     comboBoxCat1.Text := "Complaint"
@@ -643,10 +643,22 @@ CRM(){
     Send('{Control Down}{v}{Control Up}') 
         Sleep(3500)
     Send('{Enter}')
-    Sleep(1500)
-    Loop 2 {
-        Send('{Tab}')
-        Sleep(600)
+
+    Sleep(2500)
+
+    Send('^f')
+    Sleep(650)
+    Send("Dynamics 365 Mobile – custom")
+    Sleep(650)
+    Send('{Enter}')
+    Sleep(650)
+    Send('{Esc}')
+    Sleep(650)
+
+
+    Loop 13 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(500)
     }
         Sleep(500)
     Send('{Enter}')
@@ -654,7 +666,7 @@ CRM(){
     A_Clipboard:= datos["&Email"]
         Sleep(400)
     Send('^v')
-        Sleep(3500)
+        Sleep(2500)
     Send('{Enter}')
         Sleep(1000)
 
@@ -678,7 +690,7 @@ CRM(){
     Send('{Enter}')
     Sleep(500)
 
-    Sleep(25000)
+    Sleep(18000)
 
     ; ; ; MsgBoxSteps
     ; R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
@@ -743,7 +755,7 @@ CRM(){
     CreateNote(Int1,"Logs and images are here `n",true)
     Sleep(1000)
 
-Sleep(25000)
+Sleep(18000)
 
 ; ; ; MsgBoxSteps
 ; ; ; Si el usuario elige "No", cancela la acción
@@ -842,7 +854,7 @@ Sleep(25000)
     Sleep(445)
 
 
-Sleep(25000)
+    Sleep(18000)
 
 ; ; ; MsgBoxSteps
     ; R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
@@ -864,7 +876,7 @@ Sleep(25000)
     Sleep(500)
     Send('^v') 
     Sleep(445)
-    Loop 3 {
+    Loop 10 {
             Send('{Tab}')
             Sleep(445)
     }
@@ -908,10 +920,10 @@ Sleep(25000)
     Sleep(500)
     Send('^v') 
     Sleep(1000)
-    FindBar("Finished")
+    FindBar("Finish")
     Sleep(10000)
     FindBar("Resolve Case")
-    Sleep(1000)
+    Sleep(7000)
     Loop 3 {
             Send('{Tab}')
             Sleep(445)
@@ -921,14 +933,12 @@ Sleep(25000)
     Sleep(500)
     Send('^v') 
     Sleep(1000)
-    FindBar("Save & Close")
-
-
-
-
-
-
-
+    Loop 3 {
+            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+            Sleep(870)
+    }
+    Send('{Enter}')
+    
 
         Sleep(1500)
     SaveBttm(false,fileDir1)
@@ -949,6 +959,12 @@ Sleep(25000)
 ; PESTAÑA 1 (General)
 tab.UseTab(1) ; (Information)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+datos["Modulo"] := "Unite"
+datos["Version"] := "1.7.83.0"
+datos["Categ"] := "Complaint"
+datos["CategoryArea"] := "Solved Remotely" 
+datos["CaseType"] := "Expected Behaviour" 
 
 imagePath := A_ScriptDir . "/LogoSmall.png"
 scale := 2.4
@@ -1099,7 +1115,10 @@ savecase() {
     if !DirExist(filePathOptions1) {
         DirCreate(filePathOptions1)
     }
-    Datos2SavedCases := ["HJ", "Probing Questions (Add Info)", "Issue", "RC", "Solution", "EmailInputEdit"]
+    Datos2SavedCases := ["HJ", "Probing Questions (Add Info)", "Issue", "RC", "Solution", "EmailInputEdit", "Modulo","CaseType", "Categ", "Category", "CategoryArea", "Version"]
+
+        
+
     global NmOfSteps
     Loop NmOfSteps {
         Datos2SavedCases.Push(Format("Step {}", A_Index))
@@ -1417,7 +1436,7 @@ LoadMapFromFile(filePath) {
 }
 
 SkrvGui.SetFont("s34 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
-BtnSKRIVE := SkrvGui.Add("Button", "x50 y780 w450 h60 ", "S&KRIVE!")
+BtnSKRIVE := SkrvGui.Add("Button", "x50 y750 w450 h60 ", "S&KRIVE!")
 BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
 BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
 
