@@ -1,9 +1,15 @@
 ﻿{
+    "CaseType": "PC\/OS\/Network",
+    "Categ": "Complaint",
+    "Category": "Complaint || Solved Remotely || PC\/OS\/Network",
+    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "With this, you should no longer experience any connection issues with your cloud .\n\nAdditionally,  to prevent performance issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process.",
     "HJ": "https:\/\/support.3shape.com\/an-issue-occurred-company-id-set-for-token-does-not-match-pop-up-when-attempting-to-sign-in-to-unite-1871-after-updating-to-unite-cloud-?from_search=180831359\r\n",
     "Issue": "the Company ID Token error in your 3Shape Unite software after the migration process",
+    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "an internal bug in the system, which has been reported to our backend team. They are working on fixing it as soon as possible.",
+    "Software Version": "Unite version 1.7.83.0",
     "Solution": "performing an internal system reset of the server settings. Your computer has also been rebooted to ensure these settings are correctly updated.",
     "Step 1": "Went on CMD and ran the command (sc delete MigrationService) in order to delete the migration service ",
     "Step 10": "",
@@ -22,5 +28,6 @@
     "Step 6": "Signed in again with the 3shape account & password",
     "Step 7": "Issue solved no further assistance needed",
     "Step 8": "",
-    "Step 9": ""
+    "Step 9": "",
+    "Version": "1.7.83.0"
 }

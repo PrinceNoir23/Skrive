@@ -1,9 +1,15 @@
 ﻿{
+    "CaseType": "Performance",
+    "Categ": "Complaint",
+    "Category": "Complaint || Solved Remotely || Performance",
+    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "The issue was caused by the computer being continuously powered on for over 15 days, as well as the graphics card not being configured for maximum performance and some outdated drivers.\n\n\n\n\n\n",
     "HJ": "https:\/\/support.3shape.com\/products-pc\/2524193-basic-troubleshooting-of-pc-related-issues?from_search=175484113",
     "Issue": "the slow performance of your computer while using the 3Shape Unite software",
+    "Modulo": "TRIOS Software",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nThis issue happens only with the 3hape software or other ones?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "The computer settings doesnt mach the required settings for UNITE",
+    "Software Version": "TRIOS Software version 1.18.7.6",
     "Solution": "rebooted your computer, the graphics card settings have been optimized for maximum performance, and the drivers have been updated to ensure smooth operation. Also the system has been fully optimized to deliver the best performance for your 3Shape App\n\n",
     "Step 1": "PC requirements are fullfilled",
     "Step 10": "temporary files removed and system file checker command runned in CMD",
@@ -22,5 +28,6 @@
     "Step 6": "speedtest runned and all is good",
     "Step 7": "the reliability was checked and all is good",
     "Step 8": "C++ framework reisntalled",
-    "Step 9": "necessary network ports opened"
+    "Step 9": "necessary network ports opened",
+    "Version": "1.18.7.6"
 }

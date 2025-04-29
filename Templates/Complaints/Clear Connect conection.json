@@ -1,7 +1,12 @@
 ﻿{
+    "CaseType": "Performance",
+    "Categ": "Complaint",
+    "Category": "Complaint || Solved Remotely || Performance",
+    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "\nIf you need further assistance, please feel free to reach out to us using the case number.",
     "HJ": "https:\/\/support.3shape.com\/products-3shape-unite-connections-and-integrations-how-to\/clear-correct-classic-drportal-3shape-unite-integration-guide?from_search=180993325\r\n",
     "Issue": "about the Clear Connect connection.",
+    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nIs happening with all the cases or just this one?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "",
     "Solution": "setting up the Clear Correct connection in Unite. \n\nFor that we accesed to the Clear Correct page and we have created the connection succesfully with your clear correct credentials",
@@ -22,5 +27,6 @@
     "Step 6": "",
     "Step 7": "",
     "Step 8": "",
-    "Step 9": ""
+    "Step 9": "",
+    "Version": "1.7.83.0"
 }

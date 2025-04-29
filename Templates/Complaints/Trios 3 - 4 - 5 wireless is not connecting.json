@@ -1,9 +1,15 @@
 ﻿{
+    "CaseType": "Performance",
+    "Categ": "Complaint",
+    "Category": "Complaint || Solved Remotely || Performance",
+    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "As a recommendation we advise to use the Tp-Link connected directly to the port of the computer, and use the computer conected to the AC power instead of usig it in battery mode, to allow the best performance on your scanning process.\n\n",
     "HJ": "https:\/\/support.3shape.com\/products-trios-and-accessories-trios-4-troubleshooting\/2522665-internal-trios-3-4-5-wireless-is-not-connecting?from_search=182638954",
     "Issue": "Trios 4 is not connecting to the Software",
+    "Modulo": "TRIOS Software",
     "Probing Questions (Add Info)": "It happens when opening the software",
     "RC": "The hosted network was not started and tp link had an outdated driver",
+    "Software Version": "TRIOS Software version 1.18.7.6",
     "Solution": "checked 3Shape Wireless Service and now is running and the service hosted network was restarted for chanel 40",
     "Step 1": "Checked and Wireless scanning is enabled in 3DD",
     "Step 10": "Projecting to this PC feature is off",
@@ -22,5 +28,6 @@
     "Step 6": "Checked 3Shape Wireless Service is running and service hosted network restarted for chanel 40",
     "Step 7": "Wireless service restarted",
     "Step 8": " Wi-Fi adapter is shown on the Wireless service page, and tplink driver updated",
-    "Step 9": "ScanLabTrios reviewed and is fine"
+    "Step 9": "ScanLabTrios reviewed and is fine",
+    "Version": "1.18.7.6"
 }

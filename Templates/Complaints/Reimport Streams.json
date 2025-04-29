@@ -1,7 +1,12 @@
 ﻿{
+    "CaseType": "Expected Behaviour",
+    "Categ": "Complaint",
+    "Category": "Complaint || Solved Remotely || Expected Behaviour",
+    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "Other option is to export the .STL or .DCM extensions documents, so you can use them in another case, be aware these documents will not include the streams of the case\n\nAlso, as a recommendation to prevent future files from corruption during the scanning process of a specific case, please avoid excessive back-and-forth navigation. \n\nSuch actions can increase the risk of data corruption.\n\n",
     "HJ": "",
-    "Issue": "complaint of an existing case, with the sent button grayed out, unable to sent case after doing a copy the case to change settings",
+    "Issue": "complaint of an existing case, with the sent button grayed out, unable to sent case error message",
+    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "the case got corrupted per back-and-forth navigation during the scanning process",
     "Solution": "reimported the streams of the case, in a new one. ",
@@ -22,5 +27,6 @@
     "Step 6": "Issue resolved",
     "Step 7": "",
     "Step 8": "",
-    "Step 9": ""
+    "Step 9": "",
+    "Version": "1.18.7.6"
 }

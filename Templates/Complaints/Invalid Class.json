@@ -1,9 +1,15 @@
 ﻿{
+    "CaseType": "Performance",
+    "Categ": "Complaint",
+    "Category": "Complaint || Solved Remotely || Performance",
+    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "",
     "HJ": "https:\/\/support.3shape.com\/products-unite-software-troubleshooting\/2524748-while-running-dental-desktop-installer-em-runtime-error-at-176-225-swbemobjectset-invalid-class?from_search=183407033",
     "Issue": "The 3Shape Unite Server was not found, this error is related to the issues with Windows Management Instrumentation Service (WMI). It is OS configuration issue.",
+    "Modulo": "Unite",
     "Probing Questions (Add Info)": "",
     "RC": "BM-3714",
+    "Software Version": "Unite version 1.7.83.0",
     "Solution": "Run a repair for the WMI Service",
     "Step 1": "Start -> Run -> then enter WMIMGMT.MSC",
     "Step 10": "",
@@ -22,5 +28,6 @@
     "Step 6": "Reboot the Computer",
     "Step 7": "Issue Resolved",
     "Step 8": "",
-    "Step 9": ""
+    "Step 9": "",
+    "Version": "1.7.83.0"
 }

@@ -6,6 +6,10 @@ global casesObj := Map()
 global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 
+datos["EmailFinal"] := ""
+datos["EmTitl"] := ""
+
+
 ; ; tag v1.2.2.0 Msgboxes 
 ; ; tag v1.2.2.1 25 segundos
 
@@ -159,7 +163,7 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     SoftwGui.Add("Text", "x10 y10", "Select Software Versions:")
     
     SoftwGui.Add("Text", "x10 y30", "Module:")
-    comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w200", ["Unite", "TRIOS Software", "Dental Desktop (unite)","Unite Cloud", "Model Builder", "Automate","3shape Account"])
+    comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w200", ["Unite","TRIOS", "TRIOS Software", "Dental Desktop (unite)","Unite Cloud", "Model Builder", "Automate","3shape Account"])
     
     SoftwGui.Add("Text", "x230 y30", "Version:")
     comboBox2 := SoftwGui.Add("ComboBox", "x230 y50 w150", ["1.7.83.0",  "1.8.8.0", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
@@ -431,9 +435,9 @@ Automatic(){
     A_Clipboard:= datos["&Email"]
         Sleep(500)
     IntPhBttm(true)
-        Sleep(500)
+        Sleep(800)
     A_Clipboard:= "Logs and images are here"
-        Sleep(500)
+        Sleep(800)
     IntPhBttm(false)
         Sleep(500)
 
@@ -656,7 +660,7 @@ CRM(){
     Sleep(650)
 
 
-    Loop 13 {
+    Loop 14 {
             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
             Sleep(500)
     }
@@ -949,6 +953,36 @@ Sleep(18000)
     Reload
     
     return
+
+}
+
+CRM2(CRMBool){
+    global datos,EditControls
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+    IntPhBttm(false)
+    RemoteSessionBuild() 
+    EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+    
+
+    if (CRMBool == true){
+        PyPath := A_WorkingDir . "\CRM.py"
+    }else if (CRMBool == false){
+        PyPath := A_WorkingDir . "\CRM2.py"
+    }
+    jsonPath := A_WorkingDir . "\Templates\NewCase.json"
+    ; if FileExist(jsonPath) {
+    ;     FileDelete(jsonPath)
+    ; }
+    FileAppend(Jxon_Dump(datos), jsonPath)
+
+    RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
+    
+    
+    ; ; esto esconde la ventana de la consola de python
+    ; RunWait(Format('python.exe "{}" "{}"', PyPath, jsonPath), , "Hide")
+
+
+    ; FileDelete(jsonPath)
 
 }
 
@@ -1543,7 +1577,12 @@ tab.UseTab(4) ;(Email)
 
     emTit(){
         UpdateDataFromEdits()
-        A_Clipboard:="Regarding your case number " datos["C&ase Number"]
+        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+        emTITl:="Regarding your case number " datos["C&ase Number"]
+        datos["EmTitl"] := emTITl
+
+
+        A_Clipboard:= emTITl
 
     }
 
@@ -1581,6 +1620,10 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"
 
     CloseSurveyDfflt:= ("Thank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey: `n`n`n`n"  "https://" datos["Sur&vey"] "`n`n`n`n At the end of the survey, please leave a note about your experience during this interaction. " "`n`n`n" "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence." "`n`n`n")
+
+    
+
+    
     
     Greeting := (Greeting? Greeting:greetingdflt )
     Issue := (Issue? Issue:Issuedflt )
@@ -1588,6 +1631,8 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
     emailFinal := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" CloseSurvey)
+    
+    datos["EmailFinal"] = emailFinal
     A_Clipboard := emailFinal
 
 }
@@ -1766,6 +1811,8 @@ isSkrvVisible := true
 ^!f::Automatic()  ; Ctrl + Alt + 3 -> Early Access
 ^!t::CRM()  ; Ctrl + Alt + 3 -> Early Access
 ^!k::SKRIVE_Autom(false)
+^!3::CRM2(true)  ; Ctrl + Alt + 2 -> Call Back
+
 
 !d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
 !p::EditControls["&Phone"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive
