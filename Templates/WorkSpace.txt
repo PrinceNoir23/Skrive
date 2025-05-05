@@ -1,0 +1,16 @@
+Customer Service workspace - Google Chrome
+ahk_class Chrome_WidgetWin_1
+ahk_exe chrome.exe
+ahk_pid 9468
+ahk_id 12325238
+
+Screen:	455, 42
+Window:	380, 38
+Client:	371, 38 (default)
+Color:	1F2020 (Red=1F Green=20 Blue=20)
+
+
+Screen:	x: 75	y: 4	w: 643	h: 859
+Client:	x: 84	y: 4	w: 625	h: 850
+
+https://3shape.crm4.dynamics.com/main.aspx?appid=5ff51386-6105-eb11-a813-000d3ab83e53

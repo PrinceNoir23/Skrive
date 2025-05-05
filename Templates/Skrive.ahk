@@ -1,13 +1,20 @@
 #Requires AutoHotkey v2.0
 
+
+
+
+
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
 global casesObj := Map()
 global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
+global fileDir_CasesFinal := A_Desktop "\Cases_Final"  ; Solicitar la ruta del directorio
 
-datos["EmailFinal"] := ""
-datos["EmTitl"] := ""
+if !DirExist(fileDir_CasesFinal) {
+    DirCreate(fileDir_CasesFinal)
+}
+
 
 
 ; ; tag v1.2.2.0 Msgboxes 
@@ -958,6 +965,8 @@ Sleep(18000)
 
 CRM2(CRMBool){
     global datos,EditControls
+    datos["CaseLink"] := ""
+
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
     IntPhBttm(false)
     RemoteSessionBuild() 
@@ -965,17 +974,25 @@ CRM2(CRMBool){
     
 
     if (CRMBool == true){
-        PyPath := A_WorkingDir . "\CRM.py"
-    }else if (CRMBool == false){
         PyPath := A_WorkingDir . "\CRM2.py"
+    }else if (CRMBool == false){
+        PyPath := A_WorkingDir . "\CRM.py"
     }
-    jsonPath := A_WorkingDir . "\Templates\NewCase.json"
-    ; if FileExist(jsonPath) {
-    ;     FileDelete(jsonPath)
-    ; }
-    FileAppend(Jxon_Dump(datos), jsonPath)
+    jsonPath := A_WorkingDir . "\NewCase.json"
+    if FileExist(jsonPath) {
+        FileDelete(jsonPath)
+    }
+    FileAppend(Jxon_Dump(datos,4), jsonPath)
 
-    RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
+    pythonPath := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
+
+
+    Sleep(200)
+    ; RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
+    logPath := A_WorkingDir . "\error_log.txt"
+    RunWait(Format('cmd.exe /c "{}" "{}" "{}" 2> "{}"', pythonPath, PyPath, jsonPath, logPath))
+
+
     
     
     ; ; esto esconde la ventana de la consola de python
@@ -1577,7 +1594,10 @@ tab.UseTab(4) ;(Email)
 
     emTit(){
         UpdateDataFromEdits()
+
         global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+        datos["EmTitl"] := ""
+
         emTITl:="Regarding your case number " datos["C&ase Number"]
         datos["EmTitl"] := emTITl
 
@@ -1606,9 +1626,11 @@ tab.UseTab(4) ;(Email)
 
 EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    datos["EmailFinal"] := ""
 
 
     UpdateDataFromEdits()
+
     G1:=Format("Dear {}", datos["&Company Name"] )
     G2:="I hope this email finds you well."
     G3:= "I am writing in reference to your recent call to our technical support center regarding your issue "
@@ -1631,8 +1653,10 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
     emailFinal := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" CloseSurvey)
+    emailFinal1 := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" CloseSurvey)
     
-    datos["EmailFinal"] = emailFinal
+    datos["EmailFinal"] := emailFinal
+    Sleep(1)
     A_Clipboard := emailFinal
 
 }

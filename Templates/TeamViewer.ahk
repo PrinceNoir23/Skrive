@@ -140,9 +140,10 @@ Ctrl_a() {
     global datos
     UpdateDataFromEdits()
 
-    caseNumber := datos.Has("C&ase Number") && datos["C&ase Number"] != "" ? datos["C&ase Number"] : ""
+    caseNumber := datos.Has("&Dongle") && datos["&Dongle"] != "" ? datos["&Dongle"] : ""
 
     if (caseNumber = "") {
+
         IB := InputBox("Input the case number `nEXAMPLE:`n CAS-XXXXXX-XXXXXX", "Powershell Logs Backup", "w289 h180")
         if (IB.Result = "Cancel" || IB.Value = "") {
             MsgBox("No ingresaste un número de caso válido.")
