@@ -2,7 +2,6 @@
 
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
-global casesObj := Map()
 global checkboxStates := Map()
 global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
@@ -24,8 +23,10 @@ for _, dirPath in [fileDir_CasesFinal, fileDir1] {
 ; ; https://benchmark.unigine.com/heaven
 
 
-#Include  TeamViewer.ahk  
+#Include TeamViewer.ahk  
 #Include Json.ahk
+#Include Klokken.ahk
+
 Persistent 1  ; Establece el script como persistente
 ; ChatGPT - Google Chrome
 ; ahk_class Chrome_WidgetWin_1
@@ -1046,7 +1047,7 @@ datos["Categ"] := "Complaint"
 datos["CategoryArea"] := "Solved Remotely" 
 datos["CaseType"] := "Expected Behaviour" 
 
-imagePath := A_ScriptDir . "/LogoSmall.png"
+imagePath := A_ScriptDir . "/IMG_LogoSmall.png"
 scale := 2.4
 wd:= 843
 hi := 559
@@ -1060,6 +1061,20 @@ imgY1 := 550
 
 imgControl := SkrvGui.Add("Picture", Format("x{} y{} w{} h{}", imgX1, imgY1, imgWidth1, imgHeight1), imagePath)
 
+imagePath_Logo := A_ScriptDir . "/IMG_SKRIVE_Trns.png"
+scale_Logo := 3.3
+wd_Logo:= 1024
+hi_Logo := 1024
+imgWidth1_Logo := wd_Logo / scale_Logo
+imgHeight1_Logo := hi_Logo / scale_Logo
+
+
+imgX1_Logo := 1005
+imgY1_Logo := 50
+
+imgControl_Logo := SkrvGui.Add("Picture", Format("x{} y{} w{} h{}", imgX1_Logo, imgY1_Logo, imgWidth1_Logo, imgHeight1_Logo), imagePath_Logo)
+
+
 
 
 y := 50 ; Posición inicial en Y
@@ -1067,12 +1082,10 @@ x:= 260
 spacing := 35 ; Espaciado entre elementos
 Insize:=390
 
-SkrvGui.Add("Text",)
 tvsize := (750/2)-(spacing*2)
 Complaints := Map() 
 Request := Map()
 Miscellaneous := Map()
-CasesfolderPaths:= Map()
 
 Caseopt := ["Complaints", "Request", "Miscellaneous"]
 CaseTP := Map()
@@ -1576,26 +1589,58 @@ AutomGUI(){
     FileAppend(Jxon_Dump(datos,4), BackupSave, "UTF-8" )
 
     SectionsGui := Gui("+AlwaysOnTop", "Enviar a Python")
-    SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+    SectionsGui.SetFont("s25 bold", "Segoe UI")
+    SectionsGui.AddText("x20 y20", "Acciones:")
+    SectionsGui.SetFont("s25 norm", "Segoe UI")
 
-    SectionsGui.AddText("x20 y20", "Selecciona opciones:")
-    SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+    checkboxStates := Map()
+    sections := [
+        "Sección 1 [Llenar Datos Cliente]",
+        "Sección 2 [Guardar CaseNumber y Survey]",
+        "Sección 3 [Agregar notas y enviar Email]",
+        "Sección 4 [Terminar Workflow]",
+        "Sección 5 [Resolver caso]"
+    ]
 
-    checkboxStates["seccion1"] := SectionsGui.AddCheckbox("x20 y+10", "Sección 1")
-    checkboxStates["seccion2"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 2")
-    checkboxStates["seccion3"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 3")
-    checkboxStates["seccion4"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 4")
-    checkboxStates["seccion5"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 5")
+    global tooltipText := ""  ; acumulador para todas las descripciones
+    y := 60
+
+    loop sections.Length {
+        fullText := sections[A_Index]
+
+        ; Extraer nombre visible (antes del [)
+        visibleText := RegExReplace(fullText, "\s*\[.*\]", "")
+
+        ; Extraer el contenido entre [ ]
+        description := RegExReplace(fullText, ".*\[\s*(.*?)\s*\]", "$1")
+
+        ; Agregar checkbox con texto limpio
+        cbx := SectionsGui.AddCheckbox("x20 y" y, visibleText)
+        checkboxStates["seccion" A_Index] := cbx
+
+        tooltipText .= visibleText ": " description "`n"
+        y += 50
+    }
+
+    ; Botón de ayuda "?" al final
+    helpBtn := SectionsGui.AddButton("x20 y" y " w25 h45", "?")
+    helpBtn.OnEvent("Click", (*) => ShowTooltip())
+
     ; Activar todos los checkboxes por defecto
-    for clave in ["seccion2", "seccion3", "seccion4"] {
-        checkboxStates[clave].Value := true
+    for claves in [ "seccion2", "seccion3", "seccion4"] {
+        checkboxStates[claves].Value := true
     }
     SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
-    SectionsGui.AddButton("x20 y+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython())
+    SectionsGui.AddButton("x+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython())
     SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
     SectionsGui.Show()
+    ShowTooltip() {
+        global tooltipText
+        ToolTip(tooltipText)
+        SetTimer(() => ToolTip(), -4000)  ; Oculta después de 4 segundos
+    }
     EjecutarPython() {
         global datos, EditControls,fileDir1,rutaPython,rutaScript
         UpdateDataFromEdits()
@@ -1661,26 +1706,61 @@ AutomGUI_SinCondiciones(){
     FileAppend(Jxon_Dump(datos,4), BackupSave, "UTF-8" )
 
     SectionsGui := Gui("+AlwaysOnTop", "Enviar a Python")
-    SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+    SectionsGui.SetFont("s25 bold", "Segoe UI")
+    SectionsGui.AddText("x20 y20", "Acciones:")
+    SectionsGui.SetFont("s25 norm", "Segoe UI")
 
-    SectionsGui.AddText("x20 y20", "Selecciona opciones:")
-    SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+    checkboxStates := Map()
+    sections := [
+        "Sección 1 [Llenar Datos Cliente]",
+        "Sección 2 [Guardar CaseNumber y Survey]",
+        "Sección 3 [Agregar notas y enviar Email]",
+        "Sección 4 [Terminar Workflow]",
+        "Sección 5 [Resolver caso]"
+    ]
 
-    checkboxStates["seccion1"] := SectionsGui.AddCheckbox("x20 y+10", "Sección 1")
-    checkboxStates["seccion2"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 2")
-    checkboxStates["seccion3"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 3")
-    checkboxStates["seccion4"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 4")
-    checkboxStates["seccion5"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 5")
+    global tooltipText := ""  ; acumulador para todas las descripciones
+    y := 60
+
+    loop sections.Length {
+        fullText := sections[A_Index]
+
+        ; Extraer nombre visible (antes del [)
+        visibleText := RegExReplace(fullText, "\s*\[.*\]", "")
+
+        ; Extraer el contenido entre [ ]
+        description := RegExReplace(fullText, ".*\[\s*(.*?)\s*\]", "$1")
+
+        ; Agregar checkbox con texto limpio
+        cbx := SectionsGui.AddCheckbox("x20 y" y, visibleText)
+        checkboxStates["seccion" A_Index] := cbx
+
+        tooltipText .= visibleText ": " description "`n"
+        y += 50
+    }
+
+    ; Botón de ayuda "?" al final
+    helpBtn := SectionsGui.AddButton("x20 y" y " w25 h45", "?")
+    helpBtn.OnEvent("Click", (*) => ShowTooltip())
+
     ; Activar todos los checkboxes por defecto
     for _, checkBoxes in checkboxStates {
         checkBoxes.Value := true
     }
     SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
-    SectionsGui.AddButton("x20 y+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython_sinCondicionales())
+    SectionsGui.AddButton("x+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython_sinCondicionales())
     SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
     SectionsGui.Show()
+
+    ShowTooltip() {
+        global tooltipText
+        ToolTip(tooltipText)
+        SetTimer(() => ToolTip(), -4000)  ; Oculta después de 4 segundos
+    }
+
+    
     EjecutarPython_sinCondicionales() {
         global datos, EditControls,fileDir1,rutaPython,rutaScript
         UpdateDataFromEdits()
@@ -1728,10 +1808,40 @@ Skrive_link_btn() {
     }
 }
 
+Skrive_link_btn2() {
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+    if GetKeyState("Alt") {  ; Verifica si Alt está presionado
+        Automatic()
+        return
+    } else { 
+        Ejecutar_Autom_Python()
+        return
+    }
+}
+
+
 BtnSKRIVE.OnEvent("ContextMenu", (*) => Skrive_link_btn())
-BtnSKRIVE.OnEvent("Click", (*) => Ejecutar_Autom_Python())
+BtnSKRIVE.OnEvent("Click", (*) => Skrive_link_btn2())
 
 
+BtnKlokken := SkrvGui.Add("Button", "x600 y750 w200 h60", "Klokken!")
+BtnKlokken.OnEvent("Click", (*) => Klokken())
+
+Klokken() {
+    ; Ejecutar un archivo .exe (ajusta la ruta según sea necesario)
+    exePath := A_WorkingDir . "\Klokken2.exe"
+    if FileExist(exePath){
+        Run(exePath)
+    }
+    else{
+        global KlokkenGui  ; Asegúrate de que este GUI esté definido globalmente (probablemente en Klokken.ahk)
+        KlKnWidth := 320
+        KlKnHeigh := 170  
+        KlokkenGui.Show("w" KlKnWidth " h" KlKnHeigh)
+    }
+}
 
 ; ; ; BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
 ; ; ; BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
@@ -2078,10 +2188,9 @@ isSkrvVisible := true
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
 ^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
-^!f::Automatic()  ; Ctrl + Alt + 3 -> Early Access
-^!t::CRM()  ; Ctrl + Alt + 3 -> Early Access
-; ^!k::SKRIVE_Autom(false)
-^!3::CRM2(true)  ; Ctrl + Alt + 2 -> Call Back
+^!f::Automatic()  ; Ctrl + Alt + F -> Copiar todo al portapapeles
+^!s::Skrive_link_btn()  ; Ctrl + Alt + S -> Gui de Acciones
+^!d::Skrive_link_btn2()  ; Ctrl + Alt + S -> Automatizar CRM
 
 
 !d::EditControls["&Dongle"].Value := A_Clipboard  ; Ctrl + Alt + S -> Fwd2Skrive

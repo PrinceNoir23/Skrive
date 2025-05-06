@@ -86,7 +86,8 @@ def is_port_in_use(port):
 # EJEMPLO DE USO:
 # ----------------------
 
-Reusar = True  # Cambia a False si quieres forzar abrir nueva ventana en cada test
+Reusar = True  
+# Cambia a False si quieres forzar abrir nueva ventana en cada test
 # Klokken
 
 if __name__ == "__main__":
@@ -182,12 +183,16 @@ args = parser.parse_args()
 
 # Abrir página de login
 
-driver.set_window_position(0, 0)
 if data["Case Link"] == "":
     driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
+    driver.set_window_position(0, 0.1)
+
 else:
     A_link = data["Case Link"]
     driver.get(A_link)
+    driver.set_window_position(0, 0.1)
+
+
 
 actions = ActionChains(driver)
 
@@ -205,101 +210,120 @@ time.sleep(15)
 
 
 # *************** SECTION 1 ***************  
+# Llenar el formulario de SUMMARY
+def seccion1 ():
+    driver.find_element(By.CSS_SELECTOR, '[aria-label="Description"]').send_keys(A_description)
 
-
-driver.find_element(By.CSS_SELECTOR, '[aria-label="Description"]').send_keys(A_description)
-
-dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Special Attention']")))
-dropdown_button.click()
-time.sleep(0.5)
-dropdown_button.send_keys('n')
-time.sleep(0.5)
-dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-
-
-
-
-time.sleep(0.5)
-
-
-dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Priority']")))
-dropdown_button.click()
-time.sleep(0.5)
-dropdown_button.send_keys('S')
-time.sleep(0.5)
-dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-
-time.sleep(0.5)
-
-
-# Espera a que el botón esté presente y haga clic en él para abrir el desplegable
-dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Origin']")))
-dropdown_button.click()
-time.sleep(0.5)
-dropdown_button.send_keys('P')
-time.sleep(0.5)
-dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-
-time.sleep(0.5)
-
-editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Dongle Number, Lookup"]')
-time.sleep(1)
-editfill.click()
-editfill.clear()
-time.sleep(1)
-editfill.send_keys(A_Dongle)
-time.sleep(3.5)
-editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-time.sleep(1)
-
-if A_Product == "Unite" or A_Product == "TRIOS Software":
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Product, Lookup"]')
-    time.sleep(1)
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_Product)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
-
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Software Version, Lookup"]')
-    time.sleep(0.7)
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_Version)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
-
-elif A_Product == "TRIOS":
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Scanner S/N"]')
+    dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Special Attention']")))
+    dropdown_button.click()
     time.sleep(0.5)
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_ScannerSN)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
-
-
-editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Responsible contact, Lookup"]')
-editfill.send_keys(A_email)
-time.sleep(3.5)
-editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-time.sleep(1)
-
-
-if A_Categ == "Request":
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
+    dropdown_button.send_keys('n')
     time.sleep(0.5)
+    dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+
+
+
+
+    time.sleep(0.5)
+
+
+    dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Priority']")))
+    dropdown_button.click()
+    time.sleep(0.5)
+    dropdown_button.send_keys('S')
+    time.sleep(0.5)
+    dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+
+    time.sleep(0.5)
+
+
+    # Espera a que el botón esté presente y haga clic en él para abrir el desplegable
+    dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Origin']")))
+    dropdown_button.click()
+    time.sleep(0.5)
+    dropdown_button.send_keys('P')
+    time.sleep(0.5)
+    dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+
+    time.sleep(0.5)
+
+    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Dongle Number, Lookup"]')
+    time.sleep(1)
+    editfill.click()
     editfill.clear()
     time.sleep(1)
-    editfill.send_keys(A_Categ)
+    editfill.send_keys(A_Dongle)
     time.sleep(3.5)
     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
     time.sleep(1)
 
-    if A_CategArea=="General Product Information":
+    if A_Product == "Unite" or A_Product == "TRIOS Software":
+        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Product, Lookup"]')
+        time.sleep(1)
+        editfill.clear()
+        time.sleep(1)
+        editfill.send_keys(A_Product)
+        time.sleep(3.5)
+        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+        time.sleep(1)
+
+        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Software Version, Lookup"]')
+        time.sleep(0.7)
+        editfill.clear()
+        time.sleep(1)
+        editfill.send_keys(A_Version)
+        time.sleep(3.5)
+        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+        time.sleep(1)
+
+    elif A_Product == "TRIOS":
+        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Scanner S/N"]')
+        time.sleep(0.5)
+        editfill.clear()
+        time.sleep(1)
+        editfill.send_keys(A_ScannerSN)
+        time.sleep(3.5)
+        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+        time.sleep(1)
+
+
+    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Responsible contact, Lookup"]')
+    editfill.click()
+    editfill.send_keys(A_email)
+    time.sleep(3.5)
+    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    time.sleep(1)
+
+
+    if A_Categ == "Request":
+        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
+        time.sleep(0.5)
+        editfill.clear()
+        time.sleep(1)
+        editfill.send_keys(A_Categ)
+        time.sleep(3.5)
+        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+        time.sleep(1)
+
+        if A_CategArea=="General Product Information":
+            editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
+            time.sleep(0.5)
+            editfill.clear()
+            time.sleep(1)
+            editfill.send_keys(A_CategArea)
+            time.sleep(3.5)
+            editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+            time.sleep(1)
+
+            editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
+            time.sleep(0.5)
+            editfill.clear()
+            time.sleep(1)
+            editfill.send_keys(A_CasegType)
+            time.sleep(3.5)
+            editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+            time.sleep(1)
+        
         editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
         time.sleep(0.5)
         editfill.clear()
@@ -309,16 +333,19 @@ if A_Categ == "Request":
         editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
         time.sleep(1)
 
-        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
-        time.sleep(0.5)
-        editfill.clear()
-        time.sleep(1)
-        editfill.send_keys(A_CasegType)
-        time.sleep(3.5)
-        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-        time.sleep(1)
-    
+
+    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
+    editfill.click()
+    time.sleep(0.5)
+    editfill.clear()
+    time.sleep(1)
+    editfill.send_keys(A_Categ)
+    time.sleep(3.5)
+    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    time.sleep(1)
+
     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
+    editfill.click()
     time.sleep(0.5)
     editfill.clear()
     time.sleep(1)
@@ -327,559 +354,553 @@ if A_Categ == "Request":
     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
     time.sleep(1)
 
-
-editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
-editfill.click()
-time.sleep(0.5)
-editfill.clear()
-time.sleep(1)
-editfill.send_keys(A_Categ)
-time.sleep(3.5)
-editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-time.sleep(1)
-
-editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
-editfill.click()
-time.sleep(0.5)
-editfill.clear()
-time.sleep(1)
-editfill.send_keys(A_CategArea)
-time.sleep(3.5)
-editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-time.sleep(1)
-
-editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
-editfill.click()
-time.sleep(0.5)
-editfill.clear()
-time.sleep(1)
-editfill.send_keys(A_CasegType)
-time.sleep(3.5)
-editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-time.sleep(1)
+    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
+    editfill.click()
+    time.sleep(0.5)
+    editfill.clear()
+    time.sleep(1)
+    editfill.send_keys(A_CasegType)
+    time.sleep(3.5)
+    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    time.sleep(1)
 
 
 
-# Usando XPATH
-driver.find_element(By.XPATH, '//li[@aria-label="Description & Conclusion"]').click()
-time.sleep(1)
+    # Usando XPATH
+    driver.find_element(By.XPATH, '//li[@aria-label="Description & Conclusion"]').click()
+    time.sleep(1)
 
-driver.find_element(By.CSS_SELECTOR, '[aria-label="Additional Information"]').send_keys(A_AddInfo)
+    driver.find_element(By.CSS_SELECTOR, '[aria-label="Additional Information"]').send_keys(A_AddInfo)
 
-driver.find_element(By.CSS_SELECTOR, '[aria-label="Conclusion"]').send_keys(A_Conclusion)
-time.sleep(1000)
-time.sleep(1)
-save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
-save_button.click()
-
-
-Share_Btn = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Share"]'))
-)
-Share_Btn.click()
-time.sleep(0.5)
+    driver.find_element(By.CSS_SELECTOR, '[aria-label="Conclusion"]').send_keys(A_Conclusion)
+    time.sleep(1000)
+    time.sleep(1)
+    save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
+    save_button.click()
 
 
-
-# Clic en el botón "Copy link"
-copy_link_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'copyLinkItem')]")))
-copy_link_button.click()
-
-
-def update_case_link(driver, json_path):
-        # Esperar a que aparezca la ventana "Link Copied"
-
-    time.sleep(1)  # pequeña espera para asegurar que el portapapeles se haya actualizado
-
-    # Obtener link del portapapeles
-    full_url = pyperclip.paste()
-
-    # Leer el JSON
-    with open(json_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-
-    # Reemplazar el valor de la clave "Case Link"
-    if "Case Link" in data:
-        data["Case Link"] = full_url
-    else:
-        print('"Case Link" no encontrado en el JSON.')
-    # Guardar los cambios
-    with open(json_path, 'w', encoding='utf-8') as file:
-        json.dump(data, file, indent=4)
-    wait = WebDriverWait(driver, 10)
-
-    close_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'dialogCloseIconButton')]")))
-    close_button.click()
-    time.sleep(1)  # pequeña espera para asegurar que el portapapeles se haya actualizado
+    Share_Btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Share"]'))
+    )
+    Share_Btn.click()
+    time.sleep(0.5)
 
 
-update_case_link(driver,json_path)
 
-try:
-    with open(json_path, 'r', encoding='utf-8-sig') as f:
-        data = json.load(f)
-except Exception as e:
-    print(f"Error al leer el JSON: {e}")
-    sys.exit(1)
+    # Clic en el botón "Copy link"
+    copy_link_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'copyLinkItem')]")))
+    copy_link_button.click()
+
+
+    def update_case_link(driver, json_path):
+            # Esperar a que aparezca la ventana "Link Copied"
+
+        time.sleep(1)  # pequeña espera para asegurar que el portapapeles se haya actualizado
+
+        # Obtener link del portapapeles
+        full_url = pyperclip.paste()
+
+        # Leer el JSON
+        with open(json_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+        # Reemplazar el valor de la clave "Case Link"
+        if "Case Link" in data:
+            data["Case Link"] = full_url
+        else:
+            print('"Case Link" no encontrado en el JSON.')
+        # Guardar los cambios
+        with open(json_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=4)
+        wait = WebDriverWait(driver, 10)
+
+        close_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'dialogCloseIconButton')]")))
+        close_button.click()
+        time.sleep(1)  # pequeña espera para asegurar que el portapapeles se haya actualizado
+
+
+    update_case_link(driver,json_path)
+
+    try:
+        with open(json_path, 'r', encoding='utf-8-sig') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error al leer el JSON: {e}")
+        sys.exit(1)
 
 
 # *************** SECTION 2 ***************  
+# Toma el case Number, la Survey y lo guarda en el JSON
 
-time.sleep(20)
+def seccion2 ():
+    if args.seccion1:
+        time.sleep(20)
+    # Esperar hasta que el indicador de carga desaparezca
+    WebDriverWait(driver, 25).until(
+        EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
+    )
+    # Esperar a que "Enter a note" sea clickeable
+    WebDriverWait(driver, 25).until(
+        EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
+    )
 
-# Esperar hasta que el indicador de carga desaparezca
-WebDriverWait(driver, 25).until(
-    EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
-)
-# Esperar a que "Enter a note" sea clickeable
-WebDriverWait(driver, 25).until(
-    EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
-)
-
-# Esperar a que "Enter a note" sea clickeable
-WebDriverWait(driver, 25).until(
-    EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]'))
-)
-
-
-
-# # Encontrar el campo
-casewtit = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Title"]')
-A_CaseNumber = casewtit.get_attribute("value")
-
-pyperclip.copy(A_CaseNumber)
+    # Esperar a que "Enter a note" sea clickeable
+    WebDriverWait(driver, 25).until(
+        EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]'))
+    )
 
 
 
-def update_case_number(json_path, A_CaseNumber):
-    # Extraer solo el texto entre corchetes
-    match = re.search(r'\[(.*?)\]', A_CaseNumber)
-    if match:
-        A_CaseNumber = match.group(1)
-    else:
-        print("No se encontró texto entre corchetes en el valor proporcionado.")
-        return
+    # # Encontrar el campo
+    casewtit = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Title"]')
+    A_CaseNumber = casewtit.get_attribute("value")
 
-    # Leer el JSON
-    with open(json_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-
-    # Reemplazar el valor de la clave "C&ase Number"
-    if "C&ase Number" in data:
-        data["C&ase Number"] = A_CaseNumber
-    else:
-        print('"C&ase Number" no encontrado en el JSON.')
-
-    # Guardar los cambios
-    with open(json_path, 'w', encoding='utf-8') as file:
-        json.dump(data, file, indent=4)
-
-update_case_number(json_path, A_CaseNumber)
-# [CAS-1211486-Z2G2M8]
-
-try:
-    with open(json_path, 'r', encoding='utf-8-sig') as f:
-        data = json.load(f)
-except Exception as e:
-    print(f"Error al leer el JSON: {e}")
-    sys.exit(1)
-
-A_CaseNumber = data["C&ase Number"]
-
-
-time.sleep(0.5)
-# Enviar Alt + Apyautogui
-
-pyautogui.hotkey('alt', 'a')
-# Luego, enviar flecha izquierda
-time.sleep(1.5)
-# Asegurarse que el campo tenga foco
-casewtit.click()
-time.sleep(0.5)
-
-# Inicializa ActionChains
-time.sleep(1)
-
-# Ctrl+A y Backspace
-actions.key_down(Keys.CONTROL).send_keys('a').key_up(Keys.CONTROL).perform()
-time.sleep(0.5)
-
-actions.send_keys(Keys.BACKSPACE)
-
-
-time.sleep(0.5)
-
-A_CaseTitl_Plus_Casenumber = f"{A_CaseTitle} {A_CaseNumber} "
-time.sleep(0.2)
-
-casewtit.send_keys(A_CaseTitl_Plus_Casenumber)
-
-time.sleep(1)
-save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
-save_button.click()
-
-# Esperar hasta que el indicador de carga desaparezca
-WebDriverWait(driver, 25).until(
-    EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
-)
-
-time.sleep(10)
+    pyperclip.copy(A_CaseNumber)
 
 
 
-WebDriverWait(driver, 25).until(
-    EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]'))
-)
+    def update_case_number(json_path, A_CaseNumber):
+        # Extraer solo el texto entre corchetes
+        match = re.search(r'\[(.*?)\]', A_CaseNumber)
+        if match:
+            A_CaseNumber = match.group(1)
+        else:
+            print("No se encontró texto entre corchetes en el valor proporcionado.")
+            return
 
-# Luego hacer clic en el tab "Summary"
-# Esperar a que el tab esté presente y visible
-system_tab = WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.XPATH, '//li[@aria-label="System"]'))
-)
+        # Leer el JSON
+        with open(json_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
 
-# Intentar clic normal
-try:
-    system_tab.click()
-except:
-    # Si el click normal falla, usar JavaScript
-    driver.execute_script("arguments[0].click();", system_tab)
+        # Reemplazar el valor de la clave "C&ase Number"
+        if "C&ase Number" in data:
+            data["C&ase Number"] = A_CaseNumber
+        else:
+            print('"C&ase Number" no encontrado en el JSON.')
 
+        # Guardar los cambios
+        with open(json_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=4)
 
-# time.sleep(10)
+    update_case_number(json_path, A_CaseNumber)
+    # [CAS-1211486-Z2G2M8]
 
-# driver.find_element(By.XPATH, '//li[@aria-label="System"]').click()
-time.sleep(10)
+    try:
+        with open(json_path, 'r', encoding='utf-8-sig') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error al leer el JSON: {e}")
+        sys.exit(1)
 
-# Localizar el campo de texto usando XPath
-
-surveyEdit = driver.find_element(By.XPATH, '//input[@aria-label="SurveyMonkey Link"]')
-
-A_Survey = surveyEdit.get_attribute("value")
-
-pyperclip.copy(A_Survey)
-
-
-
-def update_survey(json_path, A_Survey):
-
-    # Leer el JSON
-    with open(json_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-
-    # Reemplazar el valor de la clave "Sur&vey"
-    if "Sur&vey" in data:
-        data["Sur&vey"] = A_Survey
-    else:
-        print('"Sur&vey" no encontrado en el JSON.')
-
-    # Guardar los cambios
-    with open(json_path, 'w', encoding='utf-8') as file:
-        json.dump(data, file, indent=4)
+    A_CaseNumber = data["C&ase Number"]
 
 
-update_survey(json_path, A_Survey)
-try:
-    with open(json_path, 'r', encoding='utf-8-sig') as f:
-        data = json.load(f)
-except Exception as e:
-    print(f"Error al leer el JSON: {e}")
-    sys.exit(1)
+    time.sleep(0.5)
+    # Enviar Alt + Apyautogui
 
-time.sleep(0.5)
+    pyautogui.hotkey('alt', 'a')
+    # Luego, enviar flecha izquierda
+    time.sleep(1.5)
+    # Asegurarse que el campo tenga foco
+    casewtit.click()
+    time.sleep(0.5)
 
-pyautogui.hotkey('alt', 'v')
+    # Inicializa ActionChains
+    time.sleep(1)
 
-time.sleep(0.5)
+    # Ctrl+A y Backspace
+    actions.key_down(Keys.CONTROL).send_keys('a').key_up(Keys.CONTROL).perform()
+    time.sleep(0.5)
+
+    actions.send_keys(Keys.BACKSPACE)
+
+
+    time.sleep(0.5)
+
+    A_CaseTitl_Plus_Casenumber = f"{A_CaseTitle} [{A_CaseNumber}] "
+    time.sleep(0.2)
+
+    casewtit.send_keys(A_CaseTitl_Plus_Casenumber)
+
+    time.sleep(1)
+    save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
+    save_button.click()
+
+    # Esperar hasta que el indicador de carga desaparezca
+    WebDriverWait(driver, 25).until(
+        EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
+    )
+
+    time.sleep(10)
+
+
+
+    WebDriverWait(driver, 25).until(
+        EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]'))
+    )
+
+    # Luego hacer clic en el tab "Summary"
+    # Esperar a que el tab esté presente y visible
+    system_tab = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//li[@aria-label="System"]'))
+    )
+
+    # Intentar clic normal
+    try:
+        system_tab.click()
+    except:
+        # Si el click normal falla, usar JavaScript
+        driver.execute_script("arguments[0].click();", system_tab)
+
+
+    # time.sleep(10)
+
+    # driver.find_element(By.XPATH, '//li[@aria-label="System"]').click()
+    time.sleep(10)
+
+    # Localizar el campo de texto usando XPath
+
+    surveyEdit = driver.find_element(By.XPATH, '//input[@aria-label="SurveyMonkey Link"]')
+
+    A_Survey = surveyEdit.get_attribute("value")
+
+    pyperclip.copy(A_Survey)
+
+
+
+    def update_survey(json_path, A_Survey):
+
+        # Leer el JSON
+        with open(json_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+        # Reemplazar el valor de la clave "Sur&vey"
+        if "Sur&vey" in data:
+            data["Sur&vey"] = A_Survey
+        else:
+            print('"Sur&vey" no encontrado en el JSON.')
+
+        # Guardar los cambios
+        with open(json_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=4)
+
+
+    update_survey(json_path, A_Survey)
+    try:
+        with open(json_path, 'r', encoding='utf-8-sig') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error al leer el JSON: {e}")
+        sys.exit(1)
+
+    time.sleep(0.5)
+
+    pyautogui.hotkey('alt', 'v')
+
+    time.sleep(0.5)
+
 
 # *************** SECTION 3 ***************  
+# Agregar notas y enviar email
+def seccion3 ():
+    time.sleep(1.5)
 
-time.sleep(1.5)
+    driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
 
-driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
-
-
-time.sleep(0.5)
-
-WebDriverWait(driver, 25).until(
-    EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]'))
-)
-
-
-def create_note(driver, wait, TITULO, NOTA,Notebool):
-    note_area = wait.until(EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]')))
-    note_area.click()
-    time.sleep(2)
-    # Escribir el título de la nota
-    # Ubicar directamente el input por aria-label
-    notetitle_input = driver.find_element(By.XPATH, '//input[@aria-label="Create a Note title"]')
-    # Click (opcional, si necesario)
-    notetitle_input.click()
-    # Enviar el texto
-    notetitle_input.send_keys(TITULO)
 
     time.sleep(0.5)
-    # Escribir el contenido de la nota
-    noteBody_input = driver.find_element(By.XPATH, '//div[@aria-label="Rich Text Editor Control incident notetext"]')
-    noteBody_input.send_keys(NOTA)
 
-    
-
-    if Notebool == True:
-        attach_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@title="Add an attachment"]')))
-        attach_button.click()
-        time.sleep(1)
-
-        # Ahora esperar el input de tipo file
-        file_input = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="file"]')))
-        time.sleep(1)
-        import os
-
-        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-        logs_file = os.path.join(desktop_path, "Cases_Final")
-
-        # Suponiendo que A_Dongle ya está definido, por ejemplo:
-        # A_Dongle = "Suba"
-
-        # Buscar el archivo cuyo nombre contenga A_Dongle
-        archivo_encontrado = None
-        for archivo in os.listdir(logs_file):
-            if A_Dongle in archivo and archivo.endswith(".zip"):
-                archivo_encontrado = os.path.join(logs_file, archivo)
-                break
-
-        if archivo_encontrado:
-            file_input.send_keys(archivo_encontrado)
-        else:
-            print(f"No se encontró un archivo .zip que contenga '{A_Dongle}' en {logs_file}")
+    WebDriverWait(driver, 25).until(
+        EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]'))
+    )
 
 
-        # TAB varias veces
-        for _ in range(3):
-            pyautogui.press('tab')
-            time.sleep(0.5)
+    def create_note(driver, wait, TITULO, NOTA,Notebool):
+        note_area = wait.until(EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Enter a note")]')))
+        note_area.click()
+        time.sleep(2)
+        # Escribir el título de la nota
+        # Ubicar directamente el input por aria-label
+        notetitle_input = driver.find_element(By.XPATH, '//input[@aria-label="Create a Note title"]')
+        # Click (opcional, si necesario)
+        notetitle_input.click()
+        # Enviar el texto
+        notetitle_input.send_keys(TITULO)
 
+        time.sleep(0.5)
+        # Escribir el contenido de la nota
+        noteBody_input = driver.find_element(By.XPATH, '//div[@aria-label="Rich Text Editor Control incident notetext"]')
+        noteBody_input.send_keys(NOTA)
 
-        pyautogui.press('enter')
         
-        time.sleep(10)
+
+        if Notebool == True:
+            attach_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@title="Add an attachment"]')))
+            attach_button.click()
+            time.sleep(1)
+
+            # Ahora esperar el input de tipo file
+            file_input = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="file"]')))
+            time.sleep(1)
+            import os
+
+            desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+            logs_file = os.path.join(desktop_path, "Cases_Final")
+
+            # Suponiendo que A_Dongle ya está definido, por ejemplo:
+            # A_Dongle = "Suba"
+
+            # Buscar el archivo cuyo nombre contenga A_Dongle
+            archivo_encontrado = None
+            for archivo in os.listdir(logs_file):
+                if A_Dongle in archivo and archivo.endswith(".zip"):
+                    archivo_encontrado = os.path.join(logs_file, archivo)
+                    break
+
+            if archivo_encontrado:
+                file_input.send_keys(archivo_encontrado)
+            else:
+                print(f"No se encontró un archivo .zip que contenga '{A_Dongle}' en {logs_file}")
+
+
+            # TAB varias veces
+            for _ in range(3):
+                pyautogui.press('tab')
+                time.sleep(0.5)
+
+
+            pyautogui.press('enter')
+            
+            time.sleep(10)
+            
         
-    
-    # Click en "Add note and close"
-    note_add = wait.until(EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Add note and close")]')))
-    note_add.click()
+        # Click en "Add note and close"
+        note_add = wait.until(EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "Add note and close")]')))
+        note_add.click()
 
 
-time.sleep(1)
-create_note(driver, wait, A_Phone_Tit, A_Phone_Note,False)
-time.sleep(3)
-create_note(driver, wait, A_Intl_Tit, A_Intl_Note,False)
-time.sleep(3)
-create_note(driver, wait, A_Remote_Tit, A_Remote_Note,False)
-time.sleep(3)
-create_note(driver, wait, A_Intl_Tit, "Logs and images are here",True)
+    time.sleep(1)
+    create_note(driver, wait, A_Phone_Tit, A_Phone_Note,False)
+    time.sleep(3)
+    create_note(driver, wait, A_Intl_Tit, A_Intl_Note,False)
+    time.sleep(3)
+    create_note(driver, wait, A_Remote_Tit, A_Remote_Note,False)
+    time.sleep(3)
+    create_note(driver, wait, A_Intl_Tit, "Logs and images are here",True)
 
-# Esperar hasta que el indicador de carga desaparezca
-WebDriverWait(driver, 25).until(
-    EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
-)
+    # Esperar hasta que el indicador de carga desaparezca
+    WebDriverWait(driver, 25).until(
+        EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
+    )
 
-time.sleep(10)
-
-
-# Hacer clic en el botón de "Agregar correo"
-add_email_Button = WebDriverWait(driver, 25).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[@data-id="notescontrol-action_bar_add_command"]'))
-)
-add_email_Button.click()
-
-pyautogui.hotkey('enter')
+    time.sleep(10)
 
 
-# === 1. Entrar al iframe del email popup ===
-email_iframe = WebDriverWait(driver, 30).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'iframe[id^="EmailPopupIframe_"]'))
-)
-driver.switch_to.frame(email_iframe)
+    # Hacer clic en el botón de "Agregar correo"
+    add_email_Button = WebDriverWait(driver, 25).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@data-id="notescontrol-action_bar_add_command"]'))
+    )
+    add_email_Button.click()
+
+    pyautogui.hotkey('enter')
 
 
-# # # # ---------------------------------------------------------------------
-# # # # # # Paso 1: Hacer clic en el botón del menú "Email"
-# # # # # email_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@data-id='form-selector' and contains(., 'Email')]")))
-# # # # # email_button.click()
-
-# # # # # # Paso 2: Esperar y hacer clic en la opción "Enhanced Email"
-# # # # # enhanced_email_option = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='menuitemradio' and @data-text='Enhanced Email']")))
-# # # # # enhanced_email_option.click()
+    # === 1. Entrar al iframe del email popup ===
+    email_iframe = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'iframe[id^="EmailPopupIframe_"]'))
+    )
+    driver.switch_to.frame(email_iframe)
 
 
-# # # # # discard_button = wait.until(EC.element_to_be_clickable((
-# # # # #     By.XPATH, "//button[@data-id='cancelButton' and .//div[text()='Discard changes']]"
-# # # # # )))
-# # # # # discard_button.click()
+    # # # # ---------------------------------------------------------------------
+    # # # # # # Paso 1: Hacer clic en el botón del menú "Email"
+    # # # # # email_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@data-id='form-selector' and contains(., 'Email')]")))
+    # # # # # email_button.click()
 
-# # # # ---------------------------------------------------------------------
+    # # # # # # Paso 2: Esperar y hacer clic en la opción "Enhanced Email"
+    # # # # # enhanced_email_option = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='menuitemradio' and @data-text='Enhanced Email']")))
+    # # # # # enhanced_email_option.click()
+
+
+    # # # # # discard_button = wait.until(EC.element_to_be_clickable((
+    # # # # #     By.XPATH, "//button[@data-id='cancelButton' and .//div[text()='Discard changes']]"
+    # # # # # )))
+    # # # # # discard_button.click()
+
+    # # # # ---------------------------------------------------------------------
 
 
 
 
-# === 2. Llenar el Subject ===
-subject_input = WebDriverWait(driver, 15).until(
-    EC.presence_of_element_located((By.XPATH, '//input[@aria-label="Subject"]'))
-)
-A_Subject = f"Regarding your case {A_CaseNumber}"
-subject_input.send_keys(A_Subject)
+    # === 2. Llenar el Subject ===
+    subject_input = WebDriverWait(driver, 15).until(
+        EC.presence_of_element_located((By.XPATH, '//input[@aria-label="Subject"]'))
+    )
+    A_CaseNumber = data["C&ase Number"]
+    A_Subject = f"Regarding your case [{A_CaseNumber}]"
+    subject_input.send_keys(A_Subject)
 
-time.sleep(10)
+    time.sleep(10)
 
-# SHIFT + TAB
-pyautogui.hotkey('shift', 'tab')
-time.sleep(0.5)
-
-# TAB varias veces
-for _ in range(3):
-    pyautogui.press('tab')
+    # SHIFT + TAB
+    pyautogui.hotkey('shift', 'tab')
     time.sleep(0.5)
 
-time.sleep(0.5)
+    # TAB varias veces
+    for _ in range(3):
+        pyautogui.press('tab')
+        time.sleep(0.5)
+
+    time.sleep(0.5)
 
 
 
-# Construir el texto final
-closing_message = (
-    "\n\nThank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey:\n\n\n\n"
-    "At the end of the survey, please leave a note about your experience during this interaction.\n\n\n\n"
-    "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence.\n\n"
-)
+    # Construir el texto final
+    closing_message = (
+        "\n\nThank you for allowing me to assist you today. I would greatly appreciate it if you could take a moment to provide feedback on my service by completing the following survey:\n\n\n\n"
+        "At the end of the survey, please leave a note about your experience during this interaction.\n\n\n\n"
+        "Your patience and understanding throughout the process are greatly appreciated, and your feedback will help us continue improving our services as we strive for excellence.\n\n"
+    )
 
-# Combinar el contenido principal + mensaje final
-full_text = data["EmailFinal"] + closing_message
+    # Combinar el contenido principal + mensaje final
+    full_text = data["EmailFinal"] + closing_message
 
-# Copiar al portapapeles
-pyperclip.copy(full_text)
-
-
-# Pequeña pausa para asegurar que el campo tiene foco
-time.sleep(0.5)
-
-# Pegar con pyautogui
-pyautogui.hotkey('ctrl', 'v')
-
-# Abrir buscador
-pyautogui.hotkey('ctrl', 'f')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-
-# Escribir lo que quieres buscar
-pyautogui.write('the following survey:')
-
-pyautogui.hotkey('enter')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-pyautogui.hotkey('esc')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-pyautogui.hotkey('right')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-pyautogui.hotkey('enter')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-pyautogui.hotkey('enter')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-pyautogui.hotkey('enter')
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-A_surveyFinal = f"https://{data['Sur&vey']}"
+    # Copiar al portapapeles
+    pyperclip.copy(full_text)
 
 
-pyautogui.write(A_surveyFinal)
+    # Pequeña pausa para asegurar que el campo tiene foco
+    time.sleep(0.5)
 
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-pyautogui.hotkey('enter')
+    # Pegar con pyautogui
+    pyautogui.hotkey('ctrl', 'v')
 
-time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    # Abrir buscador
+    pyautogui.hotkey('ctrl', 'f')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
-# === 6. Clic en el botón Send Email ===
-send_button = WebDriverWait(driver, 20).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Send Email"]'))
-)
-send_button.click()
+    # Escribir lo que quieres buscar
+    pyautogui.write('the following survey:')
 
-time.sleep(10)
+    pyautogui.hotkey('enter')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('esc')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('right')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+     # TAB varias veces
+    for _ in range(3):
+        pyautogui.hotkey('enter')
+        time.sleep(0.5)
 
-# === 7. Salir completamente del iframe del email ===
-driver.switch_to.default_content()
+    A_surveyFinal = f"https://{data['Sur&vey']}"
 
+
+    pyautogui.write(A_surveyFinal)
+
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('enter')
+
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+
+    # === 6. Clic en el botón Send Email ===
+    send_button = WebDriverWait(driver, 20).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Send Email"]'))
+    )
+    send_button.click()
+
+    time.sleep(10)
+
+    # === 7. Salir completamente del iframe del email ===
+    driver.switch_to.default_content()
 
 
 # *************** SECTION 4 ***************  
+# Terminar workflow y cerrar el caso
+def seccion4 ():
+    driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
+    time.sleep(1)
 
-driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
-time.sleep(1)
+    worflow_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[contains(@aria-label, "Categorization")]'))
+    )
+    worflow_button.click()
+    time.sleep(3)
 
-worflow_button = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[contains(@aria-label, "Categorization")]'))
-)
-worflow_button.click()
-time.sleep(3)
-
-next_stage_btn = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Next Stage"]'))
-)
-next_stage_btn.click()
-time.sleep(3)
-
-
-worflow_button = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[contains(@aria-label, "Analysis")]'))
-)
-worflow_button.click()
-time.sleep(3)
-
-next_stage_btn = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Next Stage"]'))
-)
-next_stage_btn.click()
-time.sleep(3)
+    next_stage_btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Next Stage"]'))
+    )
+    next_stage_btn.click()
+    time.sleep(3)
 
 
-worflow_button = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[contains(@aria-label, "Conclusion")]'))
-)
-worflow_button.click()
-time.sleep(3)
+    worflow_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[contains(@aria-label, "Analysis")]'))
+    )
+    worflow_button.click()
+    time.sleep(3)
 
-next_stage_btn = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Finish"]'))
-)
-next_stage_btn.click()
-time.sleep(3)
+    next_stage_btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Next Stage"]'))
+    )
+    next_stage_btn.click()
+    time.sleep(3)
+
+
+    worflow_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[contains(@aria-label, "Conclusion")]'))
+    )
+    worflow_button.click()
+    time.sleep(3)
+
+    next_stage_btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Finish"]'))
+    )
+    next_stage_btn.click()
+    time.sleep(3)
+
+
 # *************** SECTION 5 ***************  
+# Resolver el caso
+def seccion5 ():
+    driver.set_window_size(1920, 1080)
+
+    ResolveCase_Btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Resolve Case"]'))
+    )
+    ResolveCase_Btn.click()
+    time.sleep(3)
+
+    # Espera a que el textarea esté presente y visible
+    textarea = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//textarea[@aria-label="Resolution"]'))
+    )
+    textarea.send_keys(A_Conclusion)
 
 
-
-# # driver.set_window_size(1920, 1080)
-
-# # ResolveCase_Btn = WebDriverWait(driver, 10).until(
-# #     EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Resolve Case"]'))
-# # )
-# # ResolveCase_Btn.click()
-# # time.sleep(3)
-
-# # # Espera a que el textarea esté presente y visible
-# # textarea = WebDriverWait(driver, 10).until(
-# #     EC.presence_of_element_located((By.XPATH, '//textarea[@aria-label="Resolution"]'))
-# # )
-# # textarea.send_keys(A_Conclusion)
+    time.sleep(3)
 
 
-# # time.sleep(3)
+    # Clic en el botón "Copy link"
+    SaveClose_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@title, 'Save and close this Case Resolution')]")))
+    SaveClose_button.click()
+    time.sleep(3)
 
+    driver.maximize_window()
+    time.sleep(0.5)
 
-# # # Clic en el botón "Copy link"
-# # SaveClose_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@title, 'Save and close this Case Resolution')]")))
-# # SaveClose_button.click()
-# # time.sleep(3)
+    cases_item = wait.until(EC.element_to_be_clickable((By.ID, "sitemap-entity-nav_cases")))
+    cases_item.click()
 
-# # driver.maximize_window()
-# # time.sleep(0.5)
-
-# # cases_item = wait.until(EC.element_to_be_clickable((By.ID, "sitemap-entity-nav_cases")))
-# # cases_item.click()
-
-
-time.sleep(1000)
+if args.seccion1:
+    seccion1()
+if args.seccion2:
+    seccion2()
+if args.seccion3:
+    seccion3()
+if args.seccion4:
+    seccion4()
+if args.seccion5:
+    seccion5()
+else:
+    print("No se seleccionó ninguna opción.")
