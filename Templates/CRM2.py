@@ -1,39 +1,107 @@
 import sys
 import json
+import subprocess
+import socket
 import re
 import os
 import pyautogui
 import time
+import urllib.request
+
+import argparse
 import pyperclip
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
 from selenium.webdriver.common.action_chains import ActionChains
-
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from pathlib import Path
+
+
+CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+BASE_USER_DATA_DIR = r"C:\Skrive_Chrome\ChromeDebugProfiles"
+START_PORT = 9222
+MAX_PORT = 9300
 
 
 
-import subprocess
+def is_chrome_debugger_alive(port):
+    """Verifica si Chrome está corriendo y responde al protocolo DevTools."""
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/json/version", timeout=1) as response:
+            return response.status == 200
+    except:
+        return False
+
+
+def launch_chrome_debug(port, user_data_dir):
+    """Lanza Chrome en modo debugging con el puerto dado."""
+    os.makedirs(user_data_dir, exist_ok=True)
+    args = [
+        "powershell", "-Command",
+        f'Start-Process "{CHROME_PATH}" -ArgumentList "--remote-debugging-port={port}", "--user-data-dir={user_data_dir}" -Verb RunAs'
+    ]
+    subprocess.run(args, shell=True)
+    print(f"[✔] Chrome lanzado en modo debugging - puerto {port}")
+
+
+def ensure_chrome_debug_running(reuse_existing=True):
+    """Busca un puerto libre o activo. Si reuse_existing=True, reutiliza Chrome si ya está abierto."""
+    for port in range(START_PORT, MAX_PORT):
+        user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
+
+        if is_chrome_debugger_alive(port):
+            if reuse_existing:
+                print(f"[🔁] Reutilizando Chrome ya activo en el puerto {port}")
+                return port
+            else:
+                continue  # Saltar al siguiente para abrir uno nuevo
+
+        elif not is_port_in_use(port):
+            launch_chrome_debug(port, user_data_dir)
+
+            for _ in range(10):
+                if is_chrome_debugger_alive(port):
+                    return port
+                time.sleep(0.5)
+
+            raise RuntimeError(f"Chrome no respondió en el puerto {port}")
+        else:
+            print(f"[i] Puerto {port} ocupado pero no responde a DevTools. Probando siguiente...")
+
+    raise RuntimeError("No se encontró un puerto libre ni activo entre 9222 y 9300.")
+
+
+def is_port_in_use(port):
+    """Verifica si un puerto está en uso (sin importar si es Chrome válido o no)."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex(('127.0.0.1', port)) == 0
+
+
+# ----------------------
+# EJEMPLO DE USO:
+# ----------------------
+
+Reusar = True  # Cambia a False si quieres forzar abrir nueva ventana en cada test
+# Klokken
+
+if __name__ == "__main__":
+    # Cambia esto a False si quieres forzar abrir nueva ventana en cada test
+    debug_port = ensure_chrome_debug_running(reuse_existing=Reusar)
+
+    print(f"[🚀] Chrome listo para usar en puerto {debug_port}")
+
 
 # Ejecutar el comando de PowerShell para reactivar PSReadLine
 subprocess.run(['powershell', '-Command', 'Import-Module PSReadLine'])
 
 
-# Leer JSON
-if len(sys.argv) > 1:
-    json_path = sys.argv[1]
-    print(json_path)
-
-else:
-    # json_path = "C:/Users/Joel Hurtado/Documents/GitHub/Skrive/Templates/datos.json"
-    # json_path = "C:/Users/Joel Hurtado/Documents/GitHub/Skrive/Templates/CAS-1212817-X0X4T0.json"
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(script_dir, "NewCase.json")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+json_path = os.path.join(script_dir, "NewCase.json")
 
 
 
@@ -83,12 +151,12 @@ A_Remote_Note =  data["RMTSS"]
 # ----------------------------------------------------------------------------------------------------------
 
 
-
-
 # Inicializar navegador en modo oculto (posición fuera de pantalla)
 options = webdriver.ChromeOptions()
 # options.add_argument("--window-position=-32000,-32000")  # Mover ventana fuera de pantalla
 options.add_argument("--window-size=1920,1080")
+options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te devolvió la función 
+
 
 script_dir = os.path.dirname(os.path.abspath(__file__))  # ej: ...\Skrive\Templates
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))  # sube una carpeta
@@ -97,22 +165,35 @@ executable_path = os.path.join(root_dir, "chromedriver.exe")
 service = Service(executable_path=executable_path)
 driver = webdriver.Chrome(service=service, options=options)
 driver.set_window_position(0, 0)
-time.sleep(1)
-driver.maximize_window()
+# time.sleep(1)
+# driver.maximize_window()
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--seccion1', action='store_true')
+parser.add_argument('--seccion2', action='store_true')
+parser.add_argument('--seccion3', action='store_true')
+parser.add_argument('--seccion4', action='store_true')
+parser.add_argument('--seccion5', action='store_true')
+args = parser.parse_args()
+
+
+
 
 # Abrir página de login
-if data["CaseLink"] == "":
+
+driver.set_window_position(0, 0)
+if data["Case Link"] == "":
     driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
 else:
-    A_link = data["CaseLink"]
+    A_link = data["Case Link"]
     driver.get(A_link)
-
 
 actions = ActionChains(driver)
 
 wait = WebDriverWait(driver, 25)
 
-site_map_button = WebDriverWait(driver, 25).until(
+site_map_button = wait.until(
     EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
 )
 site_map_button.click()
@@ -317,11 +398,11 @@ def update_case_link(driver, json_path):
     with open(json_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    # Reemplazar el valor de la clave "CaseLink"
-    if "CaseLink" in data:
-        data["CaseLink"] = full_url
+    # Reemplazar el valor de la clave "Case Link"
+    if "Case Link" in data:
+        data["Case Link"] = full_url
     else:
-        print('"CaseLink" no encontrado en el JSON.')
+        print('"Case Link" no encontrado en el JSON.')
     # Guardar los cambios
     with open(json_path, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4)

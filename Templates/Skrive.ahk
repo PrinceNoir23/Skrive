@@ -1,19 +1,20 @@
 #Requires AutoHotkey v2.0
 
-
-
-
-
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
 global casesObj := Map()
+global checkboxStates := Map()
 global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 global fileDir_CasesFinal := A_Desktop "\Cases_Final"  ; Solicitar la ruta del directorio
+global rutaPython := "C:\Python313\python.exe"
+global rutaScript := A_WorkingDir "\CRM2.py"
 
-if !DirExist(fileDir_CasesFinal) {
-    DirCreate(fileDir_CasesFinal)
+for _, dirPath in [fileDir_CasesFinal, fileDir1] {
+    if !DirExist(dirPath)
+        DirCreate(dirPath)
 }
+
 
 
 
@@ -253,6 +254,34 @@ CategoryGUI(editCategory, Name2Text) {
     CategorGui.Show()
 }
 
+
+LinkSelect(Name, yOffset, btnSze, BtnHeigh) {
+    Name2Text := Name
+    btnLink := SkrvGui.Add("Button", Format("x520 y{} w{} h{}", yOffset, btnSze/2, BtnHeigh), Name2Text)
+    editLink := SkrvGui.Add("Edit", Format("x625 y{} w405 h{}", yOffset, BtnHeigh), "")
+    
+    btnLink.OnEvent("Click", (*) => editLink.Value := A_Clipboard)
+    btnLink.OnEvent("ContextMenu", (*) => Altclick() )    ; Clic derecho: limpia el Edit
+        Altclick() {
+            if GetKeyState("Alt"){  ; Verifica si Alt está presionado
+                    A_Clipboard := editLink.Value
+                    return
+            }
+            else { 
+                editLink.Value := ""
+                return
+            }
+        }
+    ; Guardar la referencia del Edit
+    global EditControls
+    EditControls[Name2Text] := editLink  
+
+    global datos
+    datos[Name2Text] := editLink.Value
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+
+    editLink.OnEvent("Change", (*) => datos[Name2Text] := editLink.Value)
+}
 
 
 OutputLine(Name,xOffset, yOffset, Insize ,btnSze,BtnHeigh){
@@ -965,7 +994,7 @@ Sleep(18000)
 
 CRM2(CRMBool){
     global datos,EditControls
-    datos["CaseLink"] := ""
+    datos["Case Link"] := ""
 
     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
     IntPhBttm(false)
@@ -982,7 +1011,7 @@ CRM2(CRMBool){
     if FileExist(jsonPath) {
         FileDelete(jsonPath)
     }
-    FileAppend(Jxon_Dump(datos,4), jsonPath)
+    FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8")
 
     pythonPath := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
 
@@ -1275,7 +1304,8 @@ c1stbttn := SkrvGui.Add("Button", Format("x985 y{} w{} h{}", y, 45, BtnHeigh), "
 c1stbttn.OnEvent("Click", (*) => C1stAdd(false))
 c1stbttn.OnEvent("ContextMenu", (*) => C1stAdd(true))
 
-InputLine("Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("Name",,,255, y,btnSze,BtnHeigh, true,,), y 
+LinkSelect("Case Link",y,btnSze,30), y += spacing
 InputLine("&Phone",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("&Email",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
@@ -1488,28 +1518,243 @@ LoadMapFromFile(filePath) {
 
 SkrvGui.SetFont("s34 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 BtnSKRIVE := SkrvGui.Add("Button", "x50 y750 w450 h60 ", "S&KRIVE!")
-BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
-BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
 
 
-SKRIVE_Autom(SKR_Boool){
+
+Ejecutar_Autom_Python() {
+    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    UpdateDataFromEdits()
+    IntPhBttm(false)
+    RemoteSessionBuild() 
+    Sleep(1000)
+    EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+
+    BackupSave := fileDir1 . Format("\DNG_{}.json", datos["&Dongle"] )
+    if FileExist(BackupSave) {
+        FileDelete(BackupSave)
+    }
+    FileAppend(Jxon_Dump(datos,4), BackupSave, "UTF-8" )
+
+
+
+    
+    ;  global datos, edits, myGui
+    jsonPath := A_WorkingDir . "\NewCase.json"
+    if FileExist(jsonPath) {
+        FileDelete(jsonPath)
+    }
+    ; args := "--seccion1 --seccion2 --seccion3 --seccion4 --seccion5 "
+    Loop 5 {
+        seccions := Format("seccion{}", A_Index)
+        datos[seccions] := 1
+        arguments := Format("--seccion{} ", A_Index)
+        args .= arguments
+    }
+
+
+
+    FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
+
+    comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
+    A_Clipboard := comand
+    ; Ejecutar el script con los argumentos
+    ; RunWait(comand, , "Hide")
+    RunWait(comand)
+}
+AutomGUI(){ 
+    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    UpdateDataFromEdits()
+    IntPhBttm(false)
+    RemoteSessionBuild() 
+    Sleep(1000)
+    EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+    
+    BackupSave := fileDir1 . Format("\DNG_{}.json", datos["&Dongle"] )
+    if FileExist(BackupSave) {
+        FileDelete(BackupSave)
+    }
+    FileAppend(Jxon_Dump(datos,4), BackupSave, "UTF-8" )
+
+    SectionsGui := Gui("+AlwaysOnTop", "Enviar a Python")
+    SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    SectionsGui.AddText("x20 y20", "Selecciona opciones:")
+    SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    checkboxStates["seccion1"] := SectionsGui.AddCheckbox("x20 y+10", "Sección 1")
+    checkboxStates["seccion2"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 2")
+    checkboxStates["seccion3"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 3")
+    checkboxStates["seccion4"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 4")
+    checkboxStates["seccion5"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 5")
+    ; Activar todos los checkboxes por defecto
+    for clave in ["seccion2", "seccion3", "seccion4"] {
+        checkboxStates[clave].Value := true
+    }
+    SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    SectionsGui.AddButton("x20 y+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython())
+    SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    SectionsGui.Show()
+    EjecutarPython() {
+        global datos, EditControls,fileDir1,rutaPython,rutaScript
+        UpdateDataFromEdits()
+        ; updatedataformedits
+        ;  global datos, edits, myGui
+        jsonPath := A_WorkingDir . "\NewCase.json"
+        if FileExist(jsonPath) {
+            FileDelete(jsonPath)
+        }
+        Loop 5{
+            seccions := Format("seccion{}", A_Index)
+            datos[seccions] := ""
+        }
+
+        args := ""
+
+        SectionsGui.hide()
+
+
+        if datos["Case Link"] != "" and checkboxStates["seccion1"].Value {
+            for clave, chk in checkboxStates {
+                if chk.Value and !(clave == "seccion1") {
+                    datos[clave] := chk.Value
+                    args .= "--" clave " "
+                }
+            }
+        }
+
+        if datos["Case Link"] == ""{
+            checkboxStates["seccion1"].Value := true
+            for clave, chk in checkboxStates {
+                if chk.Value{
+                    datos[clave] := chk.Value
+                    args .= "--" clave " "
+                }
+            }
+        }
+        FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
+
+
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
+        A_Clipboard := comand
+
+        ; Ejecutar el script con los argumentos
+        ; RunWait(comand, , "Hide")
+        RunWait(comand)
+    }
+
+}
+
+AutomGUI_SinCondiciones(){  
+    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    UpdateDataFromEdits()
+    IntPhBttm(false)
+    RemoteSessionBuild() 
+    Sleep(1000)
+    EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+    
+    BackupSave := fileDir1 . Format("\DNG_{}.json", datos["&Dongle"] )
+    if FileExist(BackupSave) {
+        FileDelete(BackupSave)
+    }
+    FileAppend(Jxon_Dump(datos,4), BackupSave, "UTF-8" )
+
+    SectionsGui := Gui("+AlwaysOnTop", "Enviar a Python")
+    SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    SectionsGui.AddText("x20 y20", "Selecciona opciones:")
+    SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    checkboxStates["seccion1"] := SectionsGui.AddCheckbox("x20 y+10", "Sección 1")
+    checkboxStates["seccion2"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 2")
+    checkboxStates["seccion3"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 3")
+    checkboxStates["seccion4"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 4")
+    checkboxStates["seccion5"] := SectionsGui.AddCheckbox("x20 y+5", "Sección 5")
+    ; Activar todos los checkboxes por defecto
+    for _, checkBoxes in checkboxStates {
+        checkBoxes.Value := true
+    }
+    SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    SectionsGui.AddButton("x20 y+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython_sinCondicionales())
+    SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    SectionsGui.Show()
+    EjecutarPython_sinCondicionales() {
+        global datos, EditControls,fileDir1,rutaPython,rutaScript
+        UpdateDataFromEdits()
+        jsonPath := A_WorkingDir . "\NewCase.json"
+        if FileExist(jsonPath) {
+            FileDelete(jsonPath)
+        }
+        Loop 5{
+            seccions := Format("seccion{}", A_Index)
+            datos[seccions] := ""
+        }
+
+        args := ""
+
+        SectionsGui.hide()
+
+        for clave, chk in checkboxStates {
+            if chk.Value {
+                datos[clave] := chk.Value
+                args .= "--" clave " "
+            }
+        }
+        FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
+
+        
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
+        A_Clipboard := comand
+
+        ; Ejecutar el script con los argumentos
+        ; RunWait(comand, , "Hide")
+        RunWait(comand)
+    }
+
+}
+Skrive_link_btn() {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+
+    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+    if GetKeyState("Alt") {  ; Verifica si Alt está presionado
+        AutomGUI_SinCondiciones()
+        return
+    } else { 
+        AutomGUI()
+        return
+    }
+}
+
+BtnSKRIVE.OnEvent("ContextMenu", (*) => Skrive_link_btn())
+BtnSKRIVE.OnEvent("Click", (*) => Ejecutar_Autom_Python())
+
+
+
+; ; ; BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
+; ; ; BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
+
+
+; ; ; SKRIVE_Autom(SKR_Boool){
+; ; ;     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
     
 
-    ; Si el usuario elige "No", cancela la acción
-    if (SKR_Boool == true) {
-        if GetKeyState("Alt") {  ; Verifica si Alt está presionado
-            Automatic()
-            return
-        } else {
-            Sleep(6000)  ; Tu función alternativa si no se presionó Alt
-            CRM()
-            return
-        }
-    }
-    ForwardToDynamics()
-    return
-}
+; ; ;     ; Si el usuario elige "No", cancela la acción
+; ; ;     if (SKR_Boool == true) {
+; ; ;         if GetKeyState("Alt") {  ; Verifica si Alt está presionado
+; ; ;             Automatic()
+; ; ;             return
+; ; ;         } else {
+; ; ;             Sleep(6000)  ; Tu función alternativa si no se presionó Alt
+; ; ;             CRM()
+; ; ;             return
+; ; ;         }
+; ; ;     }
+; ; ;     ForwardToDynamics()
+; ; ;     return
+; ; ; }
 SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 
@@ -1533,8 +1778,8 @@ Loop NmOfSteps {
 
 ; Función para recopilar y mostrar los pasos
 RemoteSessionBuild() {
+    global datos, EditControls, NmOfSteps ; Asegurar acceso a los datos y los Edit
     stepsList := ""
-    global NmOfSteps
     Loop NmOfSteps
     {
         i := A_Index
@@ -1549,6 +1794,7 @@ RemoteSessionBuild() {
     issueText := EditControls["Issue"].Value
 
     if (issueText == "") {
+        datos["RMTSS"] := "Accessed to TV session`n" "Logs and photos are in a .zip at an Internal NOTE `n" . Format("Ask the customer to reproduce the issue: {}`n")
         MsgBox("Introduce un Issue por favor.", "Error de Info", "16")
         return
     }
@@ -1834,7 +2080,7 @@ isSkrvVisible := true
 ^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
 ^!f::Automatic()  ; Ctrl + Alt + 3 -> Early Access
 ^!t::CRM()  ; Ctrl + Alt + 3 -> Early Access
-^!k::SKRIVE_Autom(false)
+; ^!k::SKRIVE_Autom(false)
 ^!3::CRM2(true)  ; Ctrl + Alt + 2 -> Call Back
 
 
