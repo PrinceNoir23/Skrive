@@ -43,7 +43,8 @@ def launch_chrome_debug(port, user_data_dir):
     os.makedirs(user_data_dir, exist_ok=True)
     args = [
         "powershell", "-Command",
-        f'Start-Process "{CHROME_PATH}" -ArgumentList "--remote-debugging-port={port}", "--user-data-dir={user_data_dir}" -Verb RunAs'
+        f'Start-Process "{CHROME_PATH}" -ArgumentList "--remote-debugging-port={port}", "--user-data-dir={user_data_dir}"'
+        # f'Start-Process "{CHROME_PATH}" -ArgumentList "--remote-debugging-port={port}", "--user-data-dir={user_data_dir}" -Verb RunAs'
     ]
     subprocess.run(args, shell=True)
     print(f"[✔] Chrome lanzado en modo debugging - puerto {port}")
