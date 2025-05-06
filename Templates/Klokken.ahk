@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 global rutaScriptFive9 := A_ScriptDir . "\Five9.py" ; Cambia esto a la ruta de tu script Python
-global rutaPython := "C:\Python313\python.exe"
+; global rutaPython := "C:\Python313\python.exe"
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
 global KlokkenGui  ; Asegúrate de que este GUI esté definido globalmente (probablemente en Klokken.ahk)
