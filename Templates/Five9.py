@@ -88,7 +88,7 @@ def is_port_in_use(port):
 # EJEMPLO DE USO:
 # ----------------------
 
-Reusar = False  
+Reusar = True  
 # Cambia a False si quieres forzar abrir nueva ventana en cada test
 # Klokken
 
@@ -135,7 +135,6 @@ driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=5ff51386-6105-eb11-
 time.sleep(10)
 
 # Crea el driver (ajusta según el navegador que uses, aquí con Chrome)
-driver = webdriver.Chrome()
 # Establece posición de la ventana
 driver.set_window_position(75, 4)
 # Establece tamaño total de la ventana (no solo del contenido)
@@ -159,9 +158,37 @@ elif args.breaktime:
     )
     Break_Btn.click()
 elif args.klokken:
-    driver.set_window_position(90, 4)
+    time.sleep(5)
+    driver.maximize_window()
+    time.sleep(5)
 
-    
+     # Abrir buscador
+    pyautogui.hotkey('ctrl', 'f')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+
+    # Escribir lo que quieres buscar
+    pyautogui.write('Five9 Adapter')
+
+    pyautogui.hotkey('enter')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('esc')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+     # TAB varias veces
+    for _ in range(3):
+        pyautogui.hotkey('tab')
+        time.sleep(0.5)
+
+    EmailLogin = "joel.hurtado@shape.com"
+    pyautogui.write(EmailLogin)
+    time.sleep(0.5)
+    pyautogui.hotkey('tab')
+    time.sleep(0.5)
+    PsswrdLogin = "LaScarlata2024*"
+    pyautogui.write(PsswrdLogin)
+    time.sleep(0.5)
+    pyautogui.hotkey('tab')
+    time.sleep(0.5)
+    pyautogui.hotkey('enter')
 
 
 

@@ -6,7 +6,8 @@ global checkboxStates := Map()
 global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 global fileDir_CasesFinal := A_Desktop "\Cases_Final"  ; Solicitar la ruta del directorio
-global rutaPython := "C:\Python313\python.exe"
+; global rutaPython := "C:\Python313\python.exe"
+global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
 global rutaScript := A_WorkingDir "\CRM2.py"
 
 for _, dirPath in [fileDir_CasesFinal, fileDir1] {
