@@ -21,7 +21,8 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from pathlib import Path
-
+from datetime import datetime, timedelta
+import threading
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 BASE_USER_DATA_DIR = r"C:\Skrive_Chrome\ChromeDebugProfiles"
@@ -99,10 +100,28 @@ if __name__ == "__main__":
     print(f"[🚀] Chrome listo para usar en puerto {debug_port}")
 
 
+
 # Ejecutar el comando de PowerShell para reactivar PSReadLine
 subprocess.run(['powershell', '-Command', 'Import-Module PSReadLine'])
 
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+json_path_Info = os.path.join(script_dir, "A_Info.json")
+
+
+
+# Verificar si el archivo JSON existe
+if not os.path.exists(json_path_Info):
+    print(f"Error: No existe el archivo en la ruta: {json_path_Info}")
+    sys.exit(1)
+
+# Leer el contenido del JSON
+try:
+    with open(json_path_Info, 'r', encoding='utf-8-sig') as f:
+        Info = json.load(f)
+except Exception as e:
+    print(f"Error al leer el JSON: {e}")
+    sys.exit(1)
 
 # Inicializar navegador en modo oculto (posición fuera de pantalla)
 options = webdriver.ChromeOptions()
@@ -120,47 +139,33 @@ driver = webdriver.Chrome(service=service, options=options)
 # time.sleep(1)
 # driver.maximize_window()
 
+wait = WebDriverWait(driver, 25)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--lunchtime', action='store_true')
 parser.add_argument('--breaktime', action='store_true')
 parser.add_argument('--klokken', action='store_true')
+parser.add_argument('--klokkenout', action='store_true')
 args = parser.parse_args()
 
+def inicializar():
+    driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=5ff51386-6105-eb11-a813-000d3ab83e53")
 
+    time.sleep(10)
+
+    # Crea el driver (ajusta según el navegador que uses, aquí con Chrome)
+    # Establece posición de la ventana
+    driver.set_window_position(75, 4)
+    # Establece tamaño total de la ventana (no solo del contenido)
+    driver.set_window_size(643, 859)
+def Access():
+    inicializar()
+        
 
     
-driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=5ff51386-6105-eb11-a813-000d3ab83e53")
-
-time.sleep(10)
-
-# Crea el driver (ajusta según el navegador que uses, aquí con Chrome)
-# Establece posición de la ventana
-driver.set_window_position(75, 4)
-# Establece tamaño total de la ventana (no solo del contenido)
-driver.set_window_size(643, 859)
-
-wait = WebDriverWait(driver, 25)
-
-# DropDown_Btn = wait.until(
-#     EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
-# )
-# DropDown_Btn.click()
-
-if args.lunchtime:
-    Lunch_Btn = wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
-    )
-    Lunch_Btn.click()
-elif args.breaktime:
-    Break_Btn = wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
-    )
-    Break_Btn.click()
-elif args.klokken:
     time.sleep(5)
     driver.maximize_window()
-    time.sleep(5)
+    time.sleep(1)
 
      # Abrir buscador
     pyautogui.hotkey('ctrl', 'f')
@@ -177,13 +182,49 @@ elif args.klokken:
     for _ in range(3):
         pyautogui.hotkey('tab')
         time.sleep(0.5)
-
-    EmailLogin = "joel.hurtado@shape.com"
+    
+    EmailLogin = Info["User Name"]
     pyautogui.write(EmailLogin)
     time.sleep(0.5)
     pyautogui.hotkey('tab')
     time.sleep(0.5)
-    PsswrdLogin = "LaScarlata2024*"
+    PsswrdLogin = Info["Password"]
+    pyautogui.write(PsswrdLogin)
+    time.sleep(0.5)
+    pyautogui.hotkey('tab')
+    time.sleep(0.5)
+    pyautogui.hotkey('enter')
+def LogOut():
+    inicializar()
+        
+
+    
+    time.sleep(5)
+    driver.maximize_window()
+    time.sleep(1)
+
+     # Abrir buscador
+    pyautogui.hotkey('ctrl', 'f')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+
+    # Escribir lo que quieres buscar
+    pyautogui.write('Five9 Adapter')
+
+    pyautogui.hotkey('enter')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('esc')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+     # TAB varias veces
+    for _ in range(3):
+        pyautogui.hotkey('tab')
+        time.sleep(0.5)
+    
+    EmailLogin = Info["User Name"]
+    pyautogui.write(EmailLogin)
+    time.sleep(0.5)
+    pyautogui.hotkey('tab')
+    time.sleep(0.5)
+    PsswrdLogin = Info["Password"]
     pyautogui.write(PsswrdLogin)
     time.sleep(0.5)
     pyautogui.hotkey('tab')
@@ -191,4 +232,22 @@ elif args.klokken:
     pyautogui.hotkey('enter')
 
 
+if args.lunchtime:
+    inicializar()
+    Lunch_Btn = wait.until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+    )
+    Lunch_Btn.click()
+elif args.breaktime:
+    inicializar()
+    Break_Btn = wait.until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+    )
+    Break_Btn.click()
+elif args.klokken:
+    Access()
+elif args.klokkenout:
+    LogOut()
 
+
+    

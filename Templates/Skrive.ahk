@@ -23,10 +23,11 @@ for _, dirPath in [fileDir_CasesFinal, fileDir1] {
 
 ; ; https://benchmark.unigine.com/heaven
 
+#Include Json.ahk
 
 #Include TeamViewer.ahk  
-#Include Json.ahk
 #Include Klokken.ahk
+#Include AutoLogin.ahk
 
 Persistent 1  ; Establece el script como persistente
 ; ChatGPT - Google Chrome

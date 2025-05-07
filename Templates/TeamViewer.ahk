@@ -630,10 +630,21 @@ Ctrl_s() {
 
 Ctrl_g() {
     if ForwardToTeamViewer(Send('{BackSpace}')) {
+        InfoPath := A_WorkingDir . "\A_Info.json"
+
+        if !FileExist(InfoPath) {
+            MsgBox("Archivo no encontrado: " InfoPath,"Error de Path","16")
+            return   ; Devuelve mapa vacío
+        }
+        
+        fileCont := FileRead(InfoPath, "UTF-8")
+        
+
+        Info := Jxon_Load(&fileCont)
         Sleep(500)
-        Send("joel.hurtado@3shape.com")
+        Send(Info["User Name"])
         Sleep(9000)  ; Espera dos segundos antes de enviar el texto
-        Send("LaScarlata2024*")
+        Send(Info["Password"])
         return  ; Salir si el envío fue exitoso
     }
     
