@@ -26,7 +26,7 @@ import threading
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 BASE_USER_DATA_DIR = r"C:\Skrive_Chrome\ChromeDebugProfiles"
-START_PORT = 9222
+START_PORT = 9223
 MAX_PORT = 9300
 
 
@@ -126,7 +126,7 @@ except Exception as e:
 # Inicializar navegador en modo oculto (posición fuera de pantalla)
 options = webdriver.ChromeOptions()
 # options.add_argument("--window-position=-32000,-32000")  # Mover ventana fuera de pantalla
-options.add_argument("--window-size=1920,1080")
+# options.add_argument("--window-size=1920,1080")
 options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te devolvió la función 
 
 
@@ -148,104 +148,242 @@ parser.add_argument('--klokken', action='store_true')
 parser.add_argument('--klokkenout', action='store_true')
 args = parser.parse_args()
 
-def inicializar():
-    driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=5ff51386-6105-eb11-a813-000d3ab83e53")
 
-    time.sleep(10)
+def get_tabs(port):
+    with urllib.request.urlopen(f"http://127.0.0.1:{port}/json") as response:
+        return json.load(response)
+
+def focus_tab(driver, port, url_fragment):
+    tabs = get_tabs(port)
+    for tab in tabs:
+        if url_fragment in tab.get("url", ""):
+            driver.switch_to.window(tab["id"])
+            print(f"[✔] Cambiado a la pestaña con URL que contiene: {url_fragment}")
+            return True
+    print(f"[✘] No se encontró una pestaña con URL que contenga: {url_fragment}")
+    return False
+
+
+
+
+def inicializar():
+
+    # Cambiar al tab que contenga la URL deseada (por ejemplo, "agent/home")
+    found = focus_tab(driver, debug_port, "agent/home")
+
+    if not found:
+        # Abrir si no está
+        driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
+
+        time.sleep(5)
 
     # Crea el driver (ajusta según el navegador que uses, aquí con Chrome)
     # Establece posición de la ventana
-    driver.set_window_position(75, 4)
+    # driver.set_window_position(75, 4)
     # Establece tamaño total de la ventana (no solo del contenido)
-    driver.set_window_size(643, 859)
-def Access():
+    # driver.set_window_size(643, 859)
+    driver.maximize_window()
+
+
+def ready():
+    # button = WebDriverWait(driver, 10).until(
+    #     EC.element_to_be_clickable((By.ID, "ReadyCodesLayout-ready-button"))
+    # )
+    # button.click()
+    # button.send_keys(Keys.DOWN)
+    # button.send_keys(Keys.ENTER)
+    body = wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+
+    # Enviar teclas como Ctrl + Alt + R
+    body.send_keys(Keys.CONTROL, Keys.ALT, 'r')
+
+def LoguearMorning():
+    time.sleep(1)
+    # Cambiar al tab que contenga la URL deseada (por ejemplo, "agent/home")
+    found = focus_tab(driver, debug_port, "html?login")
+
+    if not found:
+        # Abrir si no está
+        driver.get("https://app.five9.com/index.html?login")
+
+        time.sleep(5)
+
+    # Ingresar valores en los inputs
+    username_input = driver.find_element(By.ID, "Login-username-input")
+    password_input = driver.find_element(By.ID, "Login-password-input")
+
+    
+    
+    username_input.send_keys(Keys.CONTROL, 'a')
+    username_input.send_keys(Info["User Name"])
+
+    password_input.send_keys(Keys.CONTROL, 'a')
+    password_input.send_keys(Info["FivePassword"])
+    # Hacer clic en el botón "Log In"
+    login_button = driver.find_element(By.ID, "Login-login-button")
+    login_button.click()
+
+    
+    agent_link = wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "a.home-link.agent"))
+    )
+
+    agent_link.click()
+
+
+    
+    station_input = wait.until(
+        EC.visibility_of_element_located((By.ID, "SoftPhoneSetup-stationid-input"))
+    )
+
+    # Seleccionar todo el contenido actual y escribir uno nuevo
+    station_input.send_keys(Keys.CONTROL, 'a')
+    station_input.send_keys(Info["StationNumber"])  # Reemplaza por el valor que quieras ingresar
+
+    
+    # Esperar y hacer clic en el botón "Next"
+    next_button = wait.until(
+        EC.element_to_be_clickable((By.ID, "WizardBase-submit-button"))
+    )
+    next_button.click()
+
+
+    dashboard_button = wait.until(
+        EC.element_to_be_clickable((By.ID, "WizardBase-submit-button"))
+    )
+
+    dashboard_button.click()
+    time.sleep(3)
     inicializar()
+    ready()
+
+
+    
+
+
+
+
+
+# def Access():
+    # inicializar()
         
 
     
-    time.sleep(5)
-    driver.maximize_window()
-    time.sleep(1)
+    # time.sleep(5)
+    # driver.maximize_window()
+    # time.sleep(1)
 
-     # Abrir buscador
-    pyautogui.hotkey('ctrl', 'f')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    #  # Abrir buscador
+    # pyautogui.hotkey('ctrl', 'f')
+    # time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
-    # Escribir lo que quieres buscar
-    pyautogui.write('Five9 Adapter')
+    # # Escribir lo que quieres buscar
+    # pyautogui.write('Five9 Adapter')
 
-    pyautogui.hotkey('enter')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-    pyautogui.hotkey('esc')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-     # TAB varias veces
-    for _ in range(3):
-        pyautogui.hotkey('tab')
-        time.sleep(0.5)
+    # pyautogui.hotkey('enter')
+    # time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    # pyautogui.hotkey('esc')
+    # time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    #  # TAB varias veces
+    # for _ in range(3):
+    #     pyautogui.hotkey('tab')
+    #     time.sleep(0.5)
     
-    EmailLogin = Info["User Name"]
-    pyautogui.write(EmailLogin)
-    time.sleep(0.5)
-    pyautogui.hotkey('tab')
-    time.sleep(0.5)
-    PsswrdLogin = Info["Password"]
-    pyautogui.write(PsswrdLogin)
-    time.sleep(0.5)
-    pyautogui.hotkey('tab')
-    time.sleep(0.5)
-    pyautogui.hotkey('enter')
+    # EmailLogin = Info["User Name"]
+    # pyautogui.write(EmailLogin)
+    # time.sleep(0.5)
+    # pyautogui.hotkey('tab')
+    # time.sleep(0.5)
+    # PsswrdLogin = Info["FivePassword"]
+    # pyautogui.write(PsswrdLogin)
+    # time.sleep(0.5)
+    # pyautogui.hotkey('tab')
+    # time.sleep(0.5)
+    # pyautogui.hotkey('enter')
 def LogOut():
     inicializar()
-        
 
-    
-    time.sleep(5)
+
     driver.maximize_window()
-    time.sleep(1)
+    body = wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
-     # Abrir buscador
-    pyautogui.hotkey('ctrl', 'f')
+    # Enviar teclas como Ctrl + Alt + R
+    body.send_keys(Keys.CONTROL, Keys.ALT,Keys.SHIFT, 'l')
     time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
-    # Escribir lo que quieres buscar
-    pyautogui.write('Five9 Adapter')
 
-    pyautogui.hotkey('enter')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-    pyautogui.hotkey('esc')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-     # TAB varias veces
-    for _ in range(3):
-        pyautogui.hotkey('tab')
-        time.sleep(0.5)
     
-    EmailLogin = Info["User Name"]
-    pyautogui.write(EmailLogin)
-    time.sleep(0.5)
-    pyautogui.hotkey('tab')
-    time.sleep(0.5)
-    PsswrdLogin = Info["Password"]
-    pyautogui.write(PsswrdLogin)
-    time.sleep(0.5)
-    pyautogui.hotkey('tab')
-    time.sleep(0.5)
-    pyautogui.hotkey('enter')
+    confirm_button = wait.until(
+        EC.element_to_be_clickable((By.ID, "LogoutReasonDialog-confirm-button"))
+    )
 
+    confirm_button.click()
+
+    #  # Abrir buscador
+    # pyautogui.hotkey('ctrl','shift','alt', 'l')
+    
+    # time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+
+    # pyautogui.hotkey('enter')
+    
 
 if args.lunchtime:
     inicializar()
-    Lunch_Btn = wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+    # Esperar y hacer clic en el botón que despliega el menú
+    button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "ReadyCodesLayout-ready-button"))
     )
-    Lunch_Btn.click()
+    button.click()
+    time.sleep(1)
+
+
+    # Esperar y hacer clic en la opción "Break"
+    break_option = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "ReadyCodesItem-327071-anchor"))
+    )
+    break_option.click()
+    time.sleep(3585)
+    inicializar()
+    ready()
+
+    
+
+
 elif args.breaktime:
     inicializar()
-    Break_Btn = wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+
+    
+    # Esperar y hacer clic en el botón que despliega el menú
+    button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "ReadyCodesLayout-ready-button"))
     )
-    Break_Btn.click()
+    button.click()
+    time.sleep(1)
+
+
+    # Esperar y hacer clic en la opción "Break"
+    break_option = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "ReadyCodesItem-327070-anchor"))
+    )
+    break_option.click()
+    time.sleep(885)
+    inicializar()
+    ready()
+
+    # Esperar un momento para que aparezca el dropdown (ajusta si es necesario)
+
+
+    # # Enviar 4 veces la tecla DOWN para moverse por las opciones
+    # for _ in range(4):
+    #     button.send_keys(Keys.DOWN)
+    #     time.sleep(0.5)  # pequeña pausa entre pulsaciones
+
+    # # Opcional: enviar ENTER si deseas seleccionar la opción
+    # button.send_keys(Keys.ENTER)
+
+
 elif args.klokken:
-    Access()
+    LoguearMorning()
 elif args.klokkenout:
     LogOut()
 

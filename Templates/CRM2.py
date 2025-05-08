@@ -156,7 +156,7 @@ A_Remote_Note =  data["RMTSS"]
 # Inicializar navegador en modo oculto (posición fuera de pantalla)
 options = webdriver.ChromeOptions()
 # options.add_argument("--window-position=-32000,-32000")  # Mover ventana fuera de pantalla
-options.add_argument("--window-size=1920,1080")
+# options.add_argument("--window-size=1920,1080")
 options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te devolvió la función 
 
 
@@ -166,9 +166,10 @@ executable_path = os.path.join(root_dir, "chromedriver.exe")
 
 service = Service(executable_path=executable_path)
 driver = webdriver.Chrome(service=service, options=options)
+
 driver.set_window_position(0, 0)
-# time.sleep(1)
-# driver.maximize_window()
+time.sleep(1)
+driver.maximize_window()
 
 
 parser = argparse.ArgumentParser()
@@ -186,12 +187,14 @@ args = parser.parse_args()
 
 if data["Case Link"] == "":
     driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
-    driver.set_window_position(0, 0.1)
+    driver.maximize_window()
+
 
 else:
     A_link = data["Case Link"]
     driver.get(A_link)
-    driver.set_window_position(0, 0.1)
+    driver.maximize_window()
+
 
 
 
@@ -199,10 +202,7 @@ actions = ActionChains(driver)
 
 wait = WebDriverWait(driver, 25)
 
-site_map_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
-)
-site_map_button.click()
+
 
 
 time.sleep(15)
@@ -213,6 +213,10 @@ time.sleep(15)
 # *************** SECTION 1 ***************  
 # Llenar el formulario de SUMMARY
 def seccion1 ():
+    site_map_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+    )
+    site_map_button.click()
     driver.find_element(By.CSS_SELECTOR, '[aria-label="Description"]').send_keys(A_description)
 
     dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Special Attention']")))
@@ -374,7 +378,6 @@ def seccion1 ():
     driver.find_element(By.CSS_SELECTOR, '[aria-label="Additional Information"]').send_keys(A_AddInfo)
 
     driver.find_element(By.CSS_SELECTOR, '[aria-label="Conclusion"]').send_keys(A_Conclusion)
-    time.sleep(1000)
     time.sleep(1)
     save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
     save_button.click()
@@ -402,7 +405,7 @@ def seccion1 ():
         full_url = pyperclip.paste()
 
         # Leer el JSON
-        with open(json_path, 'r', encoding='utf-8') as file:
+        with open(json_path, 'r', encoding='utf-8-sig') as file:
             data = json.load(file)
 
         # Reemplazar el valor de la clave "Case Link"
@@ -411,7 +414,7 @@ def seccion1 ():
         else:
             print('"Case Link" no encontrado en el JSON.')
         # Guardar los cambios
-        with open(json_path, 'w', encoding='utf-8') as file:
+        with open(json_path, 'w', encoding='utf-8-sig') as file:
             json.dump(data, file, indent=4)
         wait = WebDriverWait(driver, 10)
 
@@ -436,10 +439,10 @@ def seccion1 ():
 def seccion2 ():
     if args.seccion1:
         time.sleep(20)
-    # Esperar hasta que el indicador de carga desaparezca
-    WebDriverWait(driver, 25).until(
-        EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
-    )
+        # Esperar hasta que el indicador de carga desaparezca
+        WebDriverWait(driver, 25).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
+        )
     # Esperar a que "Enter a note" sea clickeable
     WebDriverWait(driver, 25).until(
         EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
@@ -470,7 +473,7 @@ def seccion2 ():
             return
 
         # Leer el JSON
-        with open(json_path, 'r', encoding='utf-8') as file:
+        with open(json_path, 'r', encoding='utf-8-sig') as file:
             data = json.load(file)
 
         # Reemplazar el valor de la clave "C&ase Number"
@@ -480,10 +483,26 @@ def seccion2 ():
             print('"C&ase Number" no encontrado en el JSON.')
 
         # Guardar los cambios
-        with open(json_path, 'w', encoding='utf-8') as file:
+        with open(json_path, 'w', encoding='utf-8-sig') as file:
             json.dump(data, file, indent=4)
 
     update_case_number(json_path, A_CaseNumber)
+
+    # Ruta del escritorio del usuario
+    desktop_path = os.path.join(os.path.expanduser("~"), r"Desktop\CasesJSON")
+    # Verificar si el archivo JSON existe
+    
+
+    # Construcción del nombre del archivo
+    backup_filename = f"DNG_{A_Dongle}.json"
+    backup_path = os.path.join(desktop_path, backup_filename)
+
+    if not os.path.exists(backup_path):
+        print(f"Error: No existe el archivo en la ruta: {backup_path}")
+        sys.exit(1)
+
+    update_case_number(backup_path, A_CaseNumber)
+
     # [CAS-1211486-Z2G2M8]
 
     try:
@@ -572,7 +591,7 @@ def seccion2 ():
     def update_survey(json_path, A_Survey):
 
         # Leer el JSON
-        with open(json_path, 'r', encoding='utf-8') as file:
+        with open(json_path, 'r', encoding='utf-8-sig') as file:
             data = json.load(file)
 
         # Reemplazar el valor de la clave "Sur&vey"
@@ -582,11 +601,27 @@ def seccion2 ():
             print('"Sur&vey" no encontrado en el JSON.')
 
         # Guardar los cambios
-        with open(json_path, 'w', encoding='utf-8') as file:
+        with open(json_path, 'w', encoding='utf-8-sig') as file:
             json.dump(data, file, indent=4)
 
 
     update_survey(json_path, A_Survey)
+    # Ruta del escritorio del usuario
+    desktop_path = os.path.join(os.path.expanduser("~"), r"Desktop\CasesJSON")
+    # Verificar si el archivo JSON existe
+    
+
+    # Construcción del nombre del archivo
+    backup_filename = f"DNG_{A_Dongle}.json"
+    backup_path = os.path.join(desktop_path, backup_filename)
+
+    if not os.path.exists(backup_path):
+        print(f"Error: No existe el archivo en la ruta: {backup_path}")
+        sys.exit(1)
+
+    update_survey(backup_path, A_CaseNumber)
+
+    # [CAS-1211486-Z2G2M8]
     try:
         with open(json_path, 'r', encoding='utf-8-sig') as f:
             data = json.load(f)

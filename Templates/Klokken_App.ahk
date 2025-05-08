@@ -67,13 +67,14 @@ InputLineKloken(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, butt
 ; ---------------------------------------------------------------------------------------------------------------------------------
 
 ; PESTAÑA 1 (General)
-imagePath := A_ScriptDir . "/IMG_Klokken_Trns.png"
-scale := 5.5
+; imagePath := A_ScriptDir . "/LogoSmall.png"
+; scale := 5.5
 ; wd:= 843
 ; hi := 559
-
+imagePath := A_ScriptDir . "/IMG_Klokken_Trns.png"
 wd:= 1024
 hi := 1024
+scale := 5.5
 imgWidth1 := wd / scale
 imgHeight1 := hi / scale
 imgX1 := 150

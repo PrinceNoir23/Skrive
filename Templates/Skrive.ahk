@@ -1662,12 +1662,20 @@ AutomGUI(){
         SectionsGui.hide()
 
 
-        if datos["Case Link"] != "" and checkboxStates["seccion1"].Value {
-            for clave, chk in checkboxStates {
-                if chk.Value and !(clave == "seccion1") {
-                    datos[clave] := chk.Value
-                    args .= "--" clave " "
+        if datos["Case Link"] != "" {
+            if checkboxStates["seccion1"].Value{
+                for clave, chk in checkboxStates {
+                    if chk.Value and !(clave == "seccion1") {
+                        datos[clave] := chk.Value
+                        args .= "--" clave " "
+                    }
                 }
+            }
+            for clave, chk in checkboxStates {
+                    if chk.Value {
+                        datos[clave] := chk.Value
+                        args .= "--" clave " "
+                    }
             }
         }
 
@@ -1682,7 +1690,7 @@ AutomGUI(){
         }
         FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
-
+        MsgBox args
         comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
         A_Clipboard := comand
 

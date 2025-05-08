@@ -1,5 +1,6 @@
 #Requires AutoHotkey v2.0
 Persistent 1  ; Establece el script como persistente
+; 
 
 ; Tu código aquí
 ; Mostrar el tooltip
@@ -205,7 +206,7 @@ Ctrl_b() {
         OpenTab("https://portal.3shapecommunicate.com/login")
         OpenTab("https://www.speedtest.net/")
         OpenTab("http://localhost:27027/")
-        OpenTab("https://www.nvidia.com/en-us/drivers/")
+        OpenTab("https://www.nvidia.com/en-us/software/nvidia-app/")
         OpenTab("http://localhost:8000/3ShapeWirelessService//")
         OpenTab("updates.3shape.com")
         OpenTab("3shapeconfig.com")
@@ -818,7 +819,7 @@ Ctrl_y() {
 
             AddColoredText_Init(myGui, newX, newY, colWidth, rowHeight, textList[A_Index], A_Index)  ; Agrega el texto
         }
-        imgPath := A_ScriptDir . "/LogoSmall.png"
+        imgPath := A_ScriptDir . "/IMG_LogoSmall.png"
 
         ; Agregar imagen en la parte inferior derecha
         if !FileExist(imgPath) {
