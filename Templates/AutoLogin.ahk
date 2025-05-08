@@ -100,7 +100,7 @@ Logout() {
 
 Klokken1() {
     ; Ejecutar un archivo .exe (ajusta la ruta según sea necesario)
-    exePath := A_WorkingDir . "\Klokken2.exe"
+    exePath := A_WorkingDir . "\Klokken_App.exe"
     if FileExist(exePath){
         Run(exePath)
     }

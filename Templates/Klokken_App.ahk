@@ -1,7 +1,9 @@
 #Requires AutoHotkey v2.0
 global rutaScriptFive9 := A_ScriptDir . "\Five9.py" ; Cambia esto a la ruta de tu script Python
-global rutaPython := "C:\Python313\python.exe"
+; global rutaPython := "C:\Python313\python.exe"
+global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
 
+; https://login.five9.com/index.htm
 ; ---------------------------------------------------------------------------------------------------------------------------------
 global KlokkenGui  ; Asegúrate de que este GUI esté definido globalmente (probablemente en Klokken.ahk)
 
@@ -12,9 +14,9 @@ KlokkenGui.SetFont("q5")
 ; Establecer el ícono de la ventana
 BtnHeigh:=40
 btnSze:= 130
-KlKnWidth := 320
-KlKnHeigh := 170 
-KlokkenGui.Show("w" KlKnWidth " h" KlKnHeigh)
+    KlKnWidth := 320
+    KlKnHeigh := 170
+    KlokkenGui.Show("w" KlKnWidth " h" KlKnHeigh)
 
 breakTime(){
     args := "--breaktime "
@@ -87,6 +89,7 @@ InputLineKloken("&Break",10,20+btnSze,200, y,btnSze,BtnHeigh, true,,), y += 50
 InputLineKloken("&Lunch",10,20+btnSze,200, y,btnSze,BtnHeigh, false,,), y 
 BtnKlokken := KlokkenGui.Add("Button", "x10 y110 w160 h40", "KLOKKEN!")
 BtnKlokken.OnEvent("Click", (*) => AbrirFive9())
+BtnKlokken.OnEvent("ContextMenu", (*) => CerrarFive9())
 
 AbrirFive9() {
     args := "--klokken "
@@ -97,4 +100,12 @@ AbrirFive9() {
     RunWait(comand)
    
 }
-
+CerrarFive9() {
+    args := "--klokkenout "
+    comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
+    A_Clipboard := comand
+    ; Ejecutar el script con los argumentos
+    ; RunWait(comand, , "Hide")
+    RunWait(comand)
+   
+}
