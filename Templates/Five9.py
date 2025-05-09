@@ -163,13 +163,11 @@ def focus_tab(driver, port, url_fragment):
     print(f"[✘] No se encontró una pestaña con URL que contenga: {url_fragment}")
     return False
 
-
-
-
 def inicializar():
 
     # Cambiar al tab que contenga la URL deseada (por ejemplo, "agent/home")
-    found = focus_tab(driver, debug_port, "agent/home")
+    found = focus_tab(driver, debug_port, "/main.html?role=Agent#agent/")
+
 
     if not found:# Obtener el handle de la pestaña actual
 
@@ -183,6 +181,7 @@ def inicializar():
             driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
 
         time.sleep(5)
+    driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
         
 
     # Crea el driver (ajusta según el navegador que uses, aquí con Chrome)
@@ -191,7 +190,6 @@ def inicializar():
     # Establece tamaño total de la ventana (no solo del contenido)
     # driver.set_window_size(643, 859)
     driver.maximize_window()
-
 
 def ready():
     # button = WebDriverWait(driver, 10).until(
@@ -270,16 +268,9 @@ def LoguearMorning():
     )
 
     dashboard_button.click()
-    time.sleep(3)
-    inicializar()
+    time.sleep(6)
+    # inicializar()
     ready()
-
-
-    
-
-
-
-
 
 # def Access():
     # inicializar()
@@ -359,10 +350,9 @@ if args.lunchtime:
         EC.element_to_be_clickable((By.ID, "ReadyCodesItem-327071-anchor"))
     )
     break_option.click()
-    time.sleep(3585)
+    time.sleep(3598)
     inicializar()
     ready()
-
 elif args.breaktime:
     inicializar()
 
@@ -380,7 +370,7 @@ elif args.breaktime:
         EC.element_to_be_clickable((By.ID, "ReadyCodesItem-327070-anchor"))
     )
     break_option.click()
-    time.sleep(885)
+    time.sleep(898)
     inicializar()
     ready()
 
@@ -394,8 +384,6 @@ elif args.breaktime:
 
     # # Opcional: enviar ENTER si deseas seleccionar la opción
     # button.send_keys(Keys.ENTER)
-
-
 elif args.klokken:
     LoguearMorning()
 elif args.klokkenout:

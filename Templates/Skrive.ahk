@@ -1502,7 +1502,7 @@ SaveMapSmart(fileDir) {
     ; Buscar un nombre disponible
     i := 0
     loop {
-        suffix := (i = 0) ? "" : i
+        suffix := (i = 0) ? "" : Format("_{}",i)
         filePath := fileDir "\" caseNumber suffix ".json"
         if !FileExist(filePath)
             break
@@ -2193,7 +2193,7 @@ isSkrvVisible := true
 
 ; 🔹 Atajos de teclado para cambiar pestañas
 ^!i::tab.Value := 1  ; Ctrl + Alt + I -> information
-^!r::tab.Value := 2  ; Ctrl + Alt + R -> Rmt Sess
+^!m::tab.Value := 2  ; Ctrl + Alt + R -> Rmt Sess
 ^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
 ^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
 ^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back

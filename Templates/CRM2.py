@@ -149,7 +149,6 @@ A_Intl_Note =  data["InN"]
 A_Remote_Tit =  "Remote Session Desktop" 
 A_Remote_Note =  data["RMTSS"] 
 
-
 # ----------------------------------------------------------------------------------------------------------
 
 
@@ -196,7 +195,9 @@ def focus_tab(driver, port, url_fragment):
 
 
 
+actions = ActionChains(driver)
 
+wait = WebDriverWait(driver, 25)
 # Abrir página de login
 
 if data["Case Link"] == "":
@@ -212,7 +213,11 @@ if data["Case Link"] == "":
         else:
             driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
             time.sleep(10)
-            
+    if not found:    
+        site_map_button = wait.until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+        )
+        site_map_button.click()      
     driver.maximize_window()
 
 
@@ -227,15 +232,17 @@ else:
     time.sleep(0.5)
     driver.maximize_window()
     
+def readJson():
+    try:
+        with open(json_path, 'r', encoding='utf-8-sig') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error al leer el JSON: {e}")
+        sys.exit(1)
 
 
 
 
-
-
-actions = ActionChains(driver)
-
-wait = WebDriverWait(driver, 25)
 
 
 
@@ -248,187 +255,210 @@ time.sleep(15)
 # *************** SECTION 1 ***************  
 # Llenar el formulario de SUMMARY
 def seccion1 ():
-    site_map_button = wait.until(
-    EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
-    )
-    site_map_button.click()
-    driver.find_element(By.CSS_SELECTOR, '[aria-label="Description"]').send_keys(A_description)
 
-    dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Special Attention']")))
-    dropdown_button.click()
-    time.sleep(0.5)
-    dropdown_button.send_keys('n')
-    time.sleep(0.5)
-    dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    
+    # # driver.find_element(By.CSS_SELECTOR, '[aria-label="Description"]').send_keys(A_description)
+
+    # # dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Special Attention']")))
+    # # dropdown_button.click()
+    # # time.sleep(0.5)
+    # # dropdown_button.send_keys('n')
+    # # time.sleep(0.5)
+    # # dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
 
 
 
 
-    time.sleep(0.5)
+    # # time.sleep(0.5)
 
 
-    dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Priority']")))
-    dropdown_button.click()
-    time.sleep(0.5)
-    dropdown_button.send_keys('S')
-    time.sleep(0.5)
-    dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # # dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Priority']")))
+    # # dropdown_button.click()
+    # # time.sleep(0.5)
+    # # dropdown_button.send_keys('S')
+    # # time.sleep(0.5)
+    # # dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
 
-    time.sleep(0.5)
-
-
-    # Espera a que el botón esté presente y haga clic en él para abrir el desplegable
-    dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Origin']")))
-    dropdown_button.click()
-    time.sleep(0.5)
-    dropdown_button.send_keys('P')
-    time.sleep(0.5)
-    dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-
-    time.sleep(0.5)
-
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Dongle Number, Lookup"]')
-    time.sleep(1)
-    editfill.click()
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_Dongle)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
-
-    if A_Product == "Unite" or A_Product == "TRIOS Software":
-        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Product, Lookup"]')
-        time.sleep(1)
-        editfill.clear()
-        time.sleep(1)
-        editfill.send_keys(A_Product)
-        time.sleep(3.5)
-        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-        time.sleep(1)
-
-        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Software Version, Lookup"]')
-        time.sleep(0.7)
-        editfill.clear()
-        time.sleep(1)
-        editfill.send_keys(A_Version)
-        time.sleep(3.5)
-        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-        time.sleep(1)
-
-    elif A_Product == "TRIOS":
-        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Scanner S/N"]')
-        time.sleep(0.5)
-        editfill.clear()
-        time.sleep(1)
-        editfill.send_keys(A_ScannerSN)
-        time.sleep(3.5)
-        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-        time.sleep(1)
+    # # time.sleep(0.5)
 
 
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Responsible contact, Lookup"]')
-    editfill.click()
-    editfill.send_keys(A_email)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
+    # # # Espera a que el botón esté presente y haga clic en él para abrir el desplegable
+    # # dropdown_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Origin']")))
+    # # dropdown_button.click()
+    # # time.sleep(0.5)
+    # # dropdown_button.send_keys('P')
+    # # time.sleep(0.5)
+    # # dropdown_button.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+
+    # # time.sleep(0.5)
+
+    # # editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Dongle Number, Lookup"]')
+    # # time.sleep(1)
+    # # editfill.click()
+    # # time.sleep(1)
+    # # editfill.clear()
+    # # time.sleep(1)    
+    # # editfill.send_keys(A_Dongle)
+    # # time.sleep(3.5)
+    # # editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # # time.sleep(1)
+
+    # # if A_Product == "Unite" or A_Product == "TRIOS Software":
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Product, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_Product)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
+
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Software Version, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_Version)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
+
+    # # elif A_Product == "TRIOS":
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Scanner S/N"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_ScannerSN)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
 
 
-    if A_Categ == "Request":
-        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
-        time.sleep(0.5)
-        editfill.clear()
-        time.sleep(1)
-        editfill.send_keys(A_Categ)
-        time.sleep(3.5)
-        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-        time.sleep(1)
+    # # editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Responsible contact, Lookup"]')
+    # # time.sleep(1)
+    # # editfill.click()
+    # # time.sleep(1)
+    # # editfill.clear()
+    # # time.sleep(1)
+    # # editfill.send_keys(A_email)
+    # # time.sleep(3.5)
+    # # editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # # time.sleep(1)
 
-        if A_CategArea=="General Product Information":
-            editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
-            time.sleep(0.5)
-            editfill.clear()
-            time.sleep(1)
-            editfill.send_keys(A_CategArea)
-            time.sleep(3.5)
-            editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-            time.sleep(1)
 
-            editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
-            time.sleep(0.5)
-            editfill.clear()
-            time.sleep(1)
-            editfill.send_keys(A_CasegType)
-            time.sleep(3.5)
-            editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-            time.sleep(1)
+    # # if A_Categ == "Request":
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_Categ)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
+
+    # #     if A_CategArea=="General Product Information":
+    # #         editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
+    # #         time.sleep(1)
+    # #         editfill.click()
+    # #         time.sleep(1)
+    # #         editfill.clear()
+    # #         time.sleep(1)
+    # #         editfill.send_keys(A_CategArea)
+    # #         time.sleep(3.5)
+    # #         editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #         time.sleep(1)
+
+    # #         editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
+    # #         time.sleep(1)
+    # #         editfill.click()
+    # #         time.sleep(1)
+    # #         editfill.clear()
+    # #         time.sleep(1)
+    # #         editfill.send_keys(A_CasegType)
+    # #         time.sleep(3.5)
+    # #         editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #         time.sleep(1)
         
-        editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
-        time.sleep(0.5)
-        editfill.clear()
-        time.sleep(1)
-        editfill.send_keys(A_CategArea)
-        time.sleep(3.5)
-        editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-        time.sleep(1)
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_CategArea)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
+    
+    # # if A_Categ == "Complaint":
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_Categ)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
+
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_CategArea)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
+
+    # #     editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
+    # #     time.sleep(1)
+    # #     editfill.click()
+    # #     time.sleep(1)
+    # #     editfill.clear()
+    # #     time.sleep(1)
+    # #     editfill.send_keys(A_CasegType)
+    # #     time.sleep(3.5)
+    # #     editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
+    # #     time.sleep(1)
 
 
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category, Lookup"]')
-    editfill.click()
-    time.sleep(0.5)
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_Categ)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
 
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Category Area, Lookup"]')
-    editfill.click()
-    time.sleep(0.5)
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_CategArea)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
+    # # # Usando XPATH
+    # # driver.find_element(By.XPATH, '//li[@aria-label="Description & Conclusion"]').click()
+    # # time.sleep(1)
 
-    editfill = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Type, Lookup"]')
-    editfill.click()
-    time.sleep(0.5)
-    editfill.clear()
-    time.sleep(1)
-    editfill.send_keys(A_CasegType)
-    time.sleep(3.5)
-    editfill.send_keys(Keys.RETURN)  # Ejemplo de enviar una tecla hacia abajo
-    time.sleep(1)
+    # # driver.find_element(By.CSS_SELECTOR, '[aria-label="Additional Information"]').send_keys(A_AddInfo)
 
+    # # driver.find_element(By.CSS_SELECTOR, '[aria-label="Conclusion"]').send_keys(A_Conclusion)
+    # # time.sleep(1)
+    # # save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
+    # # save_button.click()
 
-
-    # Usando XPATH
-    driver.find_element(By.XPATH, '//li[@aria-label="Description & Conclusion"]').click()
-    time.sleep(1)
-
-    driver.find_element(By.CSS_SELECTOR, '[aria-label="Additional Information"]').send_keys(A_AddInfo)
-
-    driver.find_element(By.CSS_SELECTOR, '[aria-label="Conclusion"]').send_keys(A_Conclusion)
-    time.sleep(1)
-    save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
-    save_button.click()
+    # # time.sleep(20)
 
 
     Share_Btn = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Share"]'))
     )
     Share_Btn.click()
-    time.sleep(0.5)
+    time.sleep(1)
 
 
 
     # Clic en el botón "Copy link"
     copy_link_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'copyLinkItem')]")))
     copy_link_button.click()
+    time.sleep(2.5)
 
 
     def update_case_link(driver, json_path):
@@ -451,33 +481,42 @@ def seccion1 ():
         # Guardar los cambios
         with open(json_path, 'w', encoding='utf-8-sig') as file:
             json.dump(data, file, indent=4)
-        wait = WebDriverWait(driver, 10)
+        time.sleep(1)
 
-        close_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'dialogCloseIconButton')]")))
-        close_button.click()
-        time.sleep(1)  # pequeña espera para asegurar que el portapapeles se haya actualizado
+        
 
 
     update_case_link(driver,json_path)
 
-    try:
-        with open(json_path, 'r', encoding='utf-8-sig') as f:
-            data = json.load(f)
-    except Exception as e:
-        print(f"Error al leer el JSON: {e}")
+    close_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(@id, 'dialogCloseIconButton')]")))
+    close_button.click()
+    time.sleep(1)  # pequeña espera para asegurar que el portapapeles se haya actualizado
+
+    # Ruta del escritorio del usuario
+    desktop_path = os.path.join(os.path.expanduser("~"), r"Desktop\CasesJSON")
+    # Verificar si el archivo JSON existe
+    
+
+    # Construcción del nombre del archivo
+    backup_filename = f"DNG_{A_Dongle}.json"
+    backup_path = os.path.join(desktop_path, backup_filename)
+
+    if not os.path.exists(backup_path):
+        print(f"Error: No existe el archivo en la ruta: {backup_path}")
         sys.exit(1)
+
+    update_case_link(driver, backup_path)
 
 
 # *************** SECTION 2 ***************  
 # Toma el case Number, la Survey y lo guarda en el JSON
 
 def seccion2 ():
+    readJson()
+
     if args.seccion1:
         time.sleep(20)
-        # Esperar hasta que el indicador de carga desaparezca
-        WebDriverWait(driver, 25).until(
-            EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
-        )
+
     # Esperar a que "Enter a note" sea clickeable
     WebDriverWait(driver, 25).until(
         EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
@@ -552,6 +591,7 @@ def seccion2 ():
 
     time.sleep(0.5)
     # Enviar Alt + Apyautogui
+    
 
     pyautogui.hotkey('alt', 'a')
     # Luego, enviar flecha izquierda
@@ -616,12 +656,15 @@ def seccion2 ():
     # Localizar el campo de texto usando XPath
 
     surveyEdit = driver.find_element(By.XPATH, '//input[@aria-label="SurveyMonkey Link"]')
+    time.sleep(0.5)
 
     A_Survey = surveyEdit.get_attribute("value")
+    time.sleep(0.5)
 
     pyperclip.copy(A_Survey)
 
 
+    time.sleep(1.5)
 
     def update_survey(json_path, A_Survey):
 
@@ -664,11 +707,11 @@ def seccion2 ():
         print(f"Error al leer el JSON: {e}")
         sys.exit(1)
 
-    time.sleep(0.5)
+    time.sleep(0.8)
 
     pyautogui.hotkey('alt', 'v')
 
-    time.sleep(0.5)
+    time.sleep(0.8)
 
 
 # *************** SECTION 3 ***************  
@@ -736,6 +779,7 @@ def seccion3 ():
 
             # TAB varias veces
             for _ in range(3):
+
                 pyautogui.press('tab')
                 time.sleep(0.5)
 
@@ -773,6 +817,9 @@ def seccion3 ():
     )
     add_email_Button.click()
 
+   
+    time.sleep(1)
+
     pyautogui.hotkey('enter')
 
 
@@ -804,6 +851,9 @@ def seccion3 ():
 
 
     # === 2. Llenar el Subject ===
+    time.sleep(0.5)
+    readJson()
+    time.sleep(0.5)
     subject_input = WebDriverWait(driver, 15).until(
         EC.presence_of_element_located((By.XPATH, '//input[@aria-label="Subject"]'))
     )
@@ -865,11 +915,12 @@ def seccion3 ():
         time.sleep(0.5)
 
     A_surveyFinal = f"https://{data['Sur&vey']}"
+    time.sleep(0.5)
 
 
     pyautogui.write(A_surveyFinal)
 
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    time.sleep(0.8)  # Espera a que aparezca el campo de búsqueda
     pyautogui.hotkey('enter')
 
     time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
@@ -963,15 +1014,21 @@ def seccion5 ():
     cases_item = wait.until(EC.element_to_be_clickable((By.ID, "sitemap-entity-nav_cases")))
     cases_item.click()
 
+readJson()
 if args.seccion1:
+    readJson()
     seccion1()
 if args.seccion2:
+    readJson()
     seccion2()
 if args.seccion3:
+    readJson()
     seccion3()
 if args.seccion4:
+    readJson()
     seccion4()
 if args.seccion5:
+    readJson()
     seccion5()
 else:
     print("No se seleccionó ninguna opción.")
