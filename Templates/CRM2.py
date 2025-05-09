@@ -167,7 +167,6 @@ executable_path = os.path.join(root_dir, "chromedriver.exe")
 service = Service(executable_path=executable_path)
 driver = webdriver.Chrome(service=service, options=options)
 
-driver.set_window_position(0, 0)
 time.sleep(1)
 driver.maximize_window()
 
@@ -181,19 +180,55 @@ parser.add_argument('--seccion5', action='store_true')
 args = parser.parse_args()
 
 
+def get_tabs(port):
+    with urllib.request.urlopen(f"http://127.0.0.1:{port}/json") as response:
+        return json.load(response)
+
+def focus_tab(driver, port, url_fragment):
+    tabs = get_tabs(port)
+    for tab in tabs:
+        if url_fragment in tab.get("url", ""):
+            driver.switch_to.window(tab["id"])
+            print(f"[✔] Cambiado a la pestaña con URL que contiene: {url_fragment}")
+            return True
+    print(f"[✘] No se encontró una pestaña con URL que contenga: {url_fragment}")
+    return False
+
+
 
 
 # Abrir página de login
 
 if data["Case Link"] == "":
-    driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
+    found = focus_tab(driver, debug_port, "&pagetype=entityrecord&etn=incident")
+
+    if not found:
+        # Cambiar el foco a la nueva pestaña (la última en la lista)
+        if focus_tab(driver, debug_port, "about:blank"):
+            time.sleep(0.5)  # Espera para que se abra bien
+
+            driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
+            time.sleep(0.5)
+        else:
+            driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
+            time.sleep(10)
+            
     driver.maximize_window()
 
 
 else:
     A_link = data["Case Link"]
+    if not focus_tab(driver, debug_port, "about:blank"):
+        driver.get(A_link)
+
+    time.sleep(0.5)
+ 
     driver.get(A_link)
+    time.sleep(0.5)
     driver.maximize_window()
+    
+
+
 
 
 

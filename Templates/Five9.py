@@ -26,7 +26,7 @@ import threading
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 BASE_USER_DATA_DIR = r"C:\Skrive_Chrome\ChromeDebugProfiles"
-START_PORT = 9223
+START_PORT = 9222
 MAX_PORT = 9300
 
 
@@ -157,7 +157,7 @@ def focus_tab(driver, port, url_fragment):
     tabs = get_tabs(port)
     for tab in tabs:
         if url_fragment in tab.get("url", ""):
-            driver.switch_to.window(tab["id"])
+            driver.switch_to.window(tab["id"])  
             print(f"[✔] Cambiado a la pestaña con URL que contiene: {url_fragment}")
             return True
     print(f"[✘] No se encontró una pestaña con URL que contenga: {url_fragment}")
@@ -171,11 +171,19 @@ def inicializar():
     # Cambiar al tab que contenga la URL deseada (por ejemplo, "agent/home")
     found = focus_tab(driver, debug_port, "agent/home")
 
-    if not found:
-        # Abrir si no está
-        driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
+    if not found:# Obtener el handle de la pestaña actual
+
+        # Cambiar el foco a la nueva pestaña (la última en la lista)
+        if focus_tab(driver, debug_port, "about:blank"):
+            time.sleep(0.5)  # Espera para que se abra bien
+
+            driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
+
+        else:
+            driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
 
         time.sleep(5)
+        
 
     # Crea el driver (ajusta según el navegador que uses, aquí con Chrome)
     # Establece posición de la ventana
@@ -202,11 +210,20 @@ def LoguearMorning():
     # Cambiar al tab que contenga la URL deseada (por ejemplo, "agent/home")
     found = focus_tab(driver, debug_port, "html?login")
 
-    if not found:
-        # Abrir si no está
-        driver.get("https://app.five9.com/index.html?login")
+    if not found:   
+        # Cambiar el foco a la nueva pestaña (la última en la lista)
+        if focus_tab(driver, debug_port, "about:blank"):
 
-        time.sleep(5)
+            time.sleep(0.5)  # Espera para que se abra bien
+
+            # Ir a la URL deseada en la nueva pestaña
+            driver.get("https://app.five9.com/index.html?login")
+
+        else:
+            driver.get("https://app.five9.com/index.html?login")
+        time.sleep(5)  # Espera para cargar la página si es necesario
+
+
 
     # Ingresar valores en los inputs
     username_input = driver.find_element(By.ID, "Login-username-input")
@@ -345,9 +362,6 @@ if args.lunchtime:
     time.sleep(3585)
     inicializar()
     ready()
-
-    
-
 
 elif args.breaktime:
     inicializar()
