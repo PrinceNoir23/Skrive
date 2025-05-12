@@ -1,15 +1,9 @@
 ﻿{
-    "CaseType": "PC\/OS\/Network",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || PC\/OS\/Network",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "Additionally, we collected logs so the incident is now set as resolved.\n\nRemmember to always select all the options of the workflow of the scanning process, so yo avoid future related problems.",
     "HJ": "https:\/\/support.3shape.com\/products-trios-and-accessories-trios-5-troubleshooting\/wi-fi-disconnection-errors-when-connecting-wireless-scanners-on-pcmovemove?from_search=178782331    https:\/\/support.3shape.com\/products-trios-and-accessories-move-troubleshooting\/2524844-internal-misconfiguration-of-move-tp-links?from_search=178782523   ",
     "Issue": "the issues you were having in your 3Shape Unite software when trying to send a case.",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nIs happening with all the cases or just this one?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "",
-    "Software Version": "Unite version 1.7.83.0",
     "Solution": "returning to the scanning page, trimmed a small amount of soft tissue, which enabled the abutment setup menus to appear in the initial case stage.Then, after reprocessing the scans, the case was successfully sent.",
     "Step 1": "Restarted the Unite software.\r\n",
     "Step 10": "Incident solved.\r\n",
@@ -28,6 +22,5 @@
     "Step 6": "Customer selected the features.\r\n",
     "Step 7": "Post-processed the scans again.\r\n",
     "Step 8": "Case was sent successfully.\r\n",
-    "Step 9": "Collected logs.\r\n",
-    "Version": "1.7.83.0"
+    "Step 9": "Collected logs.\r\n"
 }

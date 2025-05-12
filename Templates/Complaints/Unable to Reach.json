@@ -1,15 +1,9 @@
 ﻿{
-    "CaseType": "Not Reproducible",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Not Reproducible",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "I try to contact with you via phone call to this number:  but no one pick up the call, I want to confirm with you about a suitable time frame when I can call you to take a look for the issue of ---REPORT---.\n\nPlease let me know your availability so we can schedule a convenient time for the call.\n",
     "HJ": "",
     "Issue": "Unable to Reach",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "",
     "RC": "Unable to Reach",
-    "Software Version": "Unite version 1.7.83.0",
     "Solution": "Unable to Reach",
     "Step 1": "",
     "Step 10": "",
@@ -28,6 +22,5 @@
     "Step 6": "",
     "Step 7": "",
     "Step 8": "",
-    "Step 9": "",
-    "Version": "1.7.83.0"
+    "Step 9": ""
 }

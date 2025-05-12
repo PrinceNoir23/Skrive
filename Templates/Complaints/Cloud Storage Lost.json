@@ -1,12 +1,7 @@
 ﻿{
-    "CaseType": "Performance",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Performance",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "Additionally, to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it stays connected to the internet via Ethernet.",
     "HJ": "https:\/\/support.3shape.com\/3shape-unite-241\/connection-to-cloud-is-lost-with-correct-network-speed-and-set-up?from_search=181246446",
     "Issue": "the error 'Your case could not be sent', when attempting to send to a laboratory",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "a lost of the connection while completing the synchronization with the cloud.",
     "Solution": "addressed this problem by re-establishing the Cloud Storage into your program.",
@@ -27,6 +22,5 @@
     "Step 6": "Cut both the TokenStorage and ServerTokenStorage folders and pasted to documents folder",
     "Step 7": "Services restarted",
     "Step 8": "Repair runned of Unite software from ServerPackages folder",
-    "Step 9": "Credentials Rentered",
-    "Version": "1.7.83.0"
+    "Step 9": "Credentials Rentered"
 }

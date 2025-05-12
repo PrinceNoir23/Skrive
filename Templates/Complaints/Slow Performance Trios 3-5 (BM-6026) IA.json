@@ -1,15 +1,9 @@
 ﻿{
-    "CaseType": "Performance",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Performance",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "A bug is an unexpected problem with software or hardware. Typical problems are often the result of external interference with the program's performance that was not anticipated by the developer. Minor bugs can cause small problems like frozen screens or unexplained error messages that do not significantly affect usage.\n",
     "HJ": "https:\/\/support.3shape.com\/clinic-processing-scans\/trios-3-scanner-runs-slow-when-ai-scan-is-enabled?from_search=178248534\r\n",
     "Issue": "slow performance of your TRIOS device during the scan process.",
-    "Modulo": "TRIOS Software",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nIs happening with all the cases or just this one?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "",
-    "Software Version": "TRIOS Software version 1.18.7.6",
     "Solution": "a bug on Unite when activating the AI Scan using a Trios 3 or Trios 5, your computer has been rebooted, the graphics card settings have been optimized for maximum performance, and the drivers have been updated to ensure smooth operation, additionally, the system has been fully optimized to deliver the best performance for your 3Shape App.\n\nWe have performed the workaround and leave the AI disabled while our team fixes the BUG described above, remember that you will receive updates as soon as we have them. In the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process",
     "Step 1": "Look the graphics settings and set it on high performance",
     "Step 10": "Start a hardware test",
@@ -28,6 +22,5 @@
     "Step 6": "Reboot the pc \r\n",
     "Step 7": "Ask the customer to try to scan again but the slow performance still\r\n",
     "Step 8": "Make a test with the AI disable and the scanner improve the performance\r\n (“Use DirectML backend for onnx\" dsiabled)",
-    "Step 9": "Verify the scan with out the AI and it works fine\r\n",
-    "Version": "1.18.7.6"
+    "Step 9": "Verify the scan with out the AI and it works fine\r\n"
 }

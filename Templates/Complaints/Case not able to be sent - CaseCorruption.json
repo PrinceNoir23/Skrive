@@ -1,12 +1,7 @@
 ﻿{
-    "CaseType": "Expected Behaviour",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Expected Behaviour",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "Also, as a recommendation to prevent future files from corruption during the scanning process of a specific case, please avoid excessive back-and-forth navigation. Such actions can increase the risk of data corruption.",
     "HJ": "No helpjuice used, as no article found for this proccess",
     "Issue": "the errors pop-up \"unable to sent case\" while you triying to sent a case",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nIs happening with all the cases or just this one?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "a case corruption which main reason could be due to poor navigation through the scanning process.",
     "Solution": "addressed this problem by reimporting the streams of the case, in a new one.",
@@ -27,6 +22,5 @@
     "Step 6": "Left case ready to be sent and dentist notified to add Annotations and ready to be sent\r\n",
     "Step 7": "case sent succesfully, issue solved",
     "Step 8": "",
-    "Step 9": "",
-    "Version": "1.7.83.0"
+    "Step 9": ""
 }

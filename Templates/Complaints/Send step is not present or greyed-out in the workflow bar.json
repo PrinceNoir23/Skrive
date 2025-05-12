@@ -1,15 +1,9 @@
 ﻿{
-    "CaseType": "Performance",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Performance",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "Please make sure to adjust all the proper instructions in the Case Setup step, before scanning and post-processing, to avoid corrupting the case.",
     "HJ": "https:\/\/support.3shape.com\/products-unite-software-troubleshooting\/2523362-send-step-is-not-present-or-greyed-out-in-the-workflow-bar-for-trios-cases?from_search=177686738\r\n",
     "Issue": "regarding send step missing or grayed-out, so you are unable to send cases.",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nIs happening with all the cases or just this one?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "running a repair installation, after that you were able to see the send step and send the case successfully.",
-    "Software Version": "Unite version 1.7.83.0",
     "Solution": "some modules appeared as incompatible in Unite software, causing the send step missing.",
     "Step 1": "Check dongle licenses correct\r\n",
     "Step 10": "",
@@ -28,6 +22,5 @@
     "Step 6": "Issue resolved\r\n",
     "Step 7": "",
     "Step 8": "",
-    "Step 9": "",
-    "Version": "1.7.83.0"
+    "Step 9": ""
 }

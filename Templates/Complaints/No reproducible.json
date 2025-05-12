@@ -1,15 +1,10 @@
 ﻿{
-    "CaseType": "Not Reproducible",
-    "Categ": "Complaint",
     "Category": "Complaint || Solved Remotely || Not Reproducible",
-    "CategoryArea": "Solved Remotely",
-    "EmailInputEdit": "After the appropriate investigation, we could not find the root cause of the issue as it was not reproduceable.\n\nIf you have any other questions or come across with any other issue please, do not hesitate to reach out. \n\n\n",
+    "EmailInputEdit": "After the appropriate investigation, we could not find the root cause of the issue as it was not reproducible\n\nIf you have any other questions or come across with any other issue please, do not hesitate to reach out. \n\n\n",
     "HJ": "No helpjuice used, as no article found for this proccess",
     "Issue": "",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "",
     "RC": "",
-    "Software Version": "Unite version 1.7.83.0",
     "Solution": "tried to reproduce the issue",
     "Step 1": "",
     "Step 10": "",
@@ -28,6 +23,5 @@
     "Step 6": "",
     "Step 7": "",
     "Step 8": "",
-    "Step 9": "",
-    "Version": "1.7.83.0"
+    "Step 9": ""
 }

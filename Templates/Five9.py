@@ -166,7 +166,7 @@ def focus_tab(driver, port, url_fragment):
 def inicializar():
 
     # Cambiar al tab que contenga la URL deseada (por ejemplo, "agent/home")
-    found = focus_tab(driver, debug_port, "/main.html?role=Agent#agent/")
+    found = focus_tab(driver, debug_port, "agent/")
 
 
     if not found:# Obtener el handle de la pestaña actual

@@ -7,8 +7,25 @@ global NmOfSteps := 18
 global fileDir1 := A_Desktop "\CasesJSON"  ; Solicitar la ruta del directorio
 global fileDir_CasesFinal := A_Desktop "\Cases_Final"  ; Solicitar la ruta del directorio
 ; global rutaPython := "C:\Python313\python.exe"
-global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
+; global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
 global rutaScript := A_WorkingDir "\CRM2.py"
+
+; Ruta para python ------------------------------------------------------------
+; Ejecutar "where python" y guardar la salida
+RunWait A_ComSpec ' /c where python > python_path.txt', , 'Hide'
+
+; Leer archivo generado por `where python`
+raw := FileRead("python_path.txt")
+
+; Separar por líneas
+lines := StrSplit(raw, "`n")
+
+; Tomar la primera línea y quitar posibles espacios o saltos de carro (\r)
+global rutaPython := Trim(lines[1], "`r`n ")
+
+
+; Ruta para python ------------------------------------------------------------
+
 
 for _, dirPath in [fileDir_CasesFinal, fileDir1] {
     if !DirExist(dirPath)

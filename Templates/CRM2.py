@@ -522,6 +522,9 @@ def seccion2 ():
     WebDriverWait(driver, 25).until(
         EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
     )
+    time.sleep(1)
+    driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
+    time.sleep(1)
 
     # Esperar a que "Enter a note" sea clickeable
     WebDriverWait(driver, 25).until(
@@ -719,6 +722,7 @@ def seccion2 ():
 # Agregar notas y enviar email
 def seccion3 ():
     time.sleep(1.5)
+    
 
     driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
 
@@ -924,11 +928,11 @@ def seccion3 ():
     time.sleep(0.8)  # Espera a que aparezca el campo de búsqueda
     pyautogui.hotkey('enter')
 
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    time.sleep(2.5)  # Espera a que aparezca el campo de búsqueda
 
     # === 6. Clic en el botón Send Email ===
     send_button = WebDriverWait(driver, 20).until(
-        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Send Email"]'))
+        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Send"]'))
     )
     send_button.click()
 
