@@ -1,15 +1,9 @@
 ﻿{
-    "CaseType": "Expected Behaviour",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Expected Behaviour",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "We sent to you attached a PDF with the specifications and IP addresses, that must match in your network to avoid future issues.\n\n\nIf you have any further questions or need additional assistance, please do not hesitate to reach out.\n\n",
     "HJ": "https:\/\/support.3shape.com\/products-pc\/2524193-basic-troubleshooting-of-pc-related-issues?from_search=175484134         https:\/\/support.3shape.com\/products-3shape-unite-connections-and-integrations-how-to\/3shape-unitedental-desktop-network-connections?from_search=182637675",
     "Issue": "Connection to the cloud lost",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nThis issue happens only with the 3hape software or other ones?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "There are country network restrictions on the network that disables the communication to the servers",
-    "Software Version": "Unite version 1.8.8.0",
     "Solution": "we disabled the country network restrictions, and I am pleased to report that the software is now working as expected. \n\n",
     "Step 1": "PC requirements are fullfilled",
     "Step 10": "temporary files removed and system file checker command runned in CMD",
@@ -28,6 +22,5 @@
     "Step 6": "speedtest runned and all is good",
     "Step 7": "the reliability was checked and all is good",
     "Step 8": "C++ framework reisntalled",
-    "Step 9": "necessary network ports opened",
-    "Version": "1.8.8.0"
+    "Step 9": "necessary network ports opened"
 }

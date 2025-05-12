@@ -1,7 +1,21 @@
 #Requires AutoHotkey v2.0
 global rutaScriptFive9 := A_ScriptDir . "\Five9.py" ; Cambia esto a la ruta de tu script Python
 ; global rutaPython := "C:\Python313\python.exe"
-global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
+; Ruta para python ------------------------------------------------------------
+; Ejecutar "where python" y guardar la salida
+RunWait A_ComSpec ' /c where python > python_path.txt', , 'Hide'
+
+; Leer archivo generado por `where python`
+raw := FileRead("python_path.txt")
+
+; Separar por líneas
+lines := StrSplit(raw, "`n")
+
+; Tomar la primera línea y quitar posibles espacios o saltos de carro (\r)
+global rutaPython := Trim(lines[1], "`r`n ")
+
+
+; Ruta para python ------------------------------------------------------------
 
 ; https://login.five9.com/index.htm
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -19,6 +33,7 @@ btnSze:= 130
     KlokkenGui.Show("w" KlKnWidth " h" KlKnHeigh)
 
 breakTime(){
+    global rutaPython
     args := "--breaktime "
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
     A_Clipboard := comand
@@ -28,6 +43,8 @@ breakTime(){
     RunWait(comand)
 }
 lunchTime(){
+    global rutaPython
+
     args := "--lunchtime "
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
     A_Clipboard := comand
@@ -92,6 +109,8 @@ BtnKlokken.OnEvent("Click", (*) => AbrirFive9())
 BtnKlokken.OnEvent("ContextMenu", (*) => CerrarFive9())
 
 AbrirFive9() {
+    global rutaPython
+
     args := "--klokken "
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
     A_Clipboard := comand
@@ -101,6 +120,8 @@ AbrirFive9() {
    
 }
 CerrarFive9() {
+    global rutaPython
+
     args := "--klokkenout "
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
     A_Clipboard := comand

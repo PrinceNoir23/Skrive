@@ -1,12 +1,7 @@
 ﻿{
-    "CaseType": "Performance",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Performance",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "With this, you should no longer experience any connection issues.\n\nAdditionally,  to prevent performance issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process.",
     "HJ": "\n\nhttps:\/\/support.3shape.com\/an-issue-occurred-company-id-set-for-token-does-not-match-pop-up-when-attempting-to-sign-in-to-unite-1871-after-updating-to-unite-cloud-?from_search=1754531384",
     "Issue": "the Company ID Token error in your 3Shape Unite software",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "an internal bug in the system, which has been reported to our backend team. They are working on fixing it as soon as possible.",
     "Solution": "performing an internal system reset of the server settings. Your computer has also been rebooted to ensure these settings are correctly updated.",
@@ -27,6 +22,5 @@
     "Step 6": "Signed in again with the 3shape account & password",
     "Step 7": "Issue solved no further assistance needed",
     "Step 8": "",
-    "Step 9": "",
-    "Version": "1.7.83.0"
+    "Step 9": ""
 }

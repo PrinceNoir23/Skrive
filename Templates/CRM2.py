@@ -7,7 +7,6 @@ import os
 import pyautogui
 import time
 import urllib.request
-
 import argparse
 import pyperclip
 from selenium import webdriver
@@ -20,6 +19,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from pathlib import Path
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -522,6 +522,9 @@ def seccion2 ():
     WebDriverWait(driver, 25).until(
         EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
     )
+    time.sleep(1)
+    driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
+    time.sleep(1)
 
     # Esperar a que "Enter a note" sea clickeable
     WebDriverWait(driver, 25).until(
@@ -719,6 +722,7 @@ def seccion2 ():
 # Agregar notas y enviar email
 def seccion3 ():
     time.sleep(1.5)
+    
 
     driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
 
@@ -924,13 +928,22 @@ def seccion3 ():
     time.sleep(0.8)  # Espera a que aparezca el campo de búsqueda
     pyautogui.hotkey('enter')
 
+    time.sleep(2.5)  # Espera a que aparezca el campo de búsqueda
+
+    # Abrir buscador
+    pyautogui.hotkey('ctrl', 'f')
     time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
-    # === 6. Clic en el botón Send Email ===
-    send_button = WebDriverWait(driver, 20).until(
-        EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Send Email"]'))
-    )
-    send_button.click()
+    # Escribir lo que quieres buscar
+    pyautogui.write('Send')
+
+    pyautogui.hotkey('enter')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('esc')
+    time.sleep(1)  # Espera a que aparezca el campo de búsqueda
+    pyautogui.hotkey('enter')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+     
 
     time.sleep(10)
 
@@ -986,8 +999,16 @@ def seccion4 ():
 # *************** SECTION 5 ***************  
 # Resolver el caso
 def seccion5 ():
-    driver.set_window_size(1920, 1080)
+    
+    try:
+        more_commands_btn = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="More commands for Case"]'))
+        )
+        more_commands_btn.click()
+    except TimeoutException:
+        driver.set_window_size(1920, 1080)
 
+    # Ahora continúa con el botón "Resolve Case"
     ResolveCase_Btn = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Resolve Case"]'))
     )

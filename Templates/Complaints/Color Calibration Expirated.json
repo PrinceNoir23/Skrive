@@ -1,12 +1,7 @@
 ﻿{
-    "CaseType": "Expected Behaviour",
-    "Categ": "Complaint",
-    "Category": "Complaint || Solved Remotely || Expected Behaviour",
-    "CategoryArea": "Solved Remotely",
     "EmailInputEdit": "We recommend you get a new Calibration Target on the 3shape store in the following link:\n\nhttps:\/\/webshop.3shape.com\/es\/accessories\n\n\nMeanwhile you can use the black cylinder instead to complete the calibration, while you wait the new one to arrive.",
     "HJ": "https:\/\/support.3shape.com\/products-trios-and-accessories-trios-4-troubleshooting\/2522536-internal-color-calibration-fails-error-code-7-8-10-11-or-12-during-trios-calibration?from_search=176377013",
     "Issue": "the error messages every time the calibration kit is used, while attempting the color calibration.",
-    "Modulo": "Unite",
     "Probing Questions (Add Info)": "How long has been Happening this issue?\nHave you done an update on the software?\nHave anything changed on the network or the commputer lin the last days?\nDo you have more scanners?\nHow many computer do you use?",
     "RC": "it was found that the calibration target has expired.",
     "Solution": "a hardware test attempt and we confirm the correct functionality of the scanner.",
@@ -27,6 +22,5 @@
     "Step 6": "Checked if there are any scratches or other physical damage on the target",
     "Step 7": "Tried to do calibration again and failed",
     "Step 8": "Color calibration target got checked and it has expired (2024)\r\n",
-    "Step 9": "Accesed into the ScanSuite path and verified scan pictures\r\n",
-    "Version": "1.7.83.0"
+    "Step 9": "Accesed into the ScanSuite path and verified scan pictures\r\n"
 }

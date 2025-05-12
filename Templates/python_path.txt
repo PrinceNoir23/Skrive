@@ -1,0 +1,2 @@
+C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe
+C:\Users\Joel Hurtado\AppData\Local\Microsoft\WindowsApps\python.exe
