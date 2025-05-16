@@ -4,3 +4,5 @@ git config --global alias.co checkout
 git config --global alias.purebase "pull --rebase"
 git config --global alias.lg "log --oneline --graph --all --decorate"
 git config --global --list | grep alias
+git commit --amend --no-edit
+git push --set-upstream origin main --force
