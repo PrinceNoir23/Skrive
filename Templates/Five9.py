@@ -181,7 +181,7 @@ def inicializar():
             driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
 
         time.sleep(5)
-    driver.get("https://app-scl.five9.com/clients/agent/main.html?role=Agent#agent/home")
+    
         
 
     # Crea el driver (ajusta según el navegador que uses, aquí con Chrome)

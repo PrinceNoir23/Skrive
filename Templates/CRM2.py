@@ -7,6 +7,7 @@ import os
 import pyautogui
 import time
 import urllib.request
+import tkinter as tk
 import argparse
 import pyperclip
 from selenium import webdriver
@@ -176,7 +177,10 @@ parser.add_argument('--seccion2', action='store_true')
 parser.add_argument('--seccion3', action='store_true')
 parser.add_argument('--seccion4', action='store_true')
 parser.add_argument('--seccion5', action='store_true')
+parser.add_argument('--seccionE', action='store_true')
 args = parser.parse_args()
+
+
 
 
 def get_tabs(port):
@@ -203,6 +207,7 @@ wait = WebDriverWait(driver, 25)
 if data["Case Link"] == "":
     found = focus_tab(driver, debug_port, "&pagetype=entityrecord&etn=incident")
 
+
     if not found:
         # Cambiar el foco a la nueva pestaña (la última en la lista)
         if focus_tab(driver, debug_port, "about:blank"):
@@ -210,14 +215,16 @@ if data["Case Link"] == "":
 
             driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
             time.sleep(0.5)
+
         else:
             driver.get("https://3shape.crm4.dynamics.com/main.aspx?appid=366b8060-2eea-e811-a959-000d3aba0c96&pagetype=entityrecord&etn=incident")
             time.sleep(10)
-    if not found:    
-        site_map_button = wait.until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
-        )
-        site_map_button.click()      
+            site_map_button = wait.until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@aria-label="Site Map"]'))
+            )
+            site_map_button.click() 
+    time.sleep(5)
+    
     driver.maximize_window()
 
 
@@ -242,13 +249,37 @@ def readJson():
         sys.exit(1)
 
 
+def preguntar_usuario():
+    decision = {"continuar": False}
+
+    def on_continue():
+        decision["continuar"] = True
+        root.destroy()
+
+    def on_stop():
+        root.destroy()
+
+    root = tk.Tk()
+    root.title("Confirmación")
+    root.geometry("250x100")
+    root.resizable(False, False)
+
+    label = tk.Label(root, text="¿Email enviado?")
+    label.pack(pady=10)
+
+    frame = tk.Frame(root)
+    frame.pack(pady=5)
+
+    tk.Button(frame, text="Continuar", command=on_continue).pack(side="left", padx=10)
+    tk.Button(frame, text="Parar", command=on_stop).pack(side="right", padx=10)
+
+    root.mainloop()
+    return decision["continuar"]
 
 
+# --- Tu lógica ---
 
 
-
-
-time.sleep(15)
 
 # ----------------------------------------------------------------------------------------------------------
 
@@ -256,6 +287,13 @@ time.sleep(15)
 # *************** SECTION 1 ***************  
 # Llenar el formulario de SUMMARY
 def seccion1 ():
+    # Esperar a que "Enter a note" sea clickeable
+    WebDriverWait(driver, 25).until(
+        EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
+    )
+    time.sleep(0.2)
+    driver.find_element(By.XPATH, '//li[@aria-label="Summary"]').click()
+    time.sleep(0.2)
 
     
     driver.find_element(By.CSS_SELECTOR, '[aria-label="Description"]').send_keys(A_description)
@@ -445,7 +483,7 @@ def seccion1 ():
     save_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
     save_button.click()
 
-    time.sleep(20)
+    time.sleep(10)
 
 
     Share_Btn = WebDriverWait(driver, 10).until(
@@ -516,7 +554,7 @@ def seccion2 ():
     data = readJson()
 
     if args.seccion1:
-        time.sleep(20)
+        time.sleep(10)
 
     # Esperar a que "Enter a note" sea clickeable
     WebDriverWait(driver, 25).until(
@@ -655,7 +693,7 @@ def seccion2 ():
     # time.sleep(10)
 
     # driver.find_element(By.XPATH, '//li[@aria-label="System"]').click()
-    time.sleep(10)
+    time.sleep(2)
 
     # Localizar el campo de texto usando XPath
 
@@ -761,7 +799,6 @@ def seccion3 ():
             # Ahora esperar el input de tipo file
             file_input = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="file"]')))
             time.sleep(1)
-            import os
 
             desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
             logs_file = os.path.join(desktop_path, "Cases_Final")
@@ -930,19 +967,31 @@ def seccion3 ():
 
     time.sleep(2.5)  # Espera a que aparezca el campo de búsqueda
 
-    # Abrir buscador
-    pyautogui.hotkey('ctrl', 'f')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    if args.seccionE:
 
-    # Escribir lo que quieres buscar
-    pyautogui.write('Send')
+        if preguntar_usuario():
+            print("Continuando con el código...")
+            # Aquí va el resto de tu lógica
+        else:
+            print("Operación cancelada por el usuario.")
+            exit()
+    else:
+        # Abrir buscador
+        pyautogui.hotkey('ctrl', 'f')
+        time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
-    pyautogui.hotkey('enter')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
-    pyautogui.hotkey('esc')
-    time.sleep(1)  # Espera a que aparezca el campo de búsqueda
-    pyautogui.hotkey('enter')
-    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+        # Escribir lo que quieres buscar
+        pyautogui.write('Cancel')
+
+        time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+        pyautogui.hotkey('enter')
+        time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+        pyautogui.hotkey('esc')
+        time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+        pyautogui.hotkey('shift', 'tab')
+        time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+        pyautogui.hotkey('enter')
+    
      
 
     time.sleep(10)

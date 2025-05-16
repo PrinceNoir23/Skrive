@@ -1581,10 +1581,14 @@ Ejecutar_Autom_Python() {
         datos[seccions] := 1
         arguments := Format("--seccion{} ", A_Index)
         args .= arguments
+        
     }
 
-
-
+    if (CheckBoxEmailManual.Value) {
+        args .= Format("--seccionE ")
+        
+    }
+    
     FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
     comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
@@ -1675,7 +1679,7 @@ AutomGUI(){
         }
 
         args := ""
-
+        
         SectionsGui.hide()
 
 
@@ -1701,13 +1705,17 @@ AutomGUI(){
             for clave, chk in checkboxStates {
                 if chk.Value{
                     datos[clave] := chk.Value
-                    args .= "--" clave " "
+                    args .= "--" clave " "  
                 }
             }
         }
+        if (CheckBoxEmailManual.Value) {
+            args .= Format("--seccionE ")
+        }
+        
+
         FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
-        MsgBox args
         comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
         A_Clipboard := comand
 
@@ -1801,15 +1809,21 @@ AutomGUI_SinCondiciones(){
         }
 
         args := ""
-
+        
         SectionsGui.hide()
 
         for clave, chk in checkboxStates {
             if chk.Value {
                 datos[clave] := chk.Value
                 args .= "--" clave " "
+
             }
         }
+        if (CheckBoxEmailManual.Value) {
+            args .= Format("--seccionE ")
+        }
+        
+
         FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
         
@@ -1869,6 +1883,13 @@ Klokken() {
         KlokkenGui.Show("w" KlKnWidth " h" KlKnHeigh)
     }
 }
+SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+
+CheckBoxEmailManual := SkrvGui.AddCheckbox("x850 y750 vCheckBoxEmailManual", "Manual Email?")
+
+
+
 
 ; ; ; BtnSKRIVE.OnEvent("ContextMenu", (*) => SKRIVE_Autom(true))
 ; ; ; BtnSKRIVE.OnEvent("Click", (*) => SKRIVE_Autom(false))
@@ -1892,7 +1913,6 @@ Klokken() {
 ; ; ;     ForwardToDynamics()
 ; ; ;     return
 ; ; ; }
-SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
