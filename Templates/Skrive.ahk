@@ -194,7 +194,7 @@ SoftwareVersionGUI(editSoftware, Name2Text) {
     comboBox1 := SoftwGui.Add("ComboBox", "x10 y50 w200", ["Unite","TRIOS", "TRIOS Software", "Dental Desktop (unite)","Unite Cloud", "Model Builder", "Automate","3shape Account"])
     
     SoftwGui.Add("Text", "x230 y30", "Version:")
-    comboBox2 := SoftwGui.Add("ComboBox", "x230 y50 w150", ["1.7.83.0",  "1.8.8.0", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
+    comboBox2 := SoftwGui.Add("ComboBox", "x230 y50 w150", ["1.7.83.0",  "1.8.8.0","1.8.10.1", "1.18.6.6" ,"1.18.7.6" ,"1.7.8.1", "1.8.5.1","1.7.82.5"])
 
     ; Valores por defecto
     comboBox1.Text := "Unite"
