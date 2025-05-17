@@ -50,6 +50,11 @@ Persistent 1  ; Establece el script como persistente
 ; ChatGPT - Google Chrome
 ; ahk_class Chrome_WidgetWin_1
 ; ahk_exe chrome.exe
+rutaScriptAct := A_WorkingDir "\Chrome_Activator.py"
+comand := Format('"{}" "{}"', rutaPython, rutaScriptAct) 
+RunWait(comand,,"Hide")
+
+
 
 
 ForwardToDynamics() {
