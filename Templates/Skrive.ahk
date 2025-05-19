@@ -1607,7 +1607,7 @@ Ejecutar_Autom_Python() {
     RemoteSessionBuild() 
     Sleep(1000)
     EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
-
+    
     BackupSave := fileDir1 . Format("\DNG_{}.json", datos["&Dongle"] )
     if FileExist(BackupSave) {
         FileDelete(BackupSave)
@@ -1615,7 +1615,8 @@ Ejecutar_Autom_Python() {
     FileAppend(Jxon_Dump(datos,4), BackupSave, "UTF-8" )
 
 
-
+    
+    UpdateDataFromEdits()
     
     ;  global datos, edits, myGui
     jsonPath := A_WorkingDir . "\NewCase.json"

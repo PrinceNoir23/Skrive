@@ -154,16 +154,21 @@ Solution = data["Solution"]
 
 A_description = issue + " on " + SoftwareVersion
 A_CaseTitle = "{} / SID: {} / {}".format(CompName, CompSID, A_description)
-A_Product = data["Modulo"]
+A_Product = data.get("Modulo") or "TRIOS Software"
 A_Dongle= data["&Dongle"]
 A_Version = data["Version"]
 A_ScannerSN = data["Scanne&r S/N"]
 A_AddInfo = data["Probing Questions (Add Info)"]
 A_Conclusion = "RC: " + RootCause + "\n" + "S: " + Solution
 A_email = data["&Email"]
-A_Categ = data["Categ"]
-A_CategArea = data["CategoryArea"]
-A_CasegType = data["CaseType"]
+
+A_Categ = data.get("Categ") or "Complaint"
+
+A_CategArea = data.get("CategoryArea") or "Solved Remotely"
+
+A_CasegType = data.get("CaseType") or "Expected Behaviour"
+
+
 A_Phone_Tit =  data["PhT"]  
 A_Phone_Note =  data["PhN"] 
 A_Intl_Tit =  data["InT"] 
