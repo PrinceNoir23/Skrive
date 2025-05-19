@@ -25,6 +25,16 @@ from datetime import datetime, timedelta
 import threading
 import subprocess
 
+def resource_path(relative_path):
+    """Obtiene la ruta absoluta al recurso, funciona tanto para desarrollo como para PyInstaller."""
+    try:
+        # Cuando se ejecuta el .exe empaquetado, PyInstaller crea esta carpeta temporal
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -59,12 +69,12 @@ def ensure_chrome_debug_running(reuse_existing=True):
     """Busca un puerto libre o activo. Si reuse_existing=True, reutiliza Chrome si ya está abierto."""
     for port in range(START_PORT, MAX_PORT):
         
-        # user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
-        from pathlib import Path
-        import os
+        user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
+        # from pathlib import Path
+        # import os
 
-        local_appdata = os.getenv("LOCALAPPDATA")
-        user_data_dir = Path(local_appdata) / "Google" / "Chrome" / "User Data"
+        # local_appdata = os.getenv("LOCALAPPDATA")
+        # user_data_dir = Path(local_appdata) / "Google" / "Chrome" / "User Data"
 
 
         if is_chrome_debugger_alive(port):
@@ -110,25 +120,32 @@ if __name__ == "__main__":
 
 # Ejecutar el comando de PowerShell para reactivar PSReadLine
 subprocess.run(['powershell', '-Command', 'Import-Module PSReadLine'])
+# -------------------- NUEVO BLOQUE PARA RUTAS --------------------
 
+def get_base_dir():
+    """Retorna la ruta base, considerando ejecución como .exe o .py"""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-json_path_Info = os.path.join(script_dir, "A_Info.json")
-
-
+# Ruta al archivo JSON
+json_path = os.path.join(get_base_dir(), "A_Info.json")
 
 # Verificar si el archivo JSON existe
-if not os.path.exists(json_path_Info):
-    print(f"Error: No existe el archivo en la ruta: {json_path_Info}")
+if not os.path.exists(json_path):
+    print(f"❌ Error: No existe el archivo en la ruta: {json_path}")
     sys.exit(1)
 
 # Leer el contenido del JSON
 try:
-    with open(json_path_Info, 'r', encoding='utf-8-sig') as f:
+    with open(json_path, 'r', encoding='utf-8-sig') as f:
         Info = json.load(f)
+    print("✅ JSON cargado con éxito:", Info)
 except Exception as e:
-    print(f"Error al leer el JSON: {e}")
+    print(f"❌ Error al leer el JSON: {e}")
     sys.exit(1)
+
+# ----------------------------------------------------------------
 
 # Inicializar navegador en modo oculto (posición fuera de pantalla)
 options = webdriver.ChromeOptions()
@@ -139,7 +156,8 @@ options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te dev
 
 script_dir = os.path.dirname(os.path.abspath(__file__))  # ej: ...\Skrive\Templates
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))  # sube una carpeta
-executable_path = os.path.join(root_dir, "chromedriver.exe")
+# executable_path = os.path.join(root_dir, "chromedriver.exe")
+executable_path = resource_path("chromedriver.exe")
 
 service = Service(executable_path=executable_path)
 driver = webdriver.Chrome(service=service, options=options)
@@ -241,6 +259,7 @@ def LoguearMorning():
 
     password_input.send_keys(Keys.CONTROL, 'a')
     password_input.send_keys(Info["PasswordFive"])
+    time.sleep(1)
     # Hacer clic en el botón "Log In"
     login_button = driver.find_element(By.ID, "Login-login-button")
     login_button.click()

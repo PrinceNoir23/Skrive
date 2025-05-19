@@ -28,6 +28,17 @@ import subprocess
 import subprocess
 import sys
 import importlib
+def resource_path(relative_path):
+    """Obtiene la ruta absoluta al recurso, funciona tanto para desarrollo como para PyInstaller."""
+    try:
+        # Cuando se ejecuta el .exe empaquetado, PyInstaller crea esta carpeta temporal
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 
 # Paquetes pip -> módulos a importar
 required_packages = {
@@ -79,12 +90,12 @@ def ensure_chrome_debug_running(reuse_existing=True):
     """Busca un puerto libre o activo. Si reuse_existing=True, reutiliza Chrome si ya está abierto."""
     for port in range(START_PORT, MAX_PORT):
         
-        # user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
-        from pathlib import Path
-        import os
+        user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
+        # from pathlib import Path
+        # import os
 
-        local_appdata = os.getenv("LOCALAPPDATA")
-        user_data_dir = Path(local_appdata) / "Google" / "Chrome" / "User Data"
+        # local_appdata = os.getenv("LOCALAPPDATA")
+        # user_data_dir = Path(local_appdata) / "Google" / "Chrome" / "User Data"
 
 
         if is_chrome_debugger_alive(port):
@@ -139,7 +150,8 @@ options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te dev
 
 script_dir = os.path.dirname(os.path.abspath(__file__))  # ej: ...\Skrive\Templates
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))  # sube una carpeta
-executable_path = os.path.join(root_dir, "chromedriver.exe")
+# executable_path = os.path.join(root_dir, "chromedriver.exe")
+executable_path = resource_path("chromedriver.exe")
 
 service = Service(executable_path=executable_path)
 driver = webdriver.Chrome(service=service, options=options)

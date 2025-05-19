@@ -22,12 +22,12 @@ Get-ChildItem -Filter *.spec | ForEach-Object {
 Write-Host "`n🚀 Compilando ejecutables..."
 
 # Chrome_Activator2.py → ChromeAuto.exe
-pyinstaller --onefile --name "Chrome_Activator" --add-binary "chromedriver.exe;." Chrome_Activator2.py
+pyinstaller --onefile --name "Chrome_Activator" --add-binary "chromedriver.exe;." Chrome_Activator.py
 
 # Five9_2.py → Five9Runner.exe
-pyinstaller --onefile --name "Five9" --add-binary "chromedriver.exe;." Five9_2.py
+pyinstaller --onefile --name "Five9" --add-binary "chromedriver.exe;." Five9.py
 
 # CRM2_2.py → CRMControl.exe
-pyinstaller --onefile --name "CRM2" --add-binary "chromedriver.exe;." CRM2_2.py
+pyinstaller --onefile --name "CRM2" --add-binary "chromedriver.exe;." CRM2.py
 
 Write-Host "`n✅ Compilación finalizada. Ejecutables listos en 'dist/'"

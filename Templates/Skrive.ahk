@@ -561,6 +561,11 @@ Automatic(){
         Sleep(500)
     MsgBox("Informacion Total del caso copiada al portapapeles", "Informacion Copiada Exitosamente","64")
         Sleep(500)
+    A_Clipboard := datos["&Dongle"]
+        Sleep(500)
+    A_Clipboard := datos["&Email"]
+        Sleep(500)
+    
     return
 }
 
@@ -1097,7 +1102,6 @@ CRM2(CRMBool){
     ; FileDelete(jsonPath)
 
 }
-
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -1637,7 +1641,7 @@ Ejecutar_Autom_Python() {
     
     SkrvGui.Minimize()
 
-    CRM2_Exe := A_WorkingDir "\dist\CRM2.exe"
+    CRM2_Exe := A_WorkingDir "\CRM2.exe"
     if FileExist(CRM2_Exe) {
         comand := Format('"{}" {}', CRM2_Exe, args)
         A_Clipboard := comand
@@ -1771,11 +1775,12 @@ AutomGUI(){
 
 
         SkrvGui.Minimize()
-        CRM2_Exe := A_WorkingDir "\dist\CRM2.exe"
+        CRM2_Exe := A_WorkingDir "\CRM2.exe"
         if FileExist(CRM2_Exe) {
             comand := Format('"{}" {}', CRM2_Exe, args)
             A_Clipboard := comand
-            RunWait(comand, , "Hide")
+            RunWait(comand)
+            ; RunWait(comand, , "Hide")
 
         } else {
             comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
@@ -1890,7 +1895,7 @@ AutomGUI_SinCondiciones(){
         
         
         SkrvGui.Minimize()
-        CRM2_Exe := A_WorkingDir "\dist\CRM2.exe"
+        CRM2_Exe := A_WorkingDir "\CRM2.exe"
         if FileExist(CRM2_Exe) {
             comand := Format('"{}" {}', CRM2_Exe, args)
             A_Clipboard := comand
@@ -2009,6 +2014,9 @@ CallBack.OnEvent("Click", (*) =>  CallBackCuild())
 CallBackCuild() {
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
     UpdateDataFromEdits()
+
+    A_Clipboard := ("The case will be escalated to second line to continue with the verification.`n User Info`n`n`n`n" "Name: " datos["Name"] "`n`n" "Phone: " datos["&Phone"] "`n`n" "Email: " datos["&Email"] )
+    Sleep(500)
     A_Clipboard := ("CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"])
     Sleep(500)
     A_Clipboard := " Buenos días, ayuda para agendar este callback de escalación de 2nd Line Clinic. " 
@@ -2334,9 +2342,9 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     Recommend := (Recommend? Recommend:RecommendationDflt )
     CloseSurvey := (CloseSurvey? CloseSurvey:CloseSurveyDfflt )
     emailFinal := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" CloseSurvey)
-    emailFinal1 := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" CloseSurvey)
+    emailFinal1 := (Greeting  Issue "`n`n`n`n" Body  "`n`n`n`n" Recommend "`n`n`n`n`n`n" )
     
-    datos["EmailFinal"] := emailFinal
+    datos["EmailFinal"] := emailFinal1
     Sleep(1)
     A_Clipboard := emailFinal
 

@@ -39,7 +39,7 @@ breakTime(){
     global rutaPython
     args := "--breaktime "
 
-    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
         RunWait(comand, , "Hide")
@@ -58,7 +58,7 @@ lunchTime(){
     global rutaPython
 
     args := "--lunchtime "
-    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
         RunWait(comand, , "Hide")
@@ -131,7 +131,7 @@ AbrirFive9() {
     global rutaPython
 
     args := "--klokken "
-    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
         RunWait(comand, , "Hide")
@@ -150,7 +150,7 @@ CerrarFive9() {
     global rutaPython
 
     args := "--klokkenout "
-    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
         RunWait(comand, , "Hide")
