@@ -10,6 +10,27 @@
 ;     "Brk 2": "12:00",
 ;     "Lunch ": "12:00"
 ; }
+global InfoFile := A_WorkingDir "\A_Info.json"
+
+CreateDefaultInfoFile(filePath) {
+    if !FileExist(filePath) {
+        defaultData := Map(
+            "Brk 1",        "23:59",
+            "Brk 2",        "23:59",
+            "PasswordFive", "",
+            "Hora In",      "23:59",
+            "Hora Out",     "23:59",
+            "Lunch ",       "23:59",
+            "Password",     "",
+            "StationNumber","",
+            "User Name",    ""
+        )
+
+        json := Jxon_Dump(defaultData, 4)  ; 4 = indentación bonita
+        FileAppend(json, filePath, "UTF-8")
+    }
+}
+CreateDefaultInfoFile(InfoFile)
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
 global checkboxStates := Map()
@@ -1665,7 +1686,7 @@ AutomGUI(){
     }
     SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
-    SectionsGui.AddButton("x+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython())
+    SectionsGui.AddButton("x+20", "SKRIVE!").OnEvent("Click", (*) => EjecutarPython())
     SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
     SectionsGui.Show()
@@ -2031,9 +2052,7 @@ Earlyacces1(){
 }
 
 
-#Requires AutoHotkey v2.0
 
-InfoFile := A_WorkingDir "\A_Info.json"
 
 if FileExist(InfoFile){
 
@@ -2055,6 +2074,7 @@ HoursBtn := SkrvGui.AddButton("x1150 y675 w75 h30", "Shift")
 HoursBtn.OnEvent("Click", ShowHourEditor)
 
 ShowHourEditor(*) {
+    global InfoFile
 
     hourGui := Gui("Resize", "Editar Horarios")
     hourGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
