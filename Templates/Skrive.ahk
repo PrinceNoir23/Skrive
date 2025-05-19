@@ -1604,8 +1604,8 @@ Ejecutar_Autom_Python() {
     comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
     A_Clipboard := comand
     ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    RunWait(comand, , "Hide")
+    ; RunWait(comand)
 }
 AutomGUI(){ 
     global datos, EditControls,fileDir1,rutaPython,rutaScript
@@ -1730,8 +1730,8 @@ AutomGUI(){
         A_Clipboard := comand
 
         ; Ejecutar el script con los argumentos
-        ; RunWait(comand, , "Hide")
-        RunWait(comand)
+        RunWait(comand, , "Hide")
+        ; RunWait(comand)
     }
 
 }
@@ -1841,8 +1841,8 @@ AutomGUI_SinCondiciones(){
         A_Clipboard := comand
 
         ; Ejecutar el script con los argumentos
-        ; RunWait(comand, , "Hide")
-        RunWait(comand)
+        RunWait(comand, , "Hide")
+        ; RunWait(comand)
     }
 
 }
@@ -2353,5 +2353,6 @@ Alt_a(){
 
 rutaScriptAct := A_WorkingDir "\Chrome_Activator.py"
 comand := Format('"{}" "{}"', rutaPython, rutaScriptAct) 
+A_Clipboard := comand
 ; RunWait(comand)
 RunWait(comand,,"Hide")

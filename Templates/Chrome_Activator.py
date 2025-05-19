@@ -21,6 +21,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from pathlib import Path
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+import subprocess
+
+try:
+    subprocess.run(["taskkill", "/F", "/IM", "chrome.exe"], check=True)
+    print("Chrome cerrado correctamente.")
+except subprocess.CalledProcessError:
+    print("No se pudo cerrar Chrome o no estaba abierto.")
 
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -53,7 +60,14 @@ def launch_chrome_debug(port, user_data_dir):
 def ensure_chrome_debug_running(reuse_existing=True):
     """Busca un puerto libre o activo. Si reuse_existing=True, reutiliza Chrome si ya está abierto."""
     for port in range(START_PORT, MAX_PORT):
-        user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
+        
+        # user_data_dir = os.path.join(BASE_USER_DATA_DIR, f"profile_{port}")
+        from pathlib import Path
+        import os
+
+        local_appdata = os.getenv("LOCALAPPDATA")
+        user_data_dir = Path(local_appdata) / "Google" / "Chrome" / "User Data"
+
 
         if is_chrome_debugger_alive(port):
             if reuse_existing:
