@@ -1780,8 +1780,8 @@ AutomGUI(){
         if FileExist(CRM2_Exe) {
             comand := Format('"{}" {}', CRM2_Exe, args)
             A_Clipboard := comand
-            RunWait(comand)
-            ; RunWait(comand, , "Hide")
+            ; RunWait(comand)
+            RunWait(comand, , "Hide")
 
         } else {
             comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
