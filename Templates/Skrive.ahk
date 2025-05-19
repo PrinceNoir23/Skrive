@@ -43,7 +43,7 @@ global rutaScript := A_WorkingDir "\CRM2.py"
 
 ; Ruta para python ------------------------------------------------------------
 ; Ejecutar "where python" y guardar la salida
-RunWait A_ComSpec ' /c where python > python_path.txt', , 'Hide'
+RunWait(A_ComSpec ' /c where python > python_path.txt', , 'Hide')
 
 ; Leer archivo generado por `where python`
 raw := FileRead("python_path.txt")
@@ -1073,6 +1073,8 @@ CRM2(CRMBool){
     Sleep(200)
     ; RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
     logPath := A_WorkingDir . "\error_log.txt"
+    SkrvGui.Minimize()
+
     RunWait(Format('cmd.exe /c "{}" "{}" "{}" 2> "{}"', pythonPath, PyPath, jsonPath, logPath))
 
 
@@ -1375,15 +1377,15 @@ LinkSelect("Case Link",y,btnSze,30), y += spacing
 InputLine("&Phone",,,200, y,btnSze,BtnHeigh, true,,),
 InputLine("&Email",465,535,320, y,btnSze/3,BtnHeigh, true,,),
 InputLine("PC ID",860,930,100, y,btnSze/3,BtnHeigh, true,,), y += spacing
-InputLine("&Company Name",,,300, y,btnSze,BtnHeigh, true,,), 
-InputLine("C&ase Number",565,705,325, y,btnSze/1.5,BtnHeigh, true,,), y += spacing
+InputLine("&Company Name",,,255, y,btnSze,BtnHeigh, true,,), 
+InputLine("C&ase Number",520,660,370, y,btnSze/1.5,BtnHeigh, true,,), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y 
 CategorySelect("Category", y,btnSze,BtnHeigh), y += spacing
 
 InputLine("&Dongle",,,110, y,btnSze,BtnHeigh, true,,), 
-InputLine("S&ID",375,445,110, y,btnSze/3,BtnHeigh, true,,),
-InputLine("Scanne&r S/N",560,665,180, y,btnSze/2,BtnHeigh, true,,),
-InputLine("GUI",850,920,110, y,btnSze/3,BtnHeigh, true,,), y += spacing
+InputLine("S&ID",375,445,115, y,btnSze/3,BtnHeigh, true,,),
+InputLine("Scanne&r S/N",565,670,180, y,btnSze/2,BtnHeigh, true,,),
+InputLine("GUI",855,925,105, y,btnSze/3,BtnHeigh, true,,), y += spacing
 InputLine("HJ",,,300, y,btnSze,BtnHeigh, true,,), 
 InputLine("Sur&vey",565,670,360, y,btnSze/2,BtnHeigh, true,,), y += spacing
 InputLine("RC",,,, y,btnSze,BtnHeigh, true,,), y += spacing
@@ -1624,6 +1626,8 @@ Ejecutar_Autom_Python() {
 
     comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
     A_Clipboard := comand
+    SkrvGui.Minimize()
+
     ; Ejecutar el script con los argumentos
     RunWait(comand, , "Hide")
     ; RunWait(comand)
@@ -1749,6 +1753,7 @@ AutomGUI(){
 
         comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
         A_Clipboard := comand
+        SkrvGui.Minimize()
 
         ; Ejecutar el script con los argumentos
         RunWait(comand, , "Hide")
@@ -1860,6 +1865,7 @@ AutomGUI_SinCondiciones(){
         
         comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
         A_Clipboard := comand
+        SkrvGui.Minimize()
 
         ; Ejecutar el script con los argumentos
         RunWait(comand, , "Hide")
@@ -2312,7 +2318,7 @@ isSkrvVisible := true
 ^+u:: {
     global isSkrvVisible
     if isSkrvVisible {
-        SkrvGui.Hide()
+        SkrvGui.Minimize()
         isSkrvVisible := false
         return
     } else {
