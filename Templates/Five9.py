@@ -24,6 +24,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import threading
 
+
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 BASE_USER_DATA_DIR = r"C:\Skrive_Chrome\ChromeDebugProfiles"
 START_PORT = 9222
@@ -233,7 +234,7 @@ def LoguearMorning():
     username_input.send_keys(Info["User Name"])
 
     password_input.send_keys(Keys.CONTROL, 'a')
-    password_input.send_keys(Info["FivePassword"])
+    password_input.send_keys(Info["PasswordFive"])
     # Hacer clic en el botón "Log In"
     login_button = driver.find_element(By.ID, "Login-login-button")
     login_button.click()
@@ -302,7 +303,7 @@ def LoguearMorning():
     # time.sleep(0.5)
     # pyautogui.hotkey('tab')
     # time.sleep(0.5)
-    # PsswrdLogin = Info["FivePassword"]
+    # PsswrdLogin = Info["PasswordFive"]
     # pyautogui.write(PsswrdLogin)
     # time.sleep(0.5)
     # pyautogui.hotkey('tab')

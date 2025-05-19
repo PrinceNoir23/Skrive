@@ -1,5 +1,15 @@
 #Requires AutoHotkey v2.0
-
+; {
+;     "User Name": "Aaa",
+;     "Password": "Aaa",
+;     "PasswordFive": "Aaa",
+;     "StationNumber": "Aaa",
+;     "Hora In": "12:00",
+;     "Hora Out": "12:00",
+;     "Brk 1": "12:00",
+;     "Brk 2": "12:00",
+;     "Lunch ": "12:00"
+; }
 global datos := Map()  ; Crear un diccionario global
 global EditControls := Map()  ; Guarda los controles Edit para acceder después
 global checkboxStates := Map()
@@ -50,9 +60,7 @@ Persistent 1  ; Establece el script como persistente
 ; ChatGPT - Google Chrome
 ; ahk_class Chrome_WidgetWin_1
 ; ahk_exe chrome.exe
-rutaScriptAct := A_WorkingDir "\Chrome_Activator.py"
-comand := Format('"{}" "{}"', rutaPython, rutaScriptAct) 
-RunWait(comand,,"Hide")
+
 
 
 
@@ -97,14 +105,14 @@ SkrvGui.SetFont("q5")
 ; SkrvGui.SetFont("cA53860")
 SkrvGui.SetFont("s12 italic", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
-tab := SkrvGui.Add("Tab3", "x10 y10 w900 h800", ["Information","Remote Session", "Add Info", "Email", "2nd Line - Call Back","Photos"])
+tab := SkrvGui.Add("Tab3", "x10 y10 w900 h800", ["Information","Remote Session", "Email"])
 SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 
 
 SkrvGui.OnEvent("Size", (*) => AutoResize())  ; Evento para ajustar tamaño dinámicamente
 SkrWidth := 1280
-SkrHeigh := 830 
+SkrHeigh := 730 
 BtnHeigh:=30
 btnSze:= 200
 
@@ -1081,7 +1089,7 @@ imgHeight1 := hi / scale
 ; Obtener el tamaño actual de la ventana para posicionar la imagen
 SkrvGui.GetPos(&winX1, &winY1, &winWidth1, &winHeight1)
 imgX1 := 1060
-imgY1 := 550
+imgY1 := 350
 
 imgControl := SkrvGui.Add("Picture", Format("x{} y{} w{} h{}", imgX1, imgY1, imgWidth1, imgHeight1), imagePath)
 
@@ -1343,23 +1351,20 @@ c1stbttn.OnEvent("ContextMenu", (*) => C1stAdd(true))
 
 InputLine("Name",,,255, y,btnSze,BtnHeigh, true,,), y 
 LinkSelect("Case Link",y,btnSze,30), y += spacing
-InputLine("&Phone",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("&Email",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("&Company Name",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("&Phone",,,200, y,btnSze,BtnHeigh, true,,),
+InputLine("&Email",465,535,320, y,btnSze/3,BtnHeigh, true,,),
+InputLine("PC ID",860,930,100, y,btnSze/3,BtnHeigh, true,,), y += spacing
+InputLine("&Company Name",,,300, y,btnSze,BtnHeigh, true,,), 
+InputLine("C&ase Number",565,705,325, y,btnSze/1.5,BtnHeigh, true,,), y += spacing
 SoftwareVersionSelect("Software Version", y,btnSze,BtnHeigh), y 
 CategorySelect("Category", y,btnSze,BtnHeigh), y += spacing
 
-InputLine("&Dongle",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("S&ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("GUI",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Scanne&r S/N",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("PC ID",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("C&ase Number",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-
-
-
-InputLine("HJ",,,, y,btnSze,BtnHeigh, true,,), y += spacing
-InputLine("Sur&vey",,,, y,btnSze,BtnHeigh, true,,), y += spacing
+InputLine("&Dongle",,,110, y,btnSze,BtnHeigh, true,,), 
+InputLine("S&ID",375,445,110, y,btnSze/3,BtnHeigh, true,,),
+InputLine("Scanne&r S/N",560,665,180, y,btnSze/2,BtnHeigh, true,,),
+InputLine("GUI",850,920,110, y,btnSze/3,BtnHeigh, true,,), y += spacing
+InputLine("HJ",,,300, y,btnSze,BtnHeigh, true,,), 
+InputLine("Sur&vey",565,670,360, y,btnSze/2,BtnHeigh, true,,), y += spacing
 InputLine("RC",,,, y,btnSze,BtnHeigh, true,,), y += spacing
 ; ---------------------------------------------------------------------------------------------------------------------------------
 descripton:= SkrvGui.Add("Button", Format("x50 y{} w{} h{}", y,btnSze,BtnHeigh), "Descrip&tion"),
@@ -1410,8 +1415,8 @@ OutputLine("Solution",(x+Insize +10),y, Insize ,btnSze,BtnHeigh), y += spacing
 Hotkeys("Hotke&ys", y), y
 
 
-BtnSaveInfo := SkrvGui.Add("Button", "x50 y680 w150 h40", "&Save - Load Info")
-clear := SkrvGui.Add("Button", " x205 y680  w45 h30", "Clear")
+BtnSaveInfo := SkrvGui.Add("Button", "x50 y440 w150 h40", "&Save - Load Info")
+clear := SkrvGui.Add("Button", " x205 y440  w45 h30", "Clear")
 
 clear.OnEvent("Click", (*) => ClearAll())
 
@@ -1554,7 +1559,7 @@ LoadMapFromFile(filePath) {
 }
 
 SkrvGui.SetFont("s34 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
-BtnSKRIVE := SkrvGui.Add("Button", "x50 y750 w450 h60 ", "S&KRIVE!")
+BtnSKRIVE := SkrvGui.Add("Button", "x50 y500 w450 h60 ", "S&KRIVE!")
 
 
 
@@ -1872,7 +1877,7 @@ BtnSKRIVE.OnEvent("ContextMenu", (*) => Skrive_link_btn())
 BtnSKRIVE.OnEvent("Click", (*) => Skrive_link_btn2())
 
 
-BtnKlokken := SkrvGui.Add("Button", "x600 y750 w200 h60", "Klokken!")
+BtnKlokken := SkrvGui.Add("Button", "x600 y500 w200 h60", "Klokken!")
 BtnKlokken.OnEvent("Click", (*) => Klokken())
 
 Klokken() {
@@ -1891,8 +1896,191 @@ Klokken() {
 SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 
-CheckBoxEmailManual := SkrvGui.AddCheckbox("x850 y750 vCheckBoxEmailManual", "Manual Email?")
+CheckBoxEmailManual := SkrvGui.AddCheckbox("x850 y500 vCheckBoxEmailManual", "Manual Email?")
 
+
+
+
+InputLine("Probing Questions (Add Info)",50,50,800 ,565, 250,,"paste",600,100)
+
+UpdateDataFromEdits()
+CallBack := SkrvGui.Add("Button", " x860 y600  w180 h30", "2nd Line - Call Back")
+Earlyacces := SkrvGui.Add("Button", " x860 y635  w100 h30", "Early Access")
+
+PhotosTab := SkrvGui.Add("Button", " x860 y670  w75 h30", "Photos")
+
+PhotosTab.OnEvent("Click", (*) =>  PhotosOpenExcel())
+
+PhotosOpenExcel(){
+    UpdateDataFromEdits()
+
+    filePath := A_WorkingDir ".\Photos.xlsm"
+
+    excel := ComObject("Excel.Application")
+    excel.Visible := true
+
+    workbook := excel.Workbooks.Open(filePath)
+    sheet := workbook.Sheets(1)
+
+    sheet.Cells(1, 2).Value := datos["C&ase Number"]
+    return
+
+}
+
+
+
+CallBack.OnEvent("ContextMenu", (*) =>  callbacktitle())
+
+callbacktitle(){
+    UpdateDataFromEdits()
+    today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
+    formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
+    A_Clipboard := "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to continue resolving the issue"
+    Sleep(500)
+    A_Clipboard:= "CALLBACK " formattedDate 
+    Sleep(500)
+    return
+
+}
+
+CallBack.OnEvent("Click", (*) =>  CallBackCuild())
+
+
+CallBackCuild() {
+    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
+    UpdateDataFromEdits()
+    A_Clipboard := ("CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"])
+    Sleep(500)
+    A_Clipboard := " Buenos días, ayuda para agendar este callback de escalación de 2nd Line Clinic. " 
+    Sleep(500)
+        ; Crear objeto Excel
+        xl := ComObject("Excel.Application")
+        xl.Visible := true ; Muestra Excel
+        wb := xl.Workbooks.Add()
+        ws := wb.Worksheets(1)
+        UpdateDataFromEdits()
+
+        ; Datos de ejemplo para la tabla
+        datosTabla := [
+            ["Item", "Value"],
+            ["Case Number", datos["C&ase Number"]],
+            ["Caller Name", datos["Name"]],
+            ["Request/Issue", datos["Issue"]],
+            ["Dongle", datos["&Dongle"]],
+            ["Company Name", datos["&Company Name"]],
+            ["Phone Number", datos["&Phone"]],
+            ["BEST CALL BACK TIME WITH TIME ZONE (URGENCY)", "ASAP"]
+        ]
+
+        ; Escribir los datosTabla en la hoja
+        for filaIndex, fila in datosTabla {
+            for colIndex, valor in fila {
+                ws.Cells(filaIndex, colIndex).Value := valor
+            }
+        }
+
+        ; Convertir en tabla oficial de Excel
+        lastRow := datosTabla.Length
+        lastCol := datosTabla[1].Length
+        rango := ws.Range("A1", ws.Cells(lastRow, lastCol))
+        missing := ComValue(13, 0)
+        ws.ListObjects.Add(1, rango, missing, 1).Name := "MiTabla"
+
+        ; Construir texto de la tabla
+        tablaTexto := ""
+        Loop datosTabla.Length - 1 {
+            fila := datosTabla[A_Index + 1]
+            filaTexto := ""
+            for colIndex, valor in fila {
+                filaTexto .= (colIndex > 1 ? "`t" : "") . valor
+            }
+            tablaTexto .= filaTexto . "`r`n"
+        }
+
+        ; Copiar al portapapeles
+        A_Clipboard := tablaTexto
+        Sleep(500)
+
+        ; Copiar valor individual
+        A_Clipboard := EditControls["Call Back"].Value
+        Sleep(500)
+
+        ; Liberar referencias (sin cerrar Excel)
+        rango := "", ws := "", wb := ""
+
+        MsgBox("Tabla Copiada al portapapeles", "2ndLine Clinic Info", "64")
+        return
+
+            
+}
+
+Earlyacces.OnEvent("Click", (*) =>  Earlyacces1())
+Earlyacces1(){
+    UpdateDataFromEdits()
+    today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
+    formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
+    A_Clipboard := "3Q " formattedDate "EARLY ACESS"
+    Sleep(500)
+
+    earlyBody := "Dear 3rd Line team`n" "I hope this message finds you well. I am writing to request early access to Unite III for this Company. Their licenses didn't migrate to the cloud, and the modules and labs are missing. the dongle has access to Unite III but the company it's still in Unite" datos["Software Version"] "`n" "Dongle ID " datos["&Dongle"] "`n" "SID " datos["S&ID"] "`n" "Company Name " datos["&Company Name"] "`n" "Email " datos["&Email"] "`n" "GUID " datos["GUI"] "`n" "Phone " datos["&Phone"] "`n" "TV " datos["TV ID"] "`n" "TVPSS " datos["TV PSS"] "`n"
+
+    A_Clipboard := earlyBody
+    Sleep(500)
+    return
+
+}
+
+
+#Requires AutoHotkey v2.0
+
+InfoFile := A_WorkingDir "\A_Info.json"
+
+if FileExist(InfoFile){
+
+    fileContent := FileRead(InfoFile, "UTF-8")
+
+    hours := Jxon_Load(&fileContent)
+}
+else
+    hours := Map(
+        "Hora In",  "12:00",
+        "Hora Out", "12:00",
+        "Brk 1",     "12:00",
+        "Brk 2",     "12:00",
+        "Lunch",     "12:00"
+    )
+
+; GUI principal con botón flotante
+HoursBtn := SkrvGui.AddButton("x1150 y675 w75 h30", "Shift")
+HoursBtn.OnEvent("Click", ShowHourEditor)
+
+ShowHourEditor(*) {
+
+    hourGui := Gui("Resize", "Editar Horarios")
+    hourGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
+
+    controls := Map()
+
+    ; Crear campos de edición
+    for k, v in hours {
+        hourGui.AddText("", k)
+        controls[k] := hourGui.AddEdit("w100", v)
+    }
+
+    ; Botón para guardar
+    hourGui.AddButton("xm w100", "Guardar").OnEvent("Click", (*) =>guardarHoras(controls, hourGui)) 
+    guardarHoras(controls, hourGui){
+        for k, ctrl in controls {
+            hours[k] := ctrl.Text
+        }
+        FileDelete(InfoFile)
+        FileAppend(Jxon_Dump(hours, "`t"), InfoFile)
+        hourGui.Destroy()
+        MsgBox "Horas guardadas en 'A_Info.json'"
+    }
+
+    hourGui.Show()
+}
 
 
 
@@ -2010,22 +2198,7 @@ DelCheck(){
 SkrvGui.SetFont("s12 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
 
-
-
-
-
-
-
-tab.UseTab(3) ;(Add info)
-    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
-
-    SkrvGui.GetPos(&x, &y, &SkrWidth, &SkrHeigh)  ; Obtiene tamaño de la ventana
-    offset:=55
-    InputLine("Probing Questions (Add Info)",,50,990 ,offset, 250,,"paste",50+45,580)
-
-
-
-tab.UseTab(4) ;(Email)
+tab.UseTab(3) ;(Email)
     global datos, EditControls  ; Asegurar acceso a los datos y los Edit
 
     EmailTab := SkrvGui.Add("Button", " x50 y50  w75 h30", "Email")
@@ -2109,145 +2282,6 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     A_Clipboard := emailFinal
 
 }
-tab.UseTab(5)
-
-    global datos, EditControls  ; Asegurar acceso a los datos y los Edit
-
-    CallBack := SkrvGui.Add("Button", " x50 y50  w205 h30", "2nd Line - Call Back")
-    Earlyacces := SkrvGui.Add("Button", " x265 y50  w205 h30", "Early Access")
-
-    CallBackEdit := SkrvGui.Add("Edit", " x50 y100  w990 h580", "")
-    ; Guardar la referencia del Edit
-    EditControls["Call Back"] := CallBackEdit  
-
-    ; Capturar cambios en el input
-    datos["Call Back"] := CallBackEdit
-    CallBackEdit.OnEvent("Change", (*) => datos["Call Back"] := CallBackEdit.Value)
-
-    CallBack.OnEvent("ContextMenu", (*) =>  callbacktitle())
-
-    callbacktitle(){
-        UpdateDataFromEdits()
-        today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
-        formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
-        A_Clipboard := "Called back to this phone number " datos["&Phone"] " and no body answered the phone. Voice message leaved in order to continue resolving the issue"
-        Sleep(500)
-        A_Clipboard:= "CALLBACK " formattedDate 
-        Sleep(500)
-        return
-
-    }
-
-    CallBack.OnEvent("Click", (*) =>  CallBackCuild())
-
-
-    CallBackCuild() {
-        global datos, EditControls  ; Asegurar acceso a los datos y los Edit
-        UpdateDataFromEdits()
-        A_Clipboard := ("CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"])
-        Sleep(500)
-        A_Clipboard := " Buenos días, ayuda para agendar este callback de escalación de 2nd Line Clinic. " 
-        Sleep(500)
-            ; Crear objeto Excel
-            xl := ComObject("Excel.Application")
-            xl.Visible := true ; Muestra Excel
-            wb := xl.Workbooks.Add()
-            ws := wb.Worksheets(1)
-            UpdateDataFromEdits()
-
-            ; Datos de ejemplo para la tabla
-            datosTabla := [
-                ["Item", "Value"],
-                ["Case Number", datos["C&ase Number"]],
-                ["Caller Name", datos["Name"]],
-                ["Request/Issue", datos["Issue"]],
-                ["Dongle", datos["&Dongle"]],
-                ["Company Name", datos["&Company Name"]],
-                ["Phone Number", datos["&Phone"]],
-                ["BEST CALL BACK TIME WITH TIME ZONE (URGENCY)", "ASAP"]
-            ]
-
-            ; Escribir los datosTabla en la hoja
-            for filaIndex, fila in datosTabla {
-                for colIndex, valor in fila {
-                    ws.Cells(filaIndex, colIndex).Value := valor
-                }
-            }
-
-            ; Convertir en tabla oficial de Excel
-            lastRow := datosTabla.Length
-            lastCol := datosTabla[1].Length
-            rango := ws.Range("A1", ws.Cells(lastRow, lastCol))
-            missing := ComValue(13, 0)
-            ws.ListObjects.Add(1, rango, missing, 1).Name := "MiTabla"
-
-            ; Construir texto de la tabla
-            tablaTexto := ""
-            Loop datosTabla.Length - 1 {
-                fila := datosTabla[A_Index + 1]
-                filaTexto := ""
-                for colIndex, valor in fila {
-                    filaTexto .= (colIndex > 1 ? "`t" : "") . valor
-                }
-                tablaTexto .= filaTexto . "`r`n"
-            }
-
-            ; Copiar al portapapeles
-            A_Clipboard := tablaTexto
-            Sleep(500)
-
-            ; Copiar valor individual
-            A_Clipboard := EditControls["Call Back"].Value
-            Sleep(500)
-
-            ; Liberar referencias (sin cerrar Excel)
-            rango := "", ws := "", wb := ""
-
-            MsgBox("Tabla Copiada al portapapeles", "2ndLine Clinic Info", "64")
-            return
-
-                
-    }
-
-    Earlyacces.OnEvent("Click", (*) =>  Earlyacces1())
-    Earlyacces1(){
-        UpdateDataFromEdits()
-        today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
-        formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
-        A_Clipboard := "3Q " formattedDate "EARLY ACESS"
-        Sleep(500)
-
-        earlyBody := "Dear 3rd Line team`n" "I hope this message finds you well. I am writing to request early access to Unite III for this Company. Their licenses didn't migrate to the cloud, and the modules and labs are missing. the dongle has access to Unite III but the company it's still in Unite" datos["Software Version"] "`n" "Dongle ID " datos["&Dongle"] "`n" "SID " datos["S&ID"] "`n" "Company Name " datos["&Company Name"] "`n" "Email " datos["&Email"] "`n" "GUID " datos["GUI"] "`n" "Phone " datos["&Phone"] "`n" "TV " datos["TV ID"] "`n" "TVPSS " datos["TV PSS"] "`n"
-
-        A_Clipboard := earlyBody
-        Sleep(500)
-        return
-
-    }
-
-
-
-; Salir del modo de pestañas
-tab.UseTab(6)
-UpdateDataFromEdits()
-PhotosTab := SkrvGui.Add("Button", " x50 y50  w75 h30", "Photos")
-PhotosTab.OnEvent("Click", (*) =>  PhotosOpenExcel())
-
-PhotosOpenExcel(){
-    UpdateDataFromEdits()
-
-    filePath := A_WorkingDir ".\Photos.xlsm"
-
-    excel := ComObject("Excel.Application")
-    excel.Visible := true
-
-    workbook := excel.Workbooks.Open(filePath)
-    sheet := workbook.Sheets(1)
-
-    sheet.Cells(1, 2).Value := datos["C&ase Number"]
-    return
-
-}
 
 
 tab.UseTab()
@@ -2277,10 +2311,8 @@ isSkrvVisible := true
 ; 🔹 Atajos de teclado para cambiar pestañas
 ^!i::tab.Value := 1  ; Ctrl + Alt + I -> information
 ^!m::tab.Value := 2  ; Ctrl + Alt + R -> Rmt Sess
-^!a::tab.Value := 3  ; Ctrl + Alt + A -> Add Inf
-^!e::tab.Value := 4  ; Ctrl + Alt + E -> Email
-^!2::tab.Value := 5  ; Ctrl + Alt + 2 -> Call Back
-^!p::tab.Value := 6  ; Ctrl + Alt + P -> Photos
+^!e::tab.Value := 3  ; Ctrl + Alt + E -> Email
+
 ^!f::Automatic()  ; Ctrl + Alt + F -> Copiar todo al portapapeles
 ^!s::Skrive_link_btn()  ; Ctrl + Alt + S -> Gui de Acciones
 ^!d::Skrive_link_btn2()  ; Ctrl + Alt + S -> Automatizar CRM
@@ -2319,3 +2351,7 @@ Alt_a(){
 !s::SaveBttm(false,fileDir1)  ; Ctrl + Alt + S -> Fwd2Skrive
 !y::Ctrl_a()  ; Ctrl + Alt + S -> Fwd2Skrive
 
+rutaScriptAct := A_WorkingDir "\Chrome_Activator.py"
+comand := Format('"{}" "{}"', rutaPython, rutaScriptAct) 
+; RunWait(comand)
+RunWait(comand,,"Hide")
