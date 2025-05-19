@@ -1,2 +1,5 @@
 Templates/NewCase.json
 Templates/A_Info.json
+Templates/build
+*.spec
+
