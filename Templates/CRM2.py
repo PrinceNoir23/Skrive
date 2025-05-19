@@ -23,11 +23,6 @@ from pathlib import Path
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import subprocess
 
-try:
-    subprocess.run(["taskkill", "/F", "/IM", "chrome.exe"], check=True)
-    print("Chrome cerrado correctamente.")
-except subprocess.CalledProcessError:
-    print("No se pudo cerrar Chrome o no estaba abierto.")
 
 
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"

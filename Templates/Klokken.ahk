@@ -32,27 +32,42 @@ btnSze:= 130
 ; ; KlKnHeigh := 170
 ; ; KlokkenGui.Show("w" KlKnWidth " h" KlKnHeigh)
 
+
 breakTime(){
-    global datos, EditControls,fileDir1,rutaPython,rutaScript
-
+    KlokkenGui.Minimize() ; Minimiza la ventana
+    global rutaPython
     args := "--breaktime "
-    comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
-    A_Clipboard := comand
 
-    ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    if FileExist(Five9_Exe) {
+        comand := Format('"{}" {}', Five9_Exe, args)
+        RunWait(comand, , "Hide")
+
+    } else {
+        rutaScriptFive9 := A_WorkingDir "\Five9.py"
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
+        A_Clipboard := comand
+        RunWait(comand, , "Hide")
+    }
+
 }
 lunchTime(){
-    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    KlokkenGui.Minimize() ; Minimiza la ventana
+
+    global rutaPython
 
     args := "--lunchtime "
-    comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
-    A_Clipboard := comand
+    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    if FileExist(Five9_Exe) {
+        comand := Format('"{}" {}', Five9_Exe, args)
+        RunWait(comand, , "Hide")
 
-    ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    } else {
+        rutaScriptFive9 := A_WorkingDir "\Five9.py"
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
+        A_Clipboard := comand
+        RunWait(comand, , "Hide")
+    }
 }
 
 
@@ -91,6 +106,7 @@ InputLineKloken(Name, x?, xedit?, widthedit?, yOffset?, btnSze?, BtnHeigh?, butt
 ; scale := 5.5
 ; wd:= 843
 ; hi := 559
+
 imagePath := A_ScriptDir . "/IMG_Klokken_Trns.png"
 wd:= 1024
 hi := 1024
@@ -110,24 +126,40 @@ BtnKlokken.OnEvent("Click", (*) => AbrirFive9())
 BtnKlokken.OnEvent("ContextMenu", (*) => CerrarFive9())
 
 AbrirFive9() {
-    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    KlokkenGui.Minimize() ; Minimiza la ventana
+
+    global rutaPython
 
     args := "--klokken "
-    comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
-    A_Clipboard := comand
-    ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    if FileExist(Five9_Exe) {
+        comand := Format('"{}" {}', Five9_Exe, args)
+        RunWait(comand, , "Hide")
+
+    } else {
+        rutaScriptFive9 := A_WorkingDir "\Five9.py"
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
+        A_Clipboard := comand
+        RunWait(comand, , "Hide")
+    }
    
 }
 CerrarFive9() {
-    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    KlokkenGui.Minimize() ; Minimiza la ventana
+
+    global rutaPython
 
     args := "--klokkenout "
-    comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
-    A_Clipboard := comand
-    ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    Five9_Exe := A_WorkingDir "\dist\Five9.exe"
+    if FileExist(Five9_Exe) {
+        comand := Format('"{}" {}', Five9_Exe, args)
+        RunWait(comand, , "Hide")
+
+    } else {
+        rutaScriptFive9 := A_WorkingDir "\Five9.py"
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
+        A_Clipboard := comand
+        RunWait(comand, , "Hide")
+    }
    
 }

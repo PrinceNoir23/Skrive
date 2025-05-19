@@ -10,6 +10,17 @@
 ;     "Brk 2": "12:00",
 ;     "Lunch ": "12:00"
 ; }
+
+; try:
+;     subprocess.run(["taskkill", "/F", "/IM", "chrome.exe"], check=True)
+;     print("Chrome cerrado correctamente.")
+; except subprocess.CalledProcessError:
+;     print("No se pudo cerrar Chrome o no estaba abierto.")
+
+
+; pyinstaller --onefile --add-binary "chromedriver.exe;." Chrome_Activator2.py
+; pyinstaller --onefile --add-binary "chromedriver.exe;." .\Five9_2.py
+; pyinstaller --onefile --add-binary "chromedriver.exe;." .\CRM2_2.py
 global InfoFile := A_WorkingDir "\A_Info.json"
 
 CreateDefaultInfoFile(filePath) {
@@ -72,7 +83,6 @@ for _, dirPath in [fileDir_CasesFinal, fileDir1] {
 ; ; https://benchmark.unigine.com/heaven
 
 #Include Json.ahk
-
 #Include TeamViewer.ahk  
 #Include Klokken.ahk
 #Include AutoLogin.ahk
@@ -1624,13 +1634,21 @@ Ejecutar_Autom_Python() {
     
     FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
-    comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
-    A_Clipboard := comand
+    
     SkrvGui.Minimize()
 
-    ; Ejecutar el script con los argumentos
-    RunWait(comand, , "Hide")
-    ; RunWait(comand)
+    CRM2_Exe := A_WorkingDir "\dist\CRM2.exe"
+    if FileExist(CRM2_Exe) {
+        comand := Format('"{}" {}', CRM2_Exe, args)
+        A_Clipboard := comand
+        RunWait(comand, , "Hide")
+
+    } else {
+        comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
+        A_Clipboard := comand
+        RunWait(comand, , "Hide")
+
+    }
 }
 AutomGUI(){ 
     global datos, EditControls,fileDir1,rutaPython,rutaScript
@@ -1751,13 +1769,20 @@ AutomGUI(){
 
         FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
-        comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
-        A_Clipboard := comand
-        SkrvGui.Minimize()
 
-        ; Ejecutar el script con los argumentos
-        RunWait(comand, , "Hide")
-        ; RunWait(comand)
+        SkrvGui.Minimize()
+        CRM2_Exe := A_WorkingDir "\dist\CRM2.exe"
+        if FileExist(CRM2_Exe) {
+            comand := Format('"{}" {}', CRM2_Exe, args)
+            A_Clipboard := comand
+            RunWait(comand, , "Hide")
+
+        } else {
+            comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
+            A_Clipboard := comand
+            RunWait(comand, , "Hide")
+
+        }
     }
 
 }
@@ -1863,13 +1888,21 @@ AutomGUI_SinCondiciones(){
         FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8" )
 
         
-        comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
-        A_Clipboard := comand
+        
         SkrvGui.Minimize()
+        CRM2_Exe := A_WorkingDir "\dist\CRM2.exe"
+        if FileExist(CRM2_Exe) {
+            comand := Format('"{}" {}', CRM2_Exe, args)
+            A_Clipboard := comand
+            RunWait(comand, , "Hide")
 
-        ; Ejecutar el script con los argumentos
-        RunWait(comand, , "Hide")
-        ; RunWait(comand)
+        } else {
+            comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
+            A_Clipboard := comand
+            RunWait(comand, , "Hide")
+
+        }
+
     }
 
 }
@@ -2377,8 +2410,16 @@ Alt_a(){
 !s::SaveBttm(false,fileDir1)  ; Ctrl + Alt + S -> Fwd2Skrive
 !y::Ctrl_a()  ; Ctrl + Alt + S -> Fwd2Skrive
 
-rutaScriptAct := A_WorkingDir "\Chrome_Activator.py"
-comand := Format('"{}" "{}"', rutaPython, rutaScriptAct) 
-A_Clipboard := comand
-; RunWait(comand)
-RunWait(comand,,"Hide")
+
+ChrActive_Exe := A_WorkingDir "\Chrome_Activator.exe"
+if FileExist(ChrActive_Exe) {
+    ; Ejecutar el script con los argumentos
+    RunWait(ChrActive_Exe, , "Hide")
+
+} else {
+    rutaScriptAct := A_WorkingDir "\Chrome_Activator.py"
+    comand := Format('"{}" "{}"', rutaPython, rutaScriptAct) 
+    A_Clipboard := comand
+    RunWait(comand, , "Hide")
+
+}
