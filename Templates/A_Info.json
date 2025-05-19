@@ -1,11 +1,11 @@
 ﻿{
-    "User Name": "",
-    "Password": "",
-    "FivePassword": "",
-    "StationNumber": "",
-    "Hora In": "",
-    "Hora Out": "",
-    "Brk 1": "",
-    "Brk 2": "",
-    "Lunch ": ""
+    "User Name": "AA",
+    "Password": "AA",
+    "PasswordFive": "AA",
+    "StationNumber": "AA",
+    "Hora In": "08:30",
+    "Hora Out": "17:32",
+    "Brk 1": "10:01",
+    "Brk 2": "15:46",
+    "Lunch ": "13:31"
 }
