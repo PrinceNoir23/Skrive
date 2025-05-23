@@ -141,6 +141,8 @@ try:
     with open(json_path, 'r', encoding='utf-8-sig') as f:
         Info = json.load(f)
     print("✅ JSON cargado con éxito:", Info)
+    print("Herre")
+
 except Exception as e:
     print(f"❌ Error al leer el JSON: {e}")
     sys.exit(1)
@@ -157,10 +159,12 @@ options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te dev
 script_dir = os.path.dirname(os.path.abspath(__file__))  # ej: ...\Skrive\Templates
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))  # sube una carpeta
 # executable_path = os.path.join(root_dir, "chromedriver.exe")
-executable_path = resource_path("chromedriver.exe")
+executable_path = os.path.join(get_base_dir(), "chromedriver.exe")
 
 service = Service(executable_path=executable_path)
-driver = webdriver.Chrome(service=service, options=options)
+driver = webdriver.Chrome(options=options)  # No pases `service`
+# driver = webdriver.Chrome(service=service, options=options)
+
 # time.sleep(1)
 # driver.maximize_window()
 
@@ -172,7 +176,6 @@ parser.add_argument('--breaktime', action='store_true')
 parser.add_argument('--klokken', action='store_true')
 parser.add_argument('--klokkenout', action='store_true')
 args = parser.parse_args()
-
 
 def get_tabs(port):
     with urllib.request.urlopen(f"http://127.0.0.1:{port}/json") as response:

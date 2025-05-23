@@ -42,6 +42,7 @@ breakTime(){
     Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
+        A_Clipboard := comand
         RunWait(comand, , "Hide")
 
     } else {
@@ -61,6 +62,7 @@ lunchTime(){
     Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
+        A_Clipboard := comand
         RunWait(comand, , "Hide")
 
     } else {
@@ -134,6 +136,7 @@ AbrirFive9() {
     Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
+        A_Clipboard := comand
         RunWait(comand, , "Hide")
 
     } else {
@@ -153,6 +156,7 @@ CerrarFive9() {
     Five9_Exe := A_WorkingDir "\Five9.exe"
     if FileExist(Five9_Exe) {
         comand := Format('"{}" {}', Five9_Exe, args)
+        A_Clipboard := comand
         RunWait(comand, , "Hide")
 
     } else {

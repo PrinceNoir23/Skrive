@@ -2070,9 +2070,7 @@ CallBackCuild() {
         A_Clipboard := tablaTexto
         Sleep(500)
 
-        ; Copiar valor individual
-        A_Clipboard := EditControls["Call Back"].Value
-        Sleep(500)
+        
 
         ; Liberar referencias (sin cerrar Excel)
         rango := "", ws := "", wb := ""
@@ -2418,7 +2416,14 @@ Alt_a(){
 }  ; Ctrl + Alt + S -> Fwd2Skrive
 !s::SaveBttm(false,fileDir1)  ; Ctrl + Alt + S -> Fwd2Skrive
 !y::Ctrl_a()  ; Ctrl + Alt + S -> Fwd2Skrive
-
+^!/:: {
+    Run("taskkill /F /IM chrome.exe", , "Hide")
+    Run("taskkill /F /IM Chrome_Activator.exe", , "Hide")
+    Run("taskkill /F /IM chromedriver.exe", , "Hide")
+    Run("taskkill /F /IM Five9.exe", , "Hide")
+    Run("taskkill /F /IM CRM2.exe", , "Hide")
+    Run("taskkill /F /IM Klokken_App.exe", , "Hide")
+}
 
 ChrActive_Exe := A_WorkingDir "\Chrome_Activator.exe"
 if FileExist(ChrActive_Exe) {

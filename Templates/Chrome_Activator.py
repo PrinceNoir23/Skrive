@@ -139,6 +139,11 @@ if __name__ == "__main__":
 
 # Ejecutar el comando de PowerShell para reactivar PSReadLine
 subprocess.run(['powershell', '-Command', 'Import-Module PSReadLine'])
+def get_base_dir():
+    """Retorna la ruta base, considerando ejecución como .exe o .py"""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
 
 
 # Inicializar navegador en modo oculto (posición fuera de pantalla)
@@ -151,7 +156,9 @@ options.debugger_address = f"127.0.0.1:{debug_port}"  # Usa el puerto que te dev
 script_dir = os.path.dirname(os.path.abspath(__file__))  # ej: ...\Skrive\Templates
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))  # sube una carpeta
 # executable_path = os.path.join(root_dir, "chromedriver.exe")
-executable_path = resource_path("chromedriver.exe")
+# executable_path = resource_path("chromedriver.exe")
+
+executable_path = os.path.join(get_base_dir(), "chromedriver.exe")
 
 service = Service(executable_path=executable_path)
 driver = webdriver.Chrome(service=service, options=options)
