@@ -1089,6 +1089,7 @@ CRM2(CRMBool){
     ; RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
     logPath := A_WorkingDir . "\error_log.txt"
     SkrvGui.Minimize()
+    KlokkenGui.Minimize()
 
     RunWait(Format('cmd.exe /c "{}" "{}" "{}" 2> "{}"', pythonPath, PyPath, jsonPath, logPath))
 
@@ -1641,6 +1642,8 @@ Ejecutar_Autom_Python() {
 
     
     SkrvGui.Minimize()
+    KlokkenGui.Minimize()
+
 
     CRM2_Exe := A_WorkingDir "\CRM2.exe"
     if FileExist(CRM2_Exe) {
@@ -1776,6 +1779,8 @@ AutomGUI(){
 
 
         SkrvGui.Minimize()
+        KlokkenGui.Minimize()
+
         CRM2_Exe := A_WorkingDir "\CRM2.exe"
         if FileExist(CRM2_Exe) {
             comand := Format('"{}" {}', CRM2_Exe, args)
@@ -1896,6 +1901,7 @@ AutomGUI_SinCondiciones(){
         
         
         SkrvGui.Minimize()
+        KlokkenGui.Minimize()
         CRM2_Exe := A_WorkingDir "\CRM2.exe"
         if FileExist(CRM2_Exe) {
             comand := Format('"{}" {}', CRM2_Exe, args)
@@ -1947,6 +1953,8 @@ BtnKlokken := SkrvGui.Add("Button", "x600 y500 w200 h60", "Klokken!")
 BtnKlokken.OnEvent("Click", (*) => Klokken())
 
 Klokken() {
+    SkrvGui.Minimize()
+
     ; Ejecutar un archivo .exe (ajusta la ruta según sea necesario)
     exePath := A_WorkingDir . "\Klokken_App.exe"
     if FileExist(exePath){

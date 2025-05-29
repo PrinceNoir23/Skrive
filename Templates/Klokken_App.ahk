@@ -149,6 +149,7 @@ AbrirFive9() {
 }
 CerrarFive9() {
     KlokkenGui.Minimize() ; Minimiza la ventana
+    
 
     global rutaPython
 
