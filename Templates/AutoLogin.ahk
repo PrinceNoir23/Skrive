@@ -78,8 +78,8 @@ Access() {
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
     A_Clipboard := comand
     ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    RunWait(comand, , "Hide")
+    ; RunWait(comand)
     ; Run("tu_programa.exe") ; si deseas ejecutar algo aquí
 }
 Logout() {
@@ -93,8 +93,10 @@ Logout() {
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
     A_Clipboard := comand
     ; Ejecutar el script con los argumentos
-    ; RunWait(comand, , "Hide")
-    RunWait(comand)
+    RunWait(comand, , "Hide")
+    RunWait A_Desktop "\ShutDown.bat"
+
+    ; RunWait(comand)
     ; Run("tu_programa.exe") ; si deseas ejecutar algo aquí
 }
 

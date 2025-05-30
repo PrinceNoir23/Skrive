@@ -22,7 +22,7 @@ global rutaPython := Trim(lines[1], "`r`n ")
 global KlokkenGui  ; Asegúrate de que este GUI esté definido globalmente (probablemente en Klokken.ahk)
 
 KlokkenGui := Gui(, "KLOKKEN")
-KlokkenGui.Opt("+Resize +MinSize250x170 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
+KlokkenGui.Opt("+Resize +MinSize320x170 +MaximizeBox +MinimizeBox") ; Hace la ventana redimensionable
 KlokkenGui.SetFont("s20 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 KlokkenGui.SetFont("q5")
 ; Establecer el ícono de la ventana
