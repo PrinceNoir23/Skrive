@@ -94,6 +94,7 @@ Logout() {
     A_Clipboard := comand
     ; Ejecutar el script con los argumentos
     RunWait(comand, , "Hide")
+    Sleep(60000)
     RunWait A_Desktop "\ShutDown.bat"
 
     ; RunWait(comand)
