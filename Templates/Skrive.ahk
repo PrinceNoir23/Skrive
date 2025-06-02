@@ -2438,6 +2438,9 @@ Alt_a(){
     Run("taskkill /F /IM Five9.exe", , "Hide")
     Run("taskkill /F /IM CRM2.exe", , "Hide")
     Run("taskkill /F /IM Klokken_App.exe", , "Hide")
+    Run("taskkill /F /IM python.exe", , "Hide")
+    Run("taskkill /F /IM pythonw.exe", , "Hide")
+    Run("taskkill /F /IM Skrive.exe", , "Hide")
 }
 
 ChrActive_Exe := A_WorkingDir "\Chrome_Activator.exe"
