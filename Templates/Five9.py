@@ -41,7 +41,8 @@ CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 BASE_USER_DATA_DIR = r"C:\Skrive_Chrome\ChromeDebugProfiles"
 START_PORT = 9222
 MAX_PORT = 9300
-
+import sys
+five9_Default = False
 
 
 def is_chrome_debugger_alive(port):
@@ -362,7 +363,14 @@ def LogOut():
     # time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
     # pyautogui.hotkey('enter')
-    
+
+
+# Suponiendo que five9_Default es una variable
+if not five9_Default:
+    sys.exit("El valor de Five9 Default es False. Deteniendo la ejecución.")
+# Aquí seguiría el resto del código si la variable es True
+print("Este código no se ejecutará si Five Default es False.")
+
 
 if args.lunchtime:
     inicializar()

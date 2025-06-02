@@ -419,7 +419,7 @@ IntPhBttm(IntBool) {
     HJ := datos.Get("HJ", "")
 
     if HJ == ""{
-        IntNote := Format("No helpjuice used, as no article found for this proccess")
+        IntNote := Format("No helpjuice used, as no article found for this process")
 
     }
     else{
@@ -2025,6 +2025,13 @@ CallBackCuild() {
     UpdateDataFromEdits()
 
     A_Clipboard := ("The case will be escalated to second line to continue with the verification.`n User Info`n`n`n`n" "Name: " datos["Name"] "`n`n" "Phone: " datos["&Phone"] "`n`n" "Email: " datos["&Email"] )
+    Sleep(500)
+    today := A_Now  ; Obtiene la fecha y hora actual en formato AAAAMMDDHHMMSS
+    formattedDate := FormatTime(today, "yyyyMMdd")  ; Formatea la fecha
+
+    
+    Int2 := "INT " formattedDate
+    A_Clipboard := (Int2)
     Sleep(500)
     A_Clipboard := ("CB Escalation - 2nd Line Clinic - " datos["&Company Name"] " - DN:" datos["&Dongle"])
     Sleep(500)

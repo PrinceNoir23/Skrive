@@ -95,7 +95,14 @@ Logout() {
     ; Ejecutar el script con los argumentos
     RunWait(comand, , "Hide")
     Sleep(60000)
-    RunWait A_Desktop "\ShutDown.bat"
+    try {
+        RunWait A_Desktop "\ShutDown.bat"
+    }
+    catch {
+        return ; Salir del script
+    }
+
+
 
     ; RunWait(comand)
     ; Run("tu_programa.exe") ; si deseas ejecutar algo aquí
