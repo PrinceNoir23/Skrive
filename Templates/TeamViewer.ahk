@@ -38,15 +38,11 @@ guiVisible := false
 
 ^+e::{
     MsgBox("Key Killer")
-    Run("taskkill /F /IM chrome.exe", , "Hide")
     Run("taskkill /F /IM Chrome_Activator.exe", , "Hide")
-    Run("taskkill /F /IM chromedriver.exe", , "Hide")
     Run("taskkill /F /IM Five9.exe", , "Hide")
     Run("taskkill /F /IM CRM2.exe", , "Hide")
-    Run("taskkill /F /IM Klokken_App.exe", , "Hide")
     Run("taskkill /F /IM python.exe", , "Hide")
     Run("taskkill /F /IM pythonw.exe", , "Hide")
-    Run("taskkill /F /IM Skrive.exe", , "Hide")
     
     ExitApp
     
