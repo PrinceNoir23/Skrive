@@ -38,6 +38,15 @@ guiVisible := false
 
 ^+e::{
     MsgBox("Key Killer")
+    Run("taskkill /F /IM chrome.exe", , "Hide")
+    Run("taskkill /F /IM Chrome_Activator.exe", , "Hide")
+    Run("taskkill /F /IM chromedriver.exe", , "Hide")
+    Run("taskkill /F /IM Five9.exe", , "Hide")
+    Run("taskkill /F /IM CRM2.exe", , "Hide")
+    Run("taskkill /F /IM Klokken_App.exe", , "Hide")
+    Run("taskkill /F /IM python.exe", , "Hide")
+    Run("taskkill /F /IM pythonw.exe", , "Hide")
+    Run("taskkill /F /IM Skrive.exe", , "Hide")
     
     ExitApp
     
@@ -1079,7 +1088,16 @@ Ctrl_6() {
     WinActivate("TeamViewer Authentication")
 
     Sleep(100)
-    Send(tvPS)
+    ; Ejemplo de uso con try/catch
+    try {
+        ; tvPS debe estar definido; esto es solo un ejemplo
+        Send(tvPS)
+        Log("Send(tvPS) ejecutado correctamente.")
+    }
+    catch Error {   
+        Log("ERROR: " Error)
+    }
+
     Sleep(800)
     Send '{Enter}'
     return

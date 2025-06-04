@@ -58,7 +58,7 @@ def launch_chrome_debug(port, user_data_dir):
         # f'Start-Process "{CHROME_PATH}" -ArgumentList "--remote-debugging-port={port}", "--user-data-dir={user_data_dir}" -Verb RunAs'
     ]
     subprocess.run(args, shell=True)
-    print(f"[✔] Chrome lanzado en modo debugging - puerto {port}")
+    print(f"[Excelsior] Chrome lanzado en modo debugging - puerto {port}")
 
 def ensure_chrome_debug_running(reuse_existing=True):
     """Busca un puerto libre o activo. Si reuse_existing=True, reutiliza Chrome si ya está abierto."""
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     # Cambia esto a False si quieres forzar abrir nueva ventana en cada test
     debug_port = ensure_chrome_debug_running(reuse_existing=Reusar)
 
-    print(f"[🚀] Chrome listo para usar en puerto {debug_port}")
+    print(f"[Excelsior] Chrome listo para usar en puerto {debug_port}")
 
 
 # Ejecutar el comando de PowerShell para reactivar PSReadLine
@@ -127,16 +127,16 @@ json_path = os.path.join(get_base_dir(), "NewCase.json")
 
 # Verificar si el archivo JSON existe
 if not os.path.exists(json_path):
-    print(f"❌ Error: No existe el archivo en la ruta: {json_path}")
+    print(f"[Error]: No existe el archivo en la ruta: {json_path}")
     sys.exit(1)
 
 # Leer el contenido del JSON
 try:
     with open(json_path, 'r', encoding='utf-8-sig') as f:
         data = json.load(f)
-    print("✅ JSON cargado con éxito:", data)
+    print("[Excelsior] JSON cargado con éxito:")
 except Exception as e:
-    print(f"❌ Error al leer el JSON: {e}")
+    print(f"[Error] al leer el JSON: {e}")
     sys.exit(1)
 
 # ----------------------------------------------------------------
@@ -209,7 +209,6 @@ args = parser.parse_args()
 
 
 
-
 def get_tabs(port):
     with urllib.request.urlopen(f"http://127.0.0.1:{port}/json") as response:
         return json.load(response)
@@ -219,9 +218,9 @@ def focus_tab(driver, port, url_fragment):
     for tab in tabs:
         if url_fragment in tab.get("url", ""):
             driver.switch_to.window(tab["id"])
-            print(f"[✔] Cambiado a la pestaña con URL que contiene: {url_fragment}")
+            print(f"[Excelsior] Cambiado a la pestaña con URL que contiene: {url_fragment}")
             return True
-    print(f"[✘] No se encontró una pestaña con URL que contenga: {url_fragment}")
+    print(f"[Error] No se encontró una pestaña con URL que contenga: {url_fragment}")
     return False
 
 
@@ -272,17 +271,17 @@ def readJson():
 
     # Verificar si el archivo JSON existe
     if not os.path.exists(json_path):
-        print(f"❌ Error: No existe el archivo en la ruta: {json_path}")
+        print(f"[Error]: No existe el archivo en la ruta: {json_path}")
         sys.exit(1)
 
     # Leer el contenido del JSON
     try:
         with open(json_path, 'r', encoding='utf-8-sig') as f:
             data = json.load(f)
-        print("✅ JSON cargado con éxito:", data)
+        print("[Excelsior] JSON cargado con éxito:", data)
         return data
     except Exception as e:
-        print(f"❌ Error al leer el JSON: {e}")
+        print(f"[Error] al leer el JSON: {e}")
         sys.exit(1)
 
 
@@ -553,7 +552,7 @@ def seccion1 ():
         if "Case Link" in data:
             data["Case Link"] = full_url
         else:
-            print('"Case Link" no encontrado en el JSON.')
+            print('[Error]"Case Link" no encontrado en el JSON.')
         # Guardar los cambios
         with open(json_path, 'w', encoding='utf-8-sig') as file:
             json.dump(data, file, indent=4)
@@ -578,7 +577,7 @@ def seccion1 ():
     backup_path = os.path.join(desktop_path, backup_filename)
 
     if not os.path.exists(backup_path):
-        print(f"Error: No existe el archivo en la ruta: {backup_path}")
+        print(f"[Error]: No existe el archivo en la ruta: {backup_path}")
         sys.exit(1)
 
     update_case_link(driver, backup_path)
@@ -622,7 +621,7 @@ def seccion2 ():
         if match:
             A_CaseNumber = match.group(1)
         else:
-            print("No se encontró texto entre corchetes en el valor proporcionado.")
+            print("[Error] No se encontró texto entre corchetes en el valor proporcionado.")
             return
 
         # Leer el JSON
@@ -633,7 +632,7 @@ def seccion2 ():
         if "C&ase Number" in data:
             data["C&ase Number"] = A_CaseNumber
         else:
-            print('"C&ase Number" no encontrado en el JSON.')
+            print('[Error] "C&ase Number" no encontrado en el JSON.')
 
         # Guardar los cambios
         with open(json_path, 'w', encoding='utf-8-sig') as file:
@@ -651,7 +650,7 @@ def seccion2 ():
     backup_path = os.path.join(desktop_path, backup_filename)
 
     if not os.path.exists(backup_path):
-        print(f"Error: No existe el archivo en la ruta: {backup_path}")
+        print(f"[Error]: No existe el archivo en la ruta: {backup_path}")
         sys.exit(1)
 
     update_case_number(backup_path, A_CaseNumber)
@@ -750,7 +749,7 @@ def seccion2 ():
         if "Sur&vey" in data:
             data["Sur&vey"] = A_Survey
         else:
-            print('"Sur&vey" no encontrado en el JSON.')
+            print('[Error] "Sur&vey" no encontrado en el JSON.')
 
         # Guardar los cambios
         with open(json_path, 'w', encoding='utf-8-sig') as file:
@@ -768,7 +767,7 @@ def seccion2 ():
     backup_path = os.path.join(desktop_path, backup_filename)
 
     if not os.path.exists(backup_path):
-        print(f"Error: No existe el archivo en la ruta: {backup_path}")
+        print(f"[Error] No existe el archivo en la ruta: {backup_path}")
         sys.exit(1)
 
     update_survey(backup_path, A_Survey)
@@ -778,7 +777,7 @@ def seccion2 ():
         with open(json_path, 'r', encoding='utf-8-sig') as f:
             data = json.load(f)
     except Exception as e:
-        print(f"Error al leer el JSON: {e}")
+        print(f"[Error] al leer el JSON: {e}")
         sys.exit(1)
 
     time.sleep(0.8)
@@ -848,7 +847,7 @@ def seccion3 ():
             if archivo_encontrado:
                 file_input.send_keys(archivo_encontrado)
             else:
-                print(f"No se encontró un archivo .zip que contenga '{A_Dongle}' en {logs_file}")
+                print(f"[Error] No se encontró un archivo .zip que contenga '{A_Dongle}' en {logs_file}")
 
 
             # TAB varias veces
@@ -1005,7 +1004,7 @@ def seccion3 ():
             print("Continuando con el código...")
             # Aquí va el resto de tu lógica
         else:
-            print("Operación cancelada por el usuario.")
+            print("[Error] Operación cancelada por el usuario.")
             exit()
     else:
         # Abrir buscador
@@ -1134,4 +1133,4 @@ if args.seccion5:
     data = readJson()
     seccion5()
 else:
-    print("No se seleccionó ninguna opción.")
+    print("[Error] No se seleccionó ninguna opción.")

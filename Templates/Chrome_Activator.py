@@ -51,9 +51,9 @@ required_packages = {
 def install_if_missing(pip_name, import_name):
     try:
         importlib.import_module(import_name)
-        print(f"✅ '{import_name}' ya está instalado.")
+        print(f"[Excelsior] '{import_name}' ya está instalado.")
     except ImportError:
-        print(f"📦 Instalando '{pip_name}'...")
+        print(f"[Excelsior] Instalando '{pip_name}'...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", pip_name])
 
 # Recorre todos los paquetes
@@ -112,7 +112,7 @@ def ensure_chrome_debug_running(reuse_existing=True):
                     return port
                 time.sleep(0.5)
 
-            raise RuntimeError(f"Chrome no respondió en el puerto {port}")
+            raise RuntimeError(f"[Error] Chrome no respondió en el puerto {port}")
         
     raise RuntimeError("No se encontró un puerto libre ni activo entre 9222 y 9300.")
 

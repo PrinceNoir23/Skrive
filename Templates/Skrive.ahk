@@ -22,6 +22,29 @@
 ; pyinstaller --onefile --add-binary "chromedriver.exe;." .\Five9_2.py
 ; pyinstaller --onefile --add-binary "chromedriver.exe;." .\CRM2_2.py
 global InfoFile := A_WorkingDir "\A_Info.json"
+; Logs
+; -----------------------------------------------------------------------
+; Crear la carpeta de logs si no existe
+global logDir := A_WorkingDir "\logs"
+if !DirExist(logDir)
+    DirCreate(logDir)
+
+; Ruta completa del archivo de log
+global logPath := logDir "\log.txt"
+global logPathPy := logDir "\logPy.txt"
+
+; Función para registrar mensajes en el log
+Log(msg) {
+    timestamp := FormatTime(A_Now, "yyyy-MM-dd HH:mm:ss")
+    FileAppend(timestamp " - " msg "`n", logPath)
+}
+Logpy(msg) {
+    timestamp := FormatTime(A_Now, "yyyy-MM-dd HH:mm:ss")
+    FileAppend(timestamp " - " msg "`n", logPathPy)
+}
+
+Log("Skrive Started")
+; -----------------------------------------------------------------------
 
 CreateDefaultInfoFile(filePath) {
     if !FileExist(filePath) {
@@ -53,8 +76,20 @@ global fileDir_CasesFinal := A_Desktop "\Cases_Final"  ; Solicitar la ruta del d
 global rutaScript := A_WorkingDir "\CRM2.py"
 
 ; Ruta para python ------------------------------------------------------------
+; pythontxt := A_WorkingDir "\python_path.txt"
+; if FileExist(pythontxt){
+;     FileDelete(pythontxt) 
+; }
+
 ; Ejecutar "where python" y guardar la salida
+try {
+    ; tvPS debe estar definido; esto es solo un ejemplo
 RunWait(A_ComSpec ' /c where python > python_path.txt', , 'Hide')
+    Logpy("Python path leido correctamente.")
+}
+catch Error {   
+    Logpy("ERROR: " Error)
+}
 
 ; Leer archivo generado por `where python`
 raw := FileRead("python_path.txt")
@@ -117,10 +152,9 @@ ForwardToDynamics() {
     WinWaitActive("Case: 3Shape v3: New Case - Dynamics 365 - Google Chrome")
     Sleep(50)
     exename := WinGetProcessName("A")
-    if (exename = "chrome.exe") {
-        CRM()
-    }
+    if !(exename = "chrome.exe") {
     MsgBox A_ComputerName
+    }
     Return false
     ; 
 }
@@ -635,474 +669,475 @@ CreateNote(TitleNote,BodyNote,addlog){
 
 }
 
-CRM(){
-    global datos,EditControls
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-        ; Sleep(200)
-    ; SaveBttm(false,fileDir1)
-    Sleep(1000)
+; ; CRM(){
+; ;     global datos,EditControls
+; ;     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+; ;         ; Sleep(200)
+; ;     ; SaveBttm(false,fileDir1)
+; ;     Sleep(1000)
     
-    FindBar("Summary")
-    Sleep(1000)
-    Loop 2 {
-        Send('{Tab}')
-        Sleep(445)
-    }
+; ;     FindBar("Summary")
+; ;     Sleep(1000)
+; ;     Loop 2 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
 
-        Sleep(1000)
-    DescriptionGUI(false)
-        Sleep(500)
-    Send('{Control Down}{v}{Control Up}')  
-        Sleep(500)
-    Send('{Tab}')
+; ;         Sleep(1000)
+; ;     DescriptionGUI(false)
+; ;         Sleep(500)
+; ;     Send('{Control Down}{v}{Control Up}')  
+; ;         Sleep(500)
+; ;     Send('{Tab}')
 
-        Sleep(500)
-    Send('{Tab}')
-        Sleep(500)
-    Send('{N}')
-        Sleep(500)
-    Send('{Enter}')
-    Sleep(400)
-    Loop 4 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        ; Sleep(500)
-    ; Send('{Enter}')
-        Sleep(1000)
-    A_Clipboard := datos["Modulo"] ;Product
-        Sleep(1000)
-    Send('{Control Down}{v}{Control Up}')  
-        Sleep(1500)
-    Send('{Enter}')
-    Sleep(1500)
-    Loop 4 {
-        Send('{Tab}')
-        Sleep(445)
-    }
+; ;         Sleep(500)
+; ;     Send('{Tab}')
+; ;         Sleep(500)
+; ;     Send('{N}')
+; ;         Sleep(500)
+; ;     Send('{Enter}')
+; ;     Sleep(400)
+; ;     Loop 4 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
+; ;         ; Sleep(500)
+; ;     ; Send('{Enter}')
+; ;         Sleep(1000)
+; ;     A_Clipboard := datos["Modulo"] ;Product
+; ;         Sleep(1000)
+; ;     Send('{Control Down}{v}{Control Up}')  
+; ;         Sleep(1500)
+; ;     Send('{Enter}')
+; ;     Sleep(1500)
+; ;     Loop 4 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
     
-    Send('{S}') ;Serious
-    Sleep(445)
-    Send('{Enter}')
-    Sleep(445)
-    Send('{Tab}')
-    Sleep(445)
-    Send('{P}') ;Phone
-    Sleep(445)
-    Send('{Enter}')
-    Sleep(445)
-    Loop 4 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(1000)
-    A_Clipboard:= datos["&Dongle"]
-        Sleep(445)
-    Send('^v')
-        Sleep(1500)
-    Send('{Enter}')
-    Loop 13 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        ; Sleep(500)
-    ; Send('{Enter}')
-        Sleep(1000)
-    A_Clipboard := datos["Version"] ;Version
-        Sleep(1000)
-    Send('{Control Down}{v}{Control Up}')   
-        Sleep(1500)
-    Send('{Enter}')
-        Sleep(1500)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(445)
-    Send('{Enter}')
-        Sleep(1000)
-    A_Clipboard := datos["Categ"] ;Category
-        Sleep(1000)
-    Send('{Control Down}{v}{Control Up}')  
-        Sleep(3500)
-    Send('{Enter}')
-    Sleep(1500)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(600)
-    }
-        Sleep(445)
-    Send('{Enter}')
-        Sleep(1000)
-    A_Clipboard := datos["CategoryArea"] ;Category Area
-        Sleep(1000)
-    Send('{Control Down}{v}{Control Up}') 
-        Sleep(3500)
-    Send('{Enter}')
-    Sleep(1500)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(600)
-    }
-        Sleep(445)
-    Send('{Enter}')
-        Sleep(1000)
-    A_Clipboard := datos["CaseType"] ;CaseType
-        Sleep(1000)
-    Send('{Control Down}{v}{Control Up}') 
-        Sleep(3500)
-    Send('{Enter}')
+; ;     Send('{S}') ;Serious
+; ;     Sleep(445)
+; ;     Send('{Enter}')
+; ;     Sleep(445)
+; ;     Send('{Tab}')
+; ;     Sleep(445)
+; ;     Send('{P}') ;Phone
+; ;     Sleep(445)
+; ;     Send('{Enter}')
+; ;     Sleep(445)
+; ;     Loop 4 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
+; ;         Sleep(1000)
+; ;     A_Clipboard:= datos["&Dongle"]
+; ;         Sleep(445)
+; ;     Send('^v')
+; ;         Sleep(1500)
+; ;     Send('{Enter}')
+; ;     Loop 13 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
+; ;         ; Sleep(500)
+; ;     ; Send('{Enter}')
+; ;         Sleep(1000)
+; ;     A_Clipboard := datos["Version"] ;Version
+; ;         Sleep(1000)
+; ;     Send('{Control Down}{v}{Control Up}')   
+; ;         Sleep(1500)
+; ;     Send('{Enter}')
+; ;         Sleep(1500)
+; ;     Loop 3 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
+; ;         Sleep(445)
+; ;     Send('{Enter}')
+; ;         Sleep(1000)
+; ;     A_Clipboard := datos["Categ"] ;Category
+; ;         Sleep(1000)
+; ;     Send('{Control Down}{v}{Control Up}')  
+; ;         Sleep(3500)
+; ;     Send('{Enter}')
+; ;     Sleep(1500)
+; ;     Loop 3 {
+; ;         Send('{Tab}')
+; ;         Sleep(600)
+; ;     }
+; ;         Sleep(445)
+; ;     Send('{Enter}')
+; ;         Sleep(1000)
+; ;     A_Clipboard := datos["CategoryArea"] ;Category Area
+; ;         Sleep(1000)
+; ;     Send('{Control Down}{v}{Control Up}') 
+; ;         Sleep(3500)
+; ;     Send('{Enter}')
+; ;     Sleep(1500)
+; ;     Loop 3 {
+; ;         Send('{Tab}')
+; ;         Sleep(600)
+; ;     }
+; ;         Sleep(445)
+; ;     Send('{Enter}')
+; ;         Sleep(1000)
+; ;     A_Clipboard := datos["CaseType"] ;CaseType
+; ;         Sleep(1000)
+; ;     Send('{Control Down}{v}{Control Up}') 
+; ;         Sleep(3500)
+; ;     Send('{Enter}')
 
-    Sleep(2500)
+; ;     Sleep(2500)
 
-    Send('^f')
-    Sleep(650)
-    Send("Dynamics 365 Mobile – custom")
-    Sleep(650)
-    Send('{Enter}')
-    Sleep(650)
-    Send('{Esc}')
-    Sleep(650)
-
-
-    Loop 14 {
-            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-            Sleep(500)
-    }
-        Sleep(500)
-    Send('{Enter}')
-        Sleep(500)
-    A_Clipboard:= datos["&Email"]
-        Sleep(400)
-    Send('^v')
-        Sleep(2500)
-    Send('{Enter}')
-        Sleep(1000)
+; ;     Send('^f')
+; ;     Sleep(650)
+; ;     Send("Dynamics 365 Mobile – custom")
+; ;     Sleep(650)
+; ;     Send('{Enter}')
+; ;     Sleep(650)
+; ;     Send('{Esc}')
+; ;     Sleep(650)
 
 
-    ; SAVE
-    Sleep(800)
-    Send('^f')
-    Sleep(650)
-    Send("save &")
-    Sleep(650)
-    Send('{Enter}')
-    Sleep(650)
-    Send('{Esc}')
-    Sleep(800)
-
-    Loop 1 {
-            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-            Sleep(1000)
-    }
-    Sleep(1000)
-    Send('{Enter}')
-    Sleep(500)
-
-    Sleep(18000)
-
-    ; ; ; MsgBoxSteps
-    ; R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
-    ; if (R_save = "No") {
-    ;      ; Si el usuario elige "No", cancela la acción
-    ;     Automatic()
-    ;     return
-
-    ; }
+; ;     Loop 14 {
+; ;             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+; ;             Sleep(500)
+; ;     }
+; ;         Sleep(500)
+; ;     Send('{Enter}')
+; ;         Sleep(500)
+; ;     A_Clipboard:= datos["&Email"]
+; ;         Sleep(400)
+; ;     Send('^v')
+; ;         Sleep(2500)
+; ;     Send('{Enter}')
+; ;         Sleep(1000)
 
 
-    Sleep(1000)
+; ;     ; SAVE
+; ;     Sleep(800)
+; ;     Send('^f')
+; ;     Sleep(650)
+; ;     Send("save &")
+; ;     Sleep(650)
+; ;     Send('{Enter}')
+; ;     Sleep(650)
+; ;     Send('{Esc}')
+; ;     Sleep(800)
 
-    FindBar("Summary")
-    Sleep(1000)
-    Loop 3 {
-        Send('{Tab}')
-        Sleep(445)
-    }
-        Sleep(500)
-    Send('^c') 
-        Sleep(1000)
-    Alt_a()
+; ;     Loop 1 {
+; ;             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+; ;             Sleep(1000)
+; ;     }
+; ;     Sleep(1000)
+; ;     Send('{Enter}')
+; ;     Sleep(500)
 
-        Sleep(1000)
-    Send('{Left}')
-        Sleep(500)    
-    C1stAdd(false)
-        Sleep(500)
-    Send('^v')
-        Sleep(400)
+; ;     Sleep(18000)
 
-    IntPhBttm(false)
-    RemoteSessionBuild() 
+; ;     ; ; ; MsgBoxSteps
+; ;     ; R_save:= MsgBox("¿Se guardo el caso?", "Confirmacion Para Continuar Proceso", "36")
+; ;     ; if (R_save = "No") {
+; ;     ;      ; Si el usuario elige "No", cancela la acción
+; ;     ;     Automatic()
+; ;     ;     return
 
-    ; MsgBox datos["PhT"] "`n`n" datos["PhN"] "`n`n" datos["InT"] "`n`n" datos["InN"] "`n`n"
+; ;     ; }
 
-    ; MsgBox Type(datos["PhT"]) "`n`n" Type(datos["PhN"]) "`n`n" Type(datos["InT"]) "`n`n" Type(datos["InN"]) "`n`n"
-    Ph1 := datos["PhT"]         
 
-    PHNote1 := datos["PhN"]
-    Int1 := datos["InT"]
-    IntNote1 := datos["InN"]
+; ;     Sleep(1000)
 
-    Sleep(500)
-    FindBar("Enter a note")
-    Sleep(100)
-    CreateNote(Ph1,PHNote1,false)
-    Sleep(500)
-    FindBar("Enter a note")
-    Sleep(100)
-    CreateNote(Int1,IntNote1,false)
-    Sleep(500)
-    FindBar("Enter a note")
-    Sleep(200)
-    rmtsession:= datos["RMTSS"]
-    Sleep(100)
-    CreateNote("Remote Session Desktop",rmtsession,false)
-    Sleep(500)
-    FindBar("Enter a note")
-    Sleep(100)
-    CreateNote(Int1,"Logs and images are here `n",true)
-    Sleep(1000)
+; ;     FindBar("Summary")
+; ;     Sleep(1000)
+; ;     Loop 3 {
+; ;         Send('{Tab}')
+; ;         Sleep(445)
+; ;     }
+; ;         Sleep(500)
+; ;     Send('^c') 
+; ;         Sleep(1000)
+; ;     Alt_a()
 
-Sleep(18000)
+; ;         Sleep(1000)
+; ;     Send('{Left}')
+; ;         Sleep(500)    
+; ;     C1stAdd(false)
+; ;         Sleep(500)
+; ;     Send('^v')
+; ;         Sleep(400)
 
-; ; ; MsgBoxSteps
-; ; ; Si el usuario elige "No", cancela la acción
-    ; R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
-    ; if (R_logs = "No") {
+; ;     IntPhBttm(false)
+; ;     RemoteSessionBuild() 
+
+; ;     ; MsgBox datos["PhT"] "`n`n" datos["PhN"] "`n`n" datos["InT"] "`n`n" datos["InN"] "`n`n"
+
+; ;     ; MsgBox Type(datos["PhT"]) "`n`n" Type(datos["PhN"]) "`n`n" Type(datos["InT"]) "`n`n" Type(datos["InN"]) "`n`n"
+; ;     Ph1 := datos["PhT"]         
+
+; ;     PHNote1 := datos["PhN"]
+; ;     Int1 := datos["InT"]
+; ;     IntNote1 := datos["InN"]
+
+; ;     Sleep(500)
+; ;     FindBar("Enter a note")
+; ;     Sleep(100)
+; ;     CreateNote(Ph1,PHNote1,false)
+; ;     Sleep(500)
+; ;     FindBar("Enter a note")
+; ;     Sleep(100)
+; ;     CreateNote(Int1,IntNote1,false)
+; ;     Sleep(500)
+; ;     FindBar("Enter a note")
+; ;     Sleep(200)
+; ;     rmtsession:= datos["RMTSS"]
+; ;     Sleep(100)
+; ;     CreateNote("Remote Session Desktop",rmtsession,false)
+; ;     Sleep(500)
+; ;     FindBar("Enter a note")
+; ;     Sleep(100)
+; ;     CreateNote(Int1,"Logs and images are here `n",true)
+; ;     Sleep(1000)
+
+; ; Sleep(18000)
+
+; ; ; ; ; MsgBoxSteps
+; ; ; ; ; Si el usuario elige "No", cancela la acción
+; ;     ; R_logs:= MsgBox("¿Se guardaron los logs?", "Confirmacion Para Continuar Proceso", "36")
+; ;     ; if (R_logs = "No") {
          
-    ;     Automatic()
-    ;     return
+; ;     ;     Automatic()
+; ;     ;     return
 
-    ; }
+; ;     ; }
     
-    ; SAVE
-    Sleep(800)
-    Send('^f')
-    Sleep(650)
-    Send("save &")
-    Sleep(650)
-    Send('{Enter}')
-    Sleep(650)
-    Send('{Esc}')
-    Sleep(800)
+; ;     ; SAVE
+; ;     Sleep(800)
+; ;     Send('^f')
+; ;     Sleep(650)
+; ;     Send("save &")
+; ;     Sleep(650)
+; ;     Send('{Enter}')
+; ;     Sleep(650)
+; ;     Send('{Esc}')
+; ;     Sleep(800)
 
-    Loop 1 {
-            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-            Sleep(1000)
-    }
-    Sleep(1000)
-    Send('{Enter}')
-
-
-    Sleep(15000)
-    Sleep(800)
-    Send('^f')
-    Sleep(650)
-    Send("merged cases")
-    Sleep(650)
-    Send('{Enter}')
-    Sleep(650)
-    Send('{Esc}')
-    Sleep(800)
-    Send('{Right}')
-    Sleep(500)
-    Send('{Enter}')
-    Sleep(650)
-    Loop 5 {
-            Send('{Tab}')
-            Sleep(500)
-    }
-
-        Sleep(500)
-    Send('^c') 
-        Sleep(500)
-    EditControls["Sur&vey"].Value := A_Clipboard
-    ; Send('¡v') 
-    Sleep(500)
-    FindBar("summary")
-    Sleep(1000)
-
-    FindBar("Search timeline")
-    Sleep(800)
-    Loop 5 {
-            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-            Sleep(500)
-    }
-    Sleep(445)
-    Send('{Enter}')
-    Sleep(445)
-    Send('{Enter}')
-    Sleep(3500)
-    Loop 13 {
-            Send('{Tab}')
-            Sleep(445)
-    }
-    Sleep(800)
-    A_Clipboard:="Regarding your case number " datos["C&ase Number"]
-    Sleep(445)
-    Send('^V')
-    Sleep(445)
-    Loop 2 {
-            Send('{Tab}')
-            Sleep(445)
-    }
-    Sleep(445)
-    EmailButom()
-    Sleep(445)
-    Send('^v') 
-    Sleep(1000)
-    FindBar("RECIPIENT INFO")
-    Sleep(445)
-    Loop 6 {
-            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-            Sleep(500)
-    }
-    Sleep(445)
-    Send('{Enter}')
-    Sleep(445)
+; ;     Loop 1 {
+; ;             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+; ;             Sleep(1000)
+; ;     }
+; ;     Sleep(1000)
+; ;     Send('{Enter}')
 
 
-    Sleep(18000)
+; ;     Sleep(15000)
+; ;     Sleep(800)
+; ;     Send('^f')
+; ;     Sleep(650)
+; ;     Send("merged cases")
+; ;     Sleep(650)
+; ;     Send('{Enter}')
+; ;     Sleep(650)
+; ;     Send('{Esc}')
+; ;     Sleep(800)
+; ;     Send('{Right}')
+; ;     Sleep(500)
+; ;     Send('{Enter}')
+; ;     Sleep(650)
+; ;     Loop 5 {
+; ;             Send('{Tab}')
+; ;             Sleep(500)
+; ;     }
 
-; ; ; MsgBoxSteps
-    ; R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
-    ; if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
-    ;     Automatic()
-    ;     return 
-    ; }
-    ; Sleep(5000)
-    ; ; ; ; |||
+; ;         Sleep(500)
+; ;     Send('^c') 
+; ;         Sleep(500)
+; ;     EditControls["Sur&vey"].Value := A_Clipboard
+; ;     ; Send('¡v') 
+; ;     Sleep(500)
+; ;     FindBar("summary")
+; ;     Sleep(1000)
+
+; ;     FindBar("Search timeline")
+; ;     Sleep(800)
+; ;     Loop 5 {
+; ;             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+; ;             Sleep(500)
+; ;     }
+; ;     Sleep(445)
+; ;     Send('{Enter}')
+; ;     Sleep(445)
+; ;     Send('{Enter}')
+; ;     Sleep(3500)
+; ;     Loop 13 {
+; ;             Send('{Tab}')
+; ;             Sleep(445)
+; ;     }
+; ;     Sleep(800)
+; ;     A_Clipboard:="Regarding your case number " datos["C&ase Number"]
+; ;     Sleep(445)
+; ;     Send('^V')
+; ;     Sleep(445)
+; ;     Loop 2 {
+; ;             Send('{Tab}')
+; ;             Sleep(445)
+; ;     }
+; ;     Sleep(445)
+; ;     EmailButom()
+; ;     Sleep(445)
+; ;     Send('^v') 
+; ;     Sleep(1000)
+; ;     FindBar("RECIPIENT INFO")
+; ;     Sleep(445)
+; ;     Loop 6 {
+; ;             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+; ;             Sleep(500)
+; ;     }
+; ;     Sleep(445)
+; ;     Send('{Enter}')
+; ;     Sleep(445)
 
 
-    FindBar("Description &")
-    Sleep(445)
-    Send('{Tab}')
-    Sleep(445)
-    Send('{Enter}')
-    Sleep(445)
-    A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
-    Sleep(500)
-    Send('^v') 
-    Sleep(445)
-    Loop 10 {
-            Send('{Tab}')
-            Sleep(445)
-    }
-    Sleep(445)
-    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
-    Sleep(500)
-    Send('^v') 
-    Sleep(1000)
+; ;     Sleep(18000)
 
-    R_Close:= MsgBox("¿Ya desea Terminar el caso?", "Confirmacion Para terminar flow", "36")
-    if (R_Close = "No"){  ; Si el usuario elige "No", cancela la acción
-        Automatic()
-        return 
-    }
-    Sleep(800)
-    Send('^f')
-    Sleep(650)
-    Send("americas 1st")
-    Sleep(650)
-    Send('{Enter}')
-    Sleep(650)
-    Send('{Esc}')
-    Sleep(650)
-    Loop 2 {
-            Send('{Tab}')
-            Sleep(445)
-    }
-    Sleep(650)
-    Send('{Enter}')
-    Sleep(2000)
-    FindBar("Next Stage")
-    Sleep(2000)
-    FindBar("Next Stage")
-    Sleep(2000)
-    Loop 3 {
-            Send('{Tab}')
-            Sleep(445)
-    }
-    Sleep(800)
-    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
-    Sleep(500)
-    Send('^v') 
-    Sleep(1000)
-    FindBar("Finish")
-    Sleep(10000)
-    FindBar("Resolve Case")
-    Sleep(7000)
-    Loop 3 {
-            Send('{Tab}')
-            Sleep(445)
-    }
-    Sleep(500)
-    A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
-    Sleep(500)
-    Send('^v') 
-    Sleep(1000)
-    Loop 3 {
-            Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
-            Sleep(870)
-    }
-    Send('{Enter}')
-    
+; ; ; ; ; MsgBoxSteps
+; ;     ; R_CRM:= MsgBox("¿Ya fue enviado el email?", "Confirmacion Para Continuar Proceso", "36")
+; ;     ; if (R_CRM = "No"){  ; Si el usuario elige "No", cancela la acción
+; ;     ;     Automatic()
+; ;     ;     return 
+; ;     ; }
+; ;     ; Sleep(5000)
+; ;     ; ; ; ; |||
 
-        Sleep(1500)
-    SaveBttm(false,fileDir1)
 
-    MsgBox("CRM Completado", "CRM AUTOMATIZATION","64")
-        Sleep(500)
-    
-    Reload
-    
-    return
+; ;     FindBar("Description &")
+; ;     Sleep(445)
+; ;     Send('{Tab}')
+; ;     Sleep(445)
+; ;     Send('{Enter}')
+; ;     Sleep(445)
+; ;     A_Clipboard:= EditControls["Probing Questions (Add Info)"].Value
+; ;     Sleep(500)
+; ;     Send('^v') 
+; ;     Sleep(445)
+; ;     Loop 10 {
+; ;             Send('{Tab}')
+; ;             Sleep(445)
+; ;     }
+; ;     Sleep(445)
+; ;     A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+; ;     Sleep(500)
+; ;     Send('^v') 
+; ;     Sleep(1000)
 
-}
-
-CRM2(CRMBool){
-    global datos,EditControls
-    datos["Case Link"] := ""
-
-    UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
-    IntPhBttm(false)
-    RemoteSessionBuild() 
-    EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+; ;     R_Close:= MsgBox("¿Ya desea Terminar el caso?", "Confirmacion Para terminar flow", "36")
+; ;     if (R_Close = "No"){  ; Si el usuario elige "No", cancela la acción
+; ;         Automatic()
+; ;         return 
+; ;     }
+; ;     Sleep(800)
+; ;     Send('^f')
+; ;     Sleep(650)
+; ;     Send("americas 1st")
+; ;     Sleep(650)
+; ;     Send('{Enter}')
+; ;     Sleep(650)
+; ;     Send('{Esc}')
+; ;     Sleep(650)
+; ;     Loop 2 {
+; ;             Send('{Tab}')
+; ;             Sleep(445)
+; ;     }
+; ;     Sleep(650)
+; ;     Send('{Enter}')
+; ;     Sleep(2000)
+; ;     FindBar("Next Stage")
+; ;     Sleep(2000)
+; ;     FindBar("Next Stage")
+; ;     Sleep(2000)
+; ;     Loop 3 {
+; ;             Send('{Tab}')
+; ;             Sleep(445)
+; ;     }
+; ;     Sleep(800)
+; ;     A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+; ;     Sleep(500)
+; ;     Send('^v') 
+; ;     Sleep(1000)
+; ;     FindBar("Finish")
+; ;     Sleep(10000)
+; ;     FindBar("Resolve Case")
+; ;     Sleep(7000)
+; ;     Loop 3 {
+; ;             Send('{Tab}')
+; ;             Sleep(445)
+; ;     }
+; ;     Sleep(500)
+; ;     A_Clipboard := "RC: " datos["RC"] "`n" "S: " datos["Solution"]
+; ;     Sleep(500)
+; ;     Send('^v') 
+; ;     Sleep(1000)
+; ;     Loop 3 {
+; ;             Send('{Shift Down}{Tab Down}{Shift Up}{Tab Up}')
+; ;             Sleep(870)
+; ;     }
+; ;     Send('{Enter}')
     
 
-    if (CRMBool == true){
-        PyPath := A_WorkingDir . "\CRM2.py"
-    }else if (CRMBool == false){
-        PyPath := A_WorkingDir . "\CRM.py"
-    }
-    jsonPath := A_WorkingDir . "\NewCase.json"
-    if FileExist(jsonPath) {
-        FileDelete(jsonPath)
-    }
-    FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8")
+; ;         Sleep(1500)
+; ;     SaveBttm(false,fileDir1)
 
-    pythonPath := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
+; ;     MsgBox("CRM Completado", "CRM AUTOMATIZATION","64")
+; ;         Sleep(500)
+    
+; ;     Reload
+    
+; ;     return
+
+; ; }
+
+; ; CRM2(CRMBool){
+; ;     global datos,EditControls
+; ;     global pythonPath
+; ;     datos["Case Link"] := ""
+
+; ;     UpdateDataFromEdits() ; 💡 Refresca `datos` con los valores actuales de los Edits
+; ;     IntPhBttm(false)
+; ;     RemoteSessionBuild() 
+; ;     EmailBld(false,( datos["Issue"] "`n" ),false ,datos["EmailInputEdit"] "`n" ,false)
+    
+
+; ;     if (CRMBool == true){
+; ;         PyPath := A_WorkingDir . "\CRM2.py"
+; ;     }else if (CRMBool == false){
+; ;         PyPath := A_WorkingDir . "\CRM.py"
+; ;     }
+; ;     jsonPath := A_WorkingDir . "\NewCase.json"
+; ;     if FileExist(jsonPath) {
+; ;         FileDelete(jsonPath)
+; ;     }
+; ;     FileAppend(Jxon_Dump(datos,4), jsonPath, "UTF-8")
+
+    
 
 
-    Sleep(200)
-    ; RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
-    logPath := A_WorkingDir . "\error_log.txt"
-    SkrvGui.Minimize()
-    KlokkenGui.Minimize()
+; ;     Sleep(200)
+; ;     ; RunWait(Format('python.exe "{}" "{}" ',PyPath,jsonPath))
+; ;     logPath := A_WorkingDir . "\error_log.txt"
+; ;     SkrvGui.Minimize()
+    
 
-    RunWait(Format('cmd.exe /c "{}" "{}" "{}" 2> "{}"', pythonPath, PyPath, jsonPath, logPath))
+; ;     RunWait(Format('cmd.exe /c "{}" "{}" "{}" 2> "{}"', pythonPath, PyPath, jsonPath, logPath))
 
 
     
     
-    ; ; esto esconde la ventana de la consola de python
-    ; RunWait(Format('python.exe "{}" "{}"', PyPath, jsonPath), , "Hide")
+; ;     ; ; esto esconde la ventana de la consola de python
+; ;     ; RunWait(Format('python.exe "{}" "{}"', PyPath, jsonPath), , "Hide")
 
 
-    ; FileDelete(jsonPath)
+; ;     ; FileDelete(jsonPath)
 
-}
+; ; }
 
 
 ; ---------------------------------------------------------------------------------------------------------------------------------
@@ -1602,7 +1637,7 @@ BtnSKRIVE := SkrvGui.Add("Button", "x50 y500 w450 h60 ", "S&KRIVE!")
 
 
 Ejecutar_Autom_Python() {
-    global datos, EditControls,fileDir1,rutaPython,rutaScript
+    global datos, EditControls,fileDir1,rutaPython,rutaScript, logPath
     UpdateDataFromEdits()
     IntPhBttm(false)
     RemoteSessionBuild() 
@@ -1642,7 +1677,7 @@ Ejecutar_Autom_Python() {
 
     
     SkrvGui.Minimize()
-    KlokkenGui.Minimize()
+    
 
 
     CRM2_Exe := A_WorkingDir "\CRM2.exe"
@@ -1655,7 +1690,6 @@ Ejecutar_Autom_Python() {
         comand := Format('"{}" "{}" {}', rutaPython, rutaScript, args) 
         A_Clipboard := comand
         RunWait(comand, , "Hide")
-
     }
 }
 AutomGUI(){ 
@@ -1779,7 +1813,7 @@ AutomGUI(){
 
 
         SkrvGui.Minimize()
-        KlokkenGui.Minimize()
+        
 
         CRM2_Exe := A_WorkingDir "\CRM2.exe"
         if FileExist(CRM2_Exe) {
@@ -1856,7 +1890,7 @@ AutomGUI_SinCondiciones(){
     }
     SectionsGui.SetFont("s15 bold", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
-    SectionsGui.AddButton("x+20", "Ejecutar Python").OnEvent("Click", (*) => EjecutarPython_sinCondicionales())
+    SectionsGui.AddButton("x+20", "SKRIVE!").OnEvent("Click", (*) => EjecutarPython_sinCondicionales())
     SectionsGui.SetFont("s15 norm", "Segoe UI")  ; Tamaño 14, negrita, fuente bonita
 
     SectionsGui.Show()
@@ -1901,7 +1935,7 @@ AutomGUI_SinCondiciones(){
         
         
         SkrvGui.Minimize()
-        KlokkenGui.Minimize()
+        
         CRM2_Exe := A_WorkingDir "\CRM2.exe"
         if FileExist(CRM2_Exe) {
             comand := Format('"{}" {}', CRM2_Exe, args)
@@ -2339,7 +2373,7 @@ EmailBld(Greeting?, Issue? , Body?, Recommend? ,CloseSurvey?){
     G3:= "I am writing in reference to your recent call to our technical support center regarding your issue "
     greetingdflt := (  G1 "`n`n`n`n" G2 "`n`n`n`n" G3)
 
-    bodydflt := ("I'm pleased to inform you that we have resolved this request, during our interaction we have " datos["Solution"] "`n`n`n`nBringing to your attention, it occurred due to " datos["RC"] "." "`n`n`n`n") 
+    bodydflt := ("I'm pleased to inform you that we have resolved this complaint or request, during our interaction we have " datos["Solution"] "`n`n`n`nBringing to your attention, it occurred due to " datos["RC"] "." "`n`n`n`n") 
     Issuedflt := ("Case got corrupted, we have reimported the streams and the case is now working as expected.")
 
     RecommendationDflt := "Additionally,  to prevent similar issues in the future, we recommend shutting down your computer every night and ensuring it remains connected during the scanning process"

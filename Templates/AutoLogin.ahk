@@ -1,5 +1,8 @@
 #Requires AutoHotkey v2.0
 #Include Json.ahk
+
+
+
 Persistent
 
 global eventos := Map()
@@ -70,7 +73,7 @@ DateDiffCustom(datetime1, datetime2, unidad := "Minutes") {
 Access() {
     TrayTip("Access", "Ejecutando Login Access", 5)
 
-    global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
+    global rutaPython 
     global rutaScriptFive9 := A_ScriptDir . "\Five9.py" ; Cambia esto a la ruta de tu script Python
     args := "--klokken "
 
@@ -85,7 +88,7 @@ Access() {
 Logout() {
     TrayTip("Logout", "DESLOGUEATE TU TURNO ACABO", 5)
 
-    global rutaPython := "C:\Users\Joel Hurtado\AppData\Local\Programs\Python\Python313\python.exe"
+    global rutaPython 
     global rutaScriptFive9 := A_ScriptDir . "\Five9.py" ; Cambia esto a la ruta de tu script Python
     args := "--klokkenout "
 
@@ -96,7 +99,7 @@ Logout() {
     RunWait(comand, , "Hide")
     Sleep(60000)
     try {
-        RunWait A_Desktop "\ShutDown.bat"
+        RunWait("*RunAs " A_Desktop "\ShutDown.bat")
     }
     catch {
         return ; Salir del script
