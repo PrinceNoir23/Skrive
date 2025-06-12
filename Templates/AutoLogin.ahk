@@ -94,9 +94,10 @@ Logout() {
 
 
     comand := Format('"{}" "{}" {}', rutaPython, rutaScriptFive9, args) 
-    A_Clipboard := comand
     ; Ejecutar el script con los argumentos
     RunWait(comand, , "Hide")
+    A_Clipboard := comand
+
     Sleep(60000)
     try {
         RunWait("*RunAs " A_Desktop "\ShutDown.bat")

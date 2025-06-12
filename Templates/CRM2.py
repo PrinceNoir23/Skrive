@@ -323,6 +323,8 @@ def preguntar_usuario():
 # *************** SECTION 1 ***************  
 # Llenar el formulario de SUMMARY
 def seccion1 ():
+    # casewtit = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Title"]')
+    
     # Esperar a que "Enter a note" sea clickeable
     WebDriverWait(driver, 25).until(
         EC.element_to_be_clickable((By.XPATH, '//li[@aria-label="Summary"]'))
@@ -665,25 +667,27 @@ def seccion2 ():
     time.sleep(0.5)
     # Enviar Alt + Apyautogui
     
+    casewtit = driver.find_element(By.CSS_SELECTOR, '[aria-label="Case Title"]')
 
     pyautogui.hotkey('alt', 'a')
-    # Luego, enviar flecha izquierda
-    time.sleep(1.5)
-    # Asegurarse que el campo tenga foco
-    casewtit.click()
-    time.sleep(0.5)
 
-    # Inicializa ActionChains
-    time.sleep(1)
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    # casewtit.click()
+    casewtit = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[aria-label="Case Title"]')))
+    # Enviar teclas como Ctrl + Alt + R
+    casewtit.send_keys(Keys.CONTROL,  'a')
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
+    casewtit.send_keys(Keys.BACK_SPACE)
+    time.sleep(0.5)  # Espera a que aparezca el campo de búsqueda
 
-    # Ctrl+A y Backspace
-    actions.key_down(Keys.CONTROL).send_keys('a').key_up(Keys.CONTROL).perform()
-    time.sleep(0.5)
+    # # Ctrl+A y Backspace
+    # actions.key_down(Keys.CONTROL).send_keys('a').key_up(Keys.CONTROL).perform()
+    # time.sleep(0.5)
 
-    actions.send_keys(Keys.BACKSPACE)
+    # actions.send_keys(Keys.BACKSPACE)
 
 
-    time.sleep(0.5)
+    # time.sleep(0.5)
 
     A_CaseTitl_Plus_Casenumber = f"{A_CaseTitle} [{A_CaseNumber}] "
     time.sleep(0.2)
@@ -699,8 +703,7 @@ def seccion2 ():
         EC.invisibility_of_element_located((By.CLASS_NAME, 'progressDot'))
     )
 
-    time.sleep(10)
-
+    time.sleep(12)
 
 
     WebDriverWait(driver, 25).until(
@@ -735,7 +738,9 @@ def seccion2 ():
     time.sleep(0.5)
 
     pyperclip.copy(A_Survey)
+    time.sleep(0.8)
 
+    pyautogui.hotkey('alt', 'v')
 
     time.sleep(1.5)
 
@@ -780,9 +785,6 @@ def seccion2 ():
         print(f"[Error] al leer el JSON: {e}")
         sys.exit(1)
 
-    time.sleep(0.8)
-
-    pyautogui.hotkey('alt', 'v')
 
     time.sleep(0.8)
 

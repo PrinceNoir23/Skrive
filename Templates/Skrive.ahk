@@ -1,4 +1,5 @@
 #Requires AutoHotkey v2.0
+; Navid Rahmani DDS PC / SID: 8242255223 / complaint of an existing case, wants to have the scanns of onw patient under other one mistake when scanning on TRIOS Software version 1.18.6.6 [CAS-1243173-P3
 ; {
 ;     "User Name": "Aaa",
 ;     "Password": "Aaa",
