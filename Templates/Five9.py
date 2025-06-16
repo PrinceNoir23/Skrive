@@ -387,7 +387,7 @@ if args.lunchtime:
         EC.element_to_be_clickable((By.ID, "ReadyCodesItem-327071-anchor"))
     )
     break_option.click()
-    time.sleep(3598)
+    time.sleep(3600)
     inicializar()
     ready()
 elif args.breaktime:
@@ -407,7 +407,7 @@ elif args.breaktime:
         EC.element_to_be_clickable((By.ID, "ReadyCodesItem-327070-anchor"))
     )
     break_option.click()
-    time.sleep(898)
+    time.sleep(900)
     inicializar()
     ready()
 

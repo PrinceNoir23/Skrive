@@ -85,21 +85,25 @@ global rutaScript := A_WorkingDir "\CRM2.py"
 ; Ejecutar "where python" y guardar la salida
 try {
     ; tvPS debe estar definido; esto es solo un ejemplo
-RunWait(A_ComSpec ' /c where python > python_path.txt', , 'Hide')
+    RunWait(A_ComSpec ' /c where python > python_path.txt', , 'Hide')
     Logpy("Python path leido correctamente.")
+    ; Leer archivo generado por `where python`
+    raw := FileRead("python_path.txt")
+
+    ; Separar por líneas
+    lines := StrSplit(raw, "`n")
+
+    ; Tomar la primera línea y quitar posibles espacios o saltos de carro (\r)
+    global rutaPython := Trim(lines[1], "`r`n ")
 }
-catch Error {   
-    Logpy("ERROR: " Error)
+catch  {   
+    MsgBox('instalando python')
+    Logpy("ERROR: python no estaba instalado, se va a instalar " )
+    RunWait("*RunAs " A_WorkingDir "\PythonInstaller.bat")
+
 }
 
-; Leer archivo generado por `where python`
-raw := FileRead("python_path.txt")
 
-; Separar por líneas
-lines := StrSplit(raw, "`n")
-
-; Tomar la primera línea y quitar posibles espacios o saltos de carro (\r)
-global rutaPython := Trim(lines[1], "`r`n ")
 
 
 ; Ruta para python ------------------------------------------------------------
